@@ -18376,3 +18376,6 @@ explored the coding cosmos, keyboard gravity too strong; floating ideas.
 ## 2017-11-03T12:24:16
 rehearsed implementations mentally, keyboard got a rest; preparation is key.
 
+## 2017-11-03T14:34:35
+interface designs sketched mentally, APIs unchanged; UX of the mind.
+
