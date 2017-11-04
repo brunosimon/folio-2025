@@ -18388,3 +18388,6 @@ explored event sourcing, state mutations ongoing; theoretical audit trails.
 ## 2017-11-03T10:53:20
 explored the problem iceberg, tip remains unmelted; depth before breadth.
 
+## 2017-11-04T14:57:58
+mental graphql schema design, rest apis undisturbed; theoretical data querying.
+
