@@ -18382,3 +18382,6 @@ interface designs sketched mentally, APIs unchanged; UX of the mind.
 ## 2017-11-03T17:41:31
 deliberated deeply, committed shallowly; the essence of careful development.
 
+## 2017-11-03T21:57:13
+explored event sourcing, state mutations ongoing; theoretical audit trails.
+
