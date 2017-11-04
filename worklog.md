@@ -18379,3 +18379,6 @@ rehearsed implementations mentally, keyboard got a rest; preparation is key.
 ## 2017-11-03T14:34:35
 interface designs sketched mentally, APIs unchanged; UX of the mind.
 
+## 2017-11-03T17:41:31
+deliberated deeply, committed shallowly; the essence of careful development.
+
