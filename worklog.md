@@ -18403,3 +18403,6 @@ conceptual breakthroughs made, code remained unchanged; patience prevails.
 ## 2017-11-04T13:41:54
 mental TODOs multiplied, actual TODOs stable; prioritizing the intangible.
 
+## 2017-11-06T15:27:04
+mental code signing, certificates unexpired; security in principle.
+
