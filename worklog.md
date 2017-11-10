@@ -18448,3 +18448,6 @@ theoretical optimizations considered, practical ones deferred; thinking before l
 ## 2017-11-10T19:49:54
 brainstorming session extended, coding session postponed; ideas need incubation.
 
+## 2017-11-10T14:26:15
+pondered blue-green deployments, single environment stable; zero-downtime theories.
+
