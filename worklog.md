@@ -18457,3 +18457,6 @@ brainstorming session extended, coding session postponed; ideas need incubation.
 ## 2017-11-13T18:26:43
 explored test-driven development mentally, tests unwritten; methodological contemplation.
 
+## 2017-11-13T16:23:43
+dived deep into theory, implementation remained shallow; foundations before buildings.
+
