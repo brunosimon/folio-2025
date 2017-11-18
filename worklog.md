@@ -18505,3 +18505,6 @@ mental api gateway design, direct service calls ongoing; theoretical request man
 ## 2017-11-18T23:13:10
 explored event-driven architecture, listeners unimplemented; reactive thinking exercise.
 
+## 2017-11-18T13:07:15
+explored the problem iceberg, tip remains unmelted; depth before breadth.
+
