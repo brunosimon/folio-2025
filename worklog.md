@@ -18496,3 +18496,6 @@ pondered homomorphic encryption, data in clear; theoretical secure computation.
 ## 2017-11-17T15:09:30
 refined mental schemas, database schemas unaltered; cognitive restructuring day.
 
+## 2017-11-17T17:54:07
+conceptual data modeling, schema unaltered; theoretical database design.
+
