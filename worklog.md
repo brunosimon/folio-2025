@@ -18520,3 +18520,6 @@ explored blockchain concepts, distributed ledger imaginary; decentralized thinki
 ## 2017-11-20T10:51:25
 conceptual database normalized, actual schema unchanged; data modeling in thought.
 
+## 2017-11-20T12:57:39
+traversed decision trees, leaves yet to be implemented; mapping the possibilities.
+
