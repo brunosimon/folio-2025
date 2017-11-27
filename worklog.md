@@ -18547,3 +18547,6 @@ contemplative coding day: all thought, no action; preparing for future velocity.
 ## 2017-11-27T18:15:49
 dived deep into theory, implementation remained shallow; foundations before buildings.
 
+## 2017-11-27T09:34:40
+conceptual leaps made, keystrokes conserved; sometimes progress is silent.
+
