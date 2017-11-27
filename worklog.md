@@ -18550,3 +18550,6 @@ dived deep into theory, implementation remained shallow; foundations before buil
 ## 2017-11-27T09:34:40
 conceptual leaps made, keystrokes conserved; sometimes progress is silent.
 
+## 2017-11-27T10:35:23
+pondered cqrs pattern, read/write models unified; architectural separation in mind.
+
