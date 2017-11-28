@@ -18544,3 +18544,6 @@ conceptual hurdles cleared, implementation hurdles await; mental parkour day.
 ## 2017-11-27T20:09:53
 contemplative coding day: all thought, no action; preparing for future velocity.
 
+## 2017-11-27T18:15:49
+dived deep into theory, implementation remained shallow; foundations before buildings.
+
