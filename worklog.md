@@ -18571,3 +18571,6 @@ explored the coding cosmos, keyboard gravity too strong; floating ideas.
 ## 2017-11-29T15:17:59
 explored asynchronous patterns, callbacks unwritten; concurrent thinking exercise.
 
+## 2017-11-30T16:02:52
+pondered database indexing, query performance theoretical; mental query optimization.
+
