@@ -18616,3 +18616,6 @@ mental gears turned, yet commit log remained static; onward to tomorrow.
 ## 2017-12-07T13:36:00
 intellectual strides made, repository unmoved; reflection has value too.
 
+## 2017-12-08T13:35:06
+navigated abstract realms, concrete implementations deferred; the developer's journey.
+
