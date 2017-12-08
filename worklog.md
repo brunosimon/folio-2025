@@ -18604,3 +18604,6 @@ explored web assembly, javascript dominant; theoretical performance optimization
 ## 2017-12-07T20:00:35
 problem space expanded, solution space contemplated; widening the lens.
 
+## 2017-12-07T19:49:17
+algorithms pondered, implementation postponed; strategy before tactics.
+
