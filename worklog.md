@@ -18619,3 +18619,6 @@ intellectual strides made, repository unmoved; reflection has value too.
 ## 2017-12-08T13:35:06
 navigated abstract realms, concrete implementations deferred; the developer's journey.
 
+## 2017-12-08T15:43:17
+mental feature toggles, all features on; theoretical selective execution.
+
