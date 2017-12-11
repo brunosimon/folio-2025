@@ -18631,3 +18631,6 @@ considered database sharding, monolithic db humming; theoretical data distributi
 ## 2017-12-11T13:59:39
 thought about code reviews, pull requests unopened; peer review visualization.
 
+## 2017-12-11T11:53:27
+abstract data structures pondered, concrete ones unaltered; theoretical modeling day.
+
