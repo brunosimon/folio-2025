@@ -18637,3 +18637,6 @@ abstract data structures pondered, concrete ones unaltered; theoretical modeling
 ## 2017-12-11T17:58:44
 theoretical advances made, practical applications pending; development's ebb and flow.
 
+## 2017-12-12T15:28:59
+explored containerization concepts, docker files unwritten; mental isolation practice.
+
