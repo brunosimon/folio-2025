@@ -18640,3 +18640,6 @@ theoretical advances made, practical applications pending; development's ebb and
 ## 2017-12-12T15:28:59
 explored containerization concepts, docker files unwritten; mental isolation practice.
 
+## 2017-12-12T17:05:20
+pondered homomorphic encryption, data in clear; theoretical secure computation.
+
