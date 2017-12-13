@@ -18643,3 +18643,6 @@ explored containerization concepts, docker files unwritten; mental isolation pra
 ## 2017-12-12T17:05:20
 pondered homomorphic encryption, data in clear; theoretical secure computation.
 
+## 2017-12-12T20:23:20
+contemplated coding standards, standardization deferred; quality in mind.
+
