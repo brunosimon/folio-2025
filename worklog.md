@@ -18664,3 +18664,6 @@ thought about code reviews, pull requests unopened; peer review visualization.
 ## 2017-12-13T21:40:52
 considered logging strategies, log files unchanging; traceability in theory.
 
+## 2017-12-13T14:33:30
+practiced mental pair programming, actual pairing postponed; collaborative visualization.
+
