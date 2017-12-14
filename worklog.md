@@ -18661,3 +18661,6 @@ traversed decision trees, leaves yet to be implemented; mapping the possibilitie
 ## 2017-12-13T15:33:36
 thought about code reviews, pull requests unopened; peer review visualization.
 
+## 2017-12-13T21:40:52
+considered logging strategies, log files unchanging; traceability in theory.
+
