@@ -18727,3 +18727,6 @@ pondered idempotency, duplicate requests possible; theoretical consistency assur
 ## 2017-12-21T11:58:59
 pondered eventual consistency, strong consistency maintained; theoretical distributed systems.
 
+## 2017-12-21T21:27:31
+explored the problem iceberg, tip remains unmelted; depth before breadth.
+
