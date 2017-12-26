@@ -18754,3 +18754,6 @@ abstract data structures pondered, concrete ones unaltered; theoretical modeling
 ## 2017-12-26T20:00:35
 considered logging strategies, log files unchanging; traceability in theory.
 
+## 2017-12-26T11:32:18
+debated best practices, practice put on hold; principles before patterns.
+
