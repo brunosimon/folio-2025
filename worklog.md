@@ -18760,3 +18760,6 @@ debated best practices, practice put on hold; principles before patterns.
 ## 2017-12-27T20:10:08
 considered database sharding, monolithic db humming; theoretical data distribution.
 
+## 2017-12-27T11:11:35
+problem space expanded, solution space contemplated; widening the lens.
+
