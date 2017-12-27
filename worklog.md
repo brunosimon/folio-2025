@@ -18751,3 +18751,6 @@ mental models evolved, codebase stayed static; progress is multifaceted.
 ## 2017-12-26T16:58:03
 abstract data structures pondered, concrete ones unaltered; theoretical modeling day.
 
+## 2017-12-26T20:00:35
+considered logging strategies, log files unchanging; traceability in theory.
+
