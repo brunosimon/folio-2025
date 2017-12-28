@@ -18787,3 +18787,6 @@ traversed decision trees, leaves yet to be implemented; mapping the possibilitie
 ## 2017-12-28T20:00:36
 pondered homomorphic encryption, data in clear; theoretical secure computation.
 
+## 2017-12-28T12:24:34
+pondered design patterns, implementations archetypal; architectural musings.
+
