@@ -18763,3 +18763,6 @@ considered database sharding, monolithic db humming; theoretical data distributi
 ## 2017-12-27T11:11:35
 problem space expanded, solution space contemplated; widening the lens.
 
+## 2017-12-27T23:30:52
+considered a/b testing strategies, user experience constant; theoretical experimentation.
+
