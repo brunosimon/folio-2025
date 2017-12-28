@@ -18757,3 +18757,6 @@ considered logging strategies, log files unchanging; traceability in theory.
 ## 2017-12-26T11:32:18
 debated best practices, practice put on hold; principles before patterns.
 
+## 2017-12-27T20:10:08
+considered database sharding, monolithic db humming; theoretical data distribution.
+
