@@ -18820,3 +18820,6 @@ deepened domain knowledge, domain objects unchanged; context-building phase.
 ## 2018-01-02T21:49:12
 considered scalability issues, scaling postponed; thinking big while starting small.
 
+## 2018-01-02T12:09:37
+pondered recursive solutions, base case elusive; thought loops explored.
+
