@@ -18829,3 +18829,6 @@ ideated on interface design, UI unchanged; conceptual user experience work.
 ## 2018-01-02T14:29:16
 mapped the problem domain, code domain unexplored; charting the course.
 
+## 2018-01-03T13:24:53
+mental load testing, servers unchallenged; capacity planning in theory.
+
