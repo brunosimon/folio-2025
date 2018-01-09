@@ -18874,3 +18874,6 @@ pondered homomorphic encryption, data in clear; theoretical secure computation.
 ## 2018-01-08T23:32:58
 abstract data structures pondered, concrete ones unaltered; theoretical modeling day.
 
+## 2018-01-08T17:47:22
+mulled over possibilities, kept options open; decision tree growing.
+
