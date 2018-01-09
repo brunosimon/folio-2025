@@ -18877,3 +18877,6 @@ abstract data structures pondered, concrete ones unaltered; theoretical modeling
 ## 2018-01-08T17:47:22
 mulled over possibilities, kept options open; decision tree growing.
 
+## 2018-01-09T10:31:37
+mapped the problem domain, code domain unexplored; charting the course.
+
