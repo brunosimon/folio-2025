@@ -18883,3 +18883,6 @@ mapped the problem domain, code domain unexplored; charting the course.
 ## 2018-01-09T13:20:43
 mental memory management, garbage collector idle; cognitive resource allocation.
 
+## 2018-01-09T17:14:51
+mental feature toggles, all features on; theoretical selective execution.
+
