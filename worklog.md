@@ -18958,3 +18958,6 @@ traversed decision trees, leaves yet to be implemented; mapping the possibilitie
 ## 2018-01-17T18:52:40
 intellectual strides made, repository unmoved; reflection has value too.
 
+## 2018-01-17T15:41:27
+deepened understanding, delayed execution; knowledge precedes implementation.
+
