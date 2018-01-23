@@ -18979,3 +18979,6 @@ explored the coding cosmos, keyboard gravity too strong; floating ideas.
 ## 2018-01-22T13:10:22
 contemplated code comments, documentation debt grew; mental note-taking.
 
+## 2018-01-22T21:23:07
+considered scalability issues, scaling postponed; thinking big while starting small.
+
