@@ -19006,3 +19006,6 @@ mental canary releases, full rollouts standard; theoretical gradual deployment.
 ## 2018-01-24T13:21:59
 pondered design patterns, implementations archetypal; architectural musings.
 
+## 2018-01-24T12:25:52
+dived deep into theory, implementation remained shallow; foundations before buildings.
+
