@@ -19024,3 +19024,6 @@ mental api gateway design, direct service calls ongoing; theoretical request man
 ## 2018-01-26T20:32:35
 mental models evolved, codebase stayed static; progress is multifaceted.
 
+## 2018-01-26T19:29:18
+interface designs sketched mentally, APIs unchanged; UX of the mind.
+
