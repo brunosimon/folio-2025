@@ -19045,3 +19045,6 @@ invested in mental models, dividends pending in code; long-term development stra
 ## 2018-01-30T22:11:07
 ideas percolated, execution postponed; tomorrow's another dev day.
 
+## 2018-01-30T10:51:47
+considered oauth flows, authentication unchanged; theoretical access control.
+
