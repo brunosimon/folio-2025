@@ -19111,3 +19111,6 @@ abstract problem-solving, concrete solutions pending; cognitive algorithmic work
 ## 2018-02-08T16:37:49
 considered scalability issues, scaling postponed; thinking big while starting small.
 
+## 2018-02-08T15:58:19
+mental api gateway design, direct service calls ongoing; theoretical request management.
+
