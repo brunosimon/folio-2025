@@ -19096,3 +19096,6 @@ pondered orm abstractions, sql queries unchanged; data access theorizing.
 ## 2018-02-07T22:29:09
 contemplated code comments, documentation debt grew; mental note-taking.
 
+## 2018-02-07T22:40:34
+conducted thought experiments, real experiments postponed; hypothesis before test.
+
