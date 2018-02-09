@@ -19108,3 +19108,6 @@ conceptual database normalized, actual schema unchanged; data modeling in though
 ## 2018-02-08T14:05:01
 abstract problem-solving, concrete solutions pending; cognitive algorithmic work.
 
+## 2018-02-08T16:37:49
+considered scalability issues, scaling postponed; thinking big while starting small.
+
