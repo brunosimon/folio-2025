@@ -19120,3 +19120,6 @@ mental fuzzing performed, edge cases theoretical; conceptual chaos engineering.
 ## 2018-02-09T20:46:04
 explored the problem iceberg, tip remains unmelted; depth before breadth.
 
+## 2018-02-09T11:52:42
+abstraction level increased, concrete implementations deferred; hovering above the code.
+
