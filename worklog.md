@@ -19144,3 +19144,6 @@ pondered idempotency, duplicate requests possible; theoretical consistency assur
 ## 2018-02-13T18:24:17
 abstract classes contemplated, concrete classes unchanged; OOP in the mind.
 
+## 2018-02-13T21:37:42
+contemplated code smells, refactoring deferred; awareness precedes action.
+
