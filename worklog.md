@@ -19141,3 +19141,6 @@ deliberated deeply, committed shallowly; the essence of careful development.
 ## 2018-02-13T20:57:34
 pondered idempotency, duplicate requests possible; theoretical consistency assurance.
 
+## 2018-02-13T18:24:17
+abstract classes contemplated, concrete classes unchanged; OOP in the mind.
+
