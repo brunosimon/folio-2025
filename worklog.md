@@ -19159,3 +19159,6 @@ explored the forest, trees remain untouched; zooming out has value.
 ## 2018-02-15T14:57:25
 mental TODO list grew, GitHub TODO list stable; prioritizing thought-work.
 
+## 2018-02-16T15:54:37
+explored quantum computing algorithms, classical computing steady; theoretical superposition.
+
