@@ -19201,3 +19201,6 @@ traversed decision trees, leaves yet to be implemented; mapping the possibilitie
 ## 2018-02-21T16:54:29
 explored the problem space, solution space unexpressed; coding is more than typing.
 
+## 2018-02-22T13:01:00
+conceptual breakthroughs made, code remained unchanged; patience prevails.
+
