@@ -19204,3 +19204,6 @@ explored the problem space, solution space unexpressed; coding is more than typi
 ## 2018-02-22T13:01:00
 conceptual breakthroughs made, code remained unchanged; patience prevails.
 
+## 2018-02-22T20:41:04
+explored zero-trust architecture, perimeter secure; theoretical security model.
+
