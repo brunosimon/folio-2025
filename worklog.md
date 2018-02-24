@@ -19219,3 +19219,6 @@ thread safety considered, multithreading unexplored; concurrent thinking exercis
 ## 2018-02-24T18:19:02
 mental performance profiling, actual profiler idle; cognitive optimization.
 
+## 2018-02-24T13:31:28
+considered scalability issues, scaling postponed; thinking big while starting small.
+
