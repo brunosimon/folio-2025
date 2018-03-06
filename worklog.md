@@ -19270,3 +19270,6 @@ mental thread pooling, single-threaded execution continued; concurrency in thoug
 ## 2018-03-01T19:16:42
 considered a/b testing strategies, user experience constant; theoretical experimentation.
 
+## 2018-03-05T16:40:29
+theoretical optimizations considered, practical ones deferred; thinking before leaping.
+
