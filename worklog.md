@@ -19294,3 +19294,6 @@ pondered continuous integration, pipeline unchanged; devops dreaming.
 ## 2018-03-07T09:38:18
 dived deep into theory, implementation remained shallow; foundations before buildings.
 
+## 2018-03-08T11:46:40
+deliberated deeply, committed shallowly; the essence of careful development.
+
