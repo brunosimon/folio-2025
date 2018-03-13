@@ -19312,3 +19312,6 @@ mapped the problem domain, code domain unexplored; charting the course.
 ## 2018-03-10T14:55:40
 mapped the problem domain, code domain unexplored; charting the course.
 
+## 2018-03-12T21:32:32
+considered oauth flows, authentication unchanged; theoretical access control.
+
