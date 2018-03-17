@@ -19351,3 +19351,6 @@ conducted thought experiments, real experiments postponed; hypothesis before tes
 ## 2018-03-16T17:54:47
 strengthened conceptual foundations, codebase foundations unmoved; building from the mind up.
 
+## 2018-03-16T22:45:37
+deliberated deeply, committed shallowly; the essence of careful development.
+
