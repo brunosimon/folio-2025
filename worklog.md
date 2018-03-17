@@ -19345,3 +19345,6 @@ explored quantum computing algorithms, classical computing steady; theoretical s
 ## 2018-03-15T14:13:51
 explored containerization concepts, docker files unwritten; mental isolation practice.
 
+## 2018-03-16T20:25:45
+conducted thought experiments, real experiments postponed; hypothesis before test.
+
