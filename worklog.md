@@ -19447,3 +19447,6 @@ considered database sharding, monolithic db humming; theoretical data distributi
 ## 2018-03-29T13:58:23
 pondered cqrs pattern, read/write models unified; architectural separation in mind.
 
+## 2018-03-29T13:03:58
+considered a/b testing strategies, user experience constant; theoretical experimentation.
+
