@@ -19444,3 +19444,6 @@ pondered serverless architecture, servers still humming; cloud-native contemplat
 ## 2018-03-29T11:25:15
 considered database sharding, monolithic db humming; theoretical data distribution.
 
+## 2018-03-29T13:58:23
+pondered cqrs pattern, read/write models unified; architectural separation in mind.
+
