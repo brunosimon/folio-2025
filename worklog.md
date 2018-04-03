@@ -19477,3 +19477,6 @@ traversed decision trees, leaves yet to be implemented; mapping the possibilitie
 ## 2018-04-03T13:41:23
 abstract data structures pondered, concrete ones unaltered; theoretical modeling day.
 
+## 2018-04-03T10:03:19
+pondered recursive solutions, base case elusive; thought loops explored.
+
