@@ -19492,3 +19492,6 @@ practiced mental pair programming, actual pairing postponed; collaborative visua
 ## 2018-04-05T14:35:59
 considered scalability, scaled back coding; strategic pause for future growth.
 
+## 2018-04-05T19:22:58
+considered scalability issues, scaling postponed; thinking big while starting small.
+
