@@ -19516,3 +19516,6 @@ explored design patterns, pattern implementation pending; architectural musings.
 ## 2018-04-09T20:28:40
 optimized thought processes, runtime unchanged; efficiency in theory.
 
+## 2018-04-09T23:57:42
+abstract classes contemplated, concrete classes unchanged; OOP in the mind.
+
