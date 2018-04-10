@@ -19519,3 +19519,6 @@ optimized thought processes, runtime unchanged; efficiency in theory.
 ## 2018-04-09T23:57:42
 abstract classes contemplated, concrete classes unchanged; OOP in the mind.
 
+## 2018-04-10T13:51:33
+code readability contemplated, style guide adherence pending; clarity in concept.
+
