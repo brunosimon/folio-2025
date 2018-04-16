@@ -19543,3 +19543,6 @@ considered containerization, docker-free day; isolation in thought only.
 ## 2018-04-12T10:51:58
 mapped the problem domain, code domain unexplored; charting the course.
 
+## 2018-04-16T16:15:11
+explored domain-driven design, bounded contexts imaginary; conceptual modeling exercise.
+
