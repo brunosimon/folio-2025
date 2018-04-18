@@ -19570,3 +19570,6 @@ interface designs sketched mentally, APIs unchanged; UX of the mind.
 ## 2018-04-17T11:59:03
 wrestled with concepts, code remained unaltered; groundwork for future commits.
 
+## 2018-04-17T18:47:22
+evaluated trade-offs, decisions pending; weighing options is progress too.
+
