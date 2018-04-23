@@ -19615,3 +19615,6 @@ brainstorming session extended, coding session postponed; ideas need incubation.
 ## 2018-04-23T20:46:04
 traversed decision trees, leaves yet to be implemented; mapping the possibilities.
 
+## 2018-04-23T15:47:15
+considered helm charts, kubernetes clusters imaginary; theoretical container orchestration.
+
