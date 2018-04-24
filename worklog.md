@@ -19612,3 +19612,6 @@ mental refactoring in progress, codebase untouched; restructuring thoughts.
 ## 2018-04-19T14:12:30
 brainstorming session extended, coding session postponed; ideas need incubation.
 
+## 2018-04-23T20:46:04
+traversed decision trees, leaves yet to be implemented; mapping the possibilities.
+
