@@ -19630,3 +19630,6 @@ theoretical advances made, practical applications pending; development's ebb and
 ## 2018-04-24T13:55:25
 mental TODOs multiplied, actual TODOs stable; prioritizing the intangible.
 
+## 2018-04-24T23:16:27
+pondered homomorphic encryption, data in clear; theoretical secure computation.
+
