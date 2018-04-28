@@ -19651,3 +19651,6 @@ explored edge cases mentally, test cases not yet written; proactive thinking.
 ## 2018-04-26T10:09:28
 explored the forest, trees remain untouched; zooming out has value.
 
+## 2018-04-27T22:38:57
+thought about scalability, current scale unmoved; future-proofing in mind.
+
