@@ -19672,3 +19672,6 @@ explored event sourcing, state mutations ongoing; theoretical audit trails.
 ## 2018-04-30T10:44:44
 explored possibilities, deferred decisions; progress measured in thoughts.
 
+## 2018-04-30T21:22:08
+algorithm efficiency considered, implementation efficiency deferred; big O thinking.
+
