@@ -19684,3 +19684,6 @@ explored test-driven development mentally, tests unwritten; methodological conte
 ## 2018-05-02T09:12:48
 explored the problem space, solution space unexpressed; coding is more than typing.
 
+## 2018-05-02T09:11:03
+considered message queues, synchronous operations ongoing; asynchronous ideation.
+
