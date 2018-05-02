@@ -19675,3 +19675,6 @@ explored possibilities, deferred decisions; progress measured in thoughts.
 ## 2018-04-30T21:22:08
 algorithm efficiency considered, implementation efficiency deferred; big O thinking.
 
+## 2018-05-01T19:32:38
+contemplated coding standards, standardization deferred; quality in mind.
+
