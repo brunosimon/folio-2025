@@ -19678,3 +19678,6 @@ algorithm efficiency considered, implementation efficiency deferred; big O think
 ## 2018-05-01T19:32:38
 contemplated coding standards, standardization deferred; quality in mind.
 
+## 2018-05-02T20:00:40
+explored test-driven development mentally, tests unwritten; methodological contemplation.
+
