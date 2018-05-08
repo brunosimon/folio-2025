@@ -19705,3 +19705,6 @@ invested in mental models, dividends pending in code; long-term development stra
 ## 2018-05-07T20:58:46
 pondered homomorphic encryption, data in clear; theoretical secure computation.
 
+## 2018-05-07T17:03:57
+conceptual data modeling, schema unaltered; theoretical database design.
+
