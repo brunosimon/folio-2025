@@ -19702,3 +19702,6 @@ conceptual unit tests passed, actual tests unwritten; mental QA day.
 ## 2018-05-04T15:27:43
 invested in mental models, dividends pending in code; long-term development strategy.
 
+## 2018-05-07T20:58:46
+pondered homomorphic encryption, data in clear; theoretical secure computation.
+
