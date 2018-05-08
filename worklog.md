@@ -19711,3 +19711,6 @@ conceptual data modeling, schema unaltered; theoretical database design.
 ## 2018-05-07T21:48:17
 pondered eventual consistency, strong consistency maintained; theoretical distributed systems.
 
+## 2018-05-08T09:39:03
+explored the problem space, solution space unexpressed; coding is more than typing.
+
