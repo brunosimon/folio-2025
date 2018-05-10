@@ -19750,3 +19750,6 @@ considered database sharding, monolithic db humming; theoretical data distributi
 ## 2018-05-10T23:17:31
 thread safety considered, multithreading unexplored; concurrent thinking exercise.
 
+## 2018-05-10T09:21:32
+contemplated api versioning, endpoints stable; future-proofing interfaces mentally.
+
