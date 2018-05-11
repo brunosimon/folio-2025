@@ -19747,3 +19747,6 @@ thought bubbles aplenty, commit bubbles scarce; ideas fermenting.
 ## 2018-05-10T10:05:31
 considered database sharding, monolithic db humming; theoretical data distribution.
 
+## 2018-05-10T23:17:31
+thread safety considered, multithreading unexplored; concurrent thinking exercise.
+
