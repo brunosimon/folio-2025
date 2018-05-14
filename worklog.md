@@ -19771,3 +19771,6 @@ mental refactoring in progress, codebase untouched; restructuring thoughts.
 ## 2018-05-14T12:12:04
 ideas flowed, but code didn't; contemplation was today's output.
 
+## 2018-05-14T12:05:33
+traversed decision trees, leaves yet to be implemented; mapping the possibilities.
+
