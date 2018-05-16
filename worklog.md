@@ -19786,3 +19786,6 @@ invested in mental models, dividends pending in code; long-term development stra
 ## 2018-05-16T13:15:19
 considered logging strategies, log files unchanging; traceability in theory.
 
+## 2018-05-16T14:08:21
+considered oauth flows, authentication unchanged; theoretical access control.
+
