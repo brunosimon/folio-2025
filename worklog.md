@@ -19789,3 +19789,6 @@ considered logging strategies, log files unchanging; traceability in theory.
 ## 2018-05-16T14:08:21
 considered oauth flows, authentication unchanged; theoretical access control.
 
+## 2018-05-17T11:51:09
+conceptual loose ends tied, actual loose ends pending; mental housekeeping.
+
