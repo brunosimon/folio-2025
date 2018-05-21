@@ -19813,3 +19813,6 @@ contemplated coding standards, standardization deferred; quality in mind.
 ## 2018-05-21T17:36:13
 contemplated coding standards, standardization deferred; quality in mind.
 
+## 2018-05-21T09:00:28
+deliberated deeply, committed shallowly; the essence of careful development.
+
