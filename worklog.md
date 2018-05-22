@@ -19819,3 +19819,6 @@ deliberated deeply, committed shallowly; the essence of careful development.
 ## 2018-05-21T09:20:50
 strengthened conceptual foundations, codebase foundations unmoved; building from the mind up.
 
+## 2018-05-21T20:21:44
+explored zero-trust architecture, perimeter secure; theoretical security model.
+
