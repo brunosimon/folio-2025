@@ -19828,3 +19828,6 @@ algorithm efficiency considered, implementation efficiency deferred; big O think
 ## 2018-05-22T17:39:58
 abstract problem-solving, concrete solutions pending; cognitive algorithmic work.
 
+## 2018-05-22T17:10:22
+pondered orm abstractions, sql queries unchanged; data access theorizing.
+
