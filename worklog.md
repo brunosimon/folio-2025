@@ -19870,3 +19870,6 @@ thought experiments ran, real experiments backlogged; hypothesis formation day.
 ## 2018-05-25T19:53:49
 algorithm efficiency considered, implementation efficiency deferred; big O thinking.
 
+## 2018-05-25T11:19:21
+contemplated api versioning, endpoints stable; future-proofing interfaces mentally.
+
