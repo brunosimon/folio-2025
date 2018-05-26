@@ -19873,3 +19873,6 @@ algorithm efficiency considered, implementation efficiency deferred; big O think
 ## 2018-05-25T11:19:21
 contemplated api versioning, endpoints stable; future-proofing interfaces mentally.
 
+## 2018-05-25T22:18:48
+considered oauth flows, authentication unchanged; theoretical access control.
+
