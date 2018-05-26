@@ -19867,3 +19867,6 @@ problem space expanded, solution space contemplated; widening the lens.
 ## 2018-05-25T15:57:30
 thought experiments ran, real experiments backlogged; hypothesis formation day.
 
+## 2018-05-25T19:53:49
+algorithm efficiency considered, implementation efficiency deferred; big O thinking.
+
