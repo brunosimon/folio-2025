@@ -19909,3 +19909,6 @@ practiced rubber duck debugging sans duck or debug; introspective development da
 ## 2018-05-30T12:21:52
 algorithm efficiency considered, implementation efficiency deferred; big O thinking.
 
+## 2018-05-30T15:39:54
+explored the solution maze, exit not yet found; mapping the territory.
+
