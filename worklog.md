@@ -19906,3 +19906,6 @@ thought about cache invalidation, cache hits steady; conceptual performance tuni
 ## 2018-05-30T14:11:02
 practiced rubber duck debugging sans duck or debug; introspective development day.
 
+## 2018-05-30T12:21:52
+algorithm efficiency considered, implementation efficiency deferred; big O thinking.
+
