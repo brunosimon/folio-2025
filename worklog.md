@@ -20014,3 +20014,6 @@ considered database sharding, monolithic db humming; theoretical data distributi
 ## 2018-06-13T14:19:51
 thread safety considered, multithreading unexplored; concurrent thinking exercise.
 
+## 2018-06-13T10:15:24
+rich in consideration, poor in commits; the developer's paradox.
+
