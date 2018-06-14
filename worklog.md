@@ -20005,3 +20005,6 @@ considered message queues, synchronous operations ongoing; asynchronous ideation
 ## 2018-06-12T16:16:32
 mental dark launching, features fully visible; theoretical progressive rollout.
 
+## 2018-06-13T23:32:58
+interface designs sketched mentally, APIs unchanged; UX of the mind.
+
