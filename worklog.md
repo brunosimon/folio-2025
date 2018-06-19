@@ -20047,3 +20047,6 @@ thought experiments ran, real experiments backlogged; hypothesis formation day.
 ## 2018-06-19T11:39:04
 dived deep into theory, implementation remained shallow; foundations before buildings.
 
+## 2018-06-19T16:16:17
+considered scalability issues, scaling postponed; thinking big while starting small.
+
