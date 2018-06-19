@@ -20044,3 +20044,6 @@ debugged mental models, source code unaltered; cognitive troubleshooting.
 ## 2018-06-18T10:40:39
 thought experiments ran, real experiments backlogged; hypothesis formation day.
 
+## 2018-06-19T11:39:04
+dived deep into theory, implementation remained shallow; foundations before buildings.
+
