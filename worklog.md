@@ -20083,3 +20083,6 @@ thoughts compiled successfully, code compilation postponed; cognitive sprints ma
 ## 2018-06-22T23:20:56
 thoughts compiled successfully, code compilation postponed; cognitive sprints matter.
 
+## 2018-06-22T10:19:23
+considered containerization, docker-free day; isolation in thought only.
+
