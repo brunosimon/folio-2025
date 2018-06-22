@@ -20071,3 +20071,6 @@ explored the coding cosmos, keyboard gravity too strong; floating ideas.
 ## 2018-06-21T19:51:01
 mental load increased, server load unchanged; cognitive heavy lifting.
 
+## 2018-06-22T15:22:46
+abstraction level increased, concrete implementations deferred; hovering above the code.
+
