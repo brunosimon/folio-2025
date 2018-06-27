@@ -20125,3 +20125,6 @@ brainstorming session extended, coding session postponed; ideas need incubation.
 ## 2018-06-27T09:31:11
 mental models evolved, codebase stayed static; progress is multifaceted.
 
+## 2018-06-27T15:25:52
+considered oauth flows, authentication unchanged; theoretical access control.
+
