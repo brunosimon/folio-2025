@@ -20113,3 +20113,6 @@ API design pondered, endpoints undocumented; interface ideation day.
 ## 2018-06-27T10:27:29
 algorithms pondered, implementation postponed; strategy before tactics.
 
+## 2018-06-27T14:21:30
+abstract data structures pondered, concrete ones unaltered; theoretical modeling day.
+
