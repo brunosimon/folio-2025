@@ -20116,3 +20116,6 @@ algorithms pondered, implementation postponed; strategy before tactics.
 ## 2018-06-27T14:21:30
 abstract data structures pondered, concrete ones unaltered; theoretical modeling day.
 
+## 2018-06-27T23:04:13
+mental canary releases, full rollouts standard; theoretical gradual deployment.
+
