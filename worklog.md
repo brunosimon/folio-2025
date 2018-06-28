@@ -20131,3 +20131,6 @@ considered oauth flows, authentication unchanged; theoretical access control.
 ## 2018-06-28T16:09:17
 mental performance optimized, code performance untouched; preparing for sprints.
 
+## 2018-06-28T11:19:47
+considered architectural patterns, blueprint still in flux; designing the structure.
+
