@@ -20134,3 +20134,6 @@ mental performance optimized, code performance untouched; preparing for sprints.
 ## 2018-06-28T11:19:47
 considered architectural patterns, blueprint still in flux; designing the structure.
 
+## 2018-06-29T15:49:10
+mental code signing, certificates unexpired; security in principle.
+
