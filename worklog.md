@@ -20155,3 +20155,6 @@ conceptual unit tests passed, actual tests unwritten; mental QA day.
 ## 2018-06-30T20:03:55
 code smells identified mentally, refactoring todo list grew; awareness phase.
 
+## 2018-06-30T20:24:39
+mental load testing, servers unchallenged; capacity planning in theory.
+
