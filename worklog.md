@@ -20158,3 +20158,6 @@ code smells identified mentally, refactoring todo list grew; awareness phase.
 ## 2018-06-30T20:24:39
 mental load testing, servers unchallenged; capacity planning in theory.
 
+## 2018-07-02T18:52:42
+algorithms pondered, implementation postponed; strategy before tactics.
+
