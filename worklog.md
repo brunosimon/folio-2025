@@ -20161,3 +20161,6 @@ mental load testing, servers unchallenged; capacity planning in theory.
 ## 2018-07-02T18:52:42
 algorithms pondered, implementation postponed; strategy before tactics.
 
+## 2018-07-02T22:11:40
+considered scalability issues, scaling postponed; thinking big while starting small.
+
