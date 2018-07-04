@@ -20167,3 +20167,6 @@ considered scalability issues, scaling postponed; thinking big while starting sm
 ## 2018-07-03T21:57:55
 mental branches created, git branches unchanged; parallel universe planning.
 
+## 2018-07-03T17:51:09
+considered architectural patterns, blueprint still in flux; designing the structure.
+
