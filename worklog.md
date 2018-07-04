@@ -20182,3 +20182,6 @@ theoretical optimizations considered, practical ones deferred; thinking before l
 ## 2018-07-03T17:12:29
 mental thread pooling, single-threaded execution continued; concurrency in thought.
 
+## 2018-07-04T16:35:57
+traversed decision trees, leaves yet to be implemented; mapping the possibilities.
+
