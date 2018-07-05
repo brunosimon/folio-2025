@@ -20185,3 +20185,6 @@ mental thread pooling, single-threaded execution continued; concurrency in thoug
 ## 2018-07-04T16:35:57
 traversed decision trees, leaves yet to be implemented; mapping the possibilities.
 
+## 2018-07-05T15:24:07
+considered ci/cd pipelines, manual deployments continued; automation in thought.
+
