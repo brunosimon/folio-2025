@@ -20200,3 +20200,6 @@ explored asynchronous ideas, synchronization deferred; parallel thinking day.
 ## 2018-07-06T22:39:26
 explored asynchronous ideas, synchronization deferred; parallel thinking day.
 
+## 2018-07-06T10:11:45
+abstract classes contemplated, concrete classes unchanged; OOP in the mind.
+
