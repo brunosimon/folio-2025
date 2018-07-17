@@ -20284,3 +20284,6 @@ debated best practices, practice put on hold; principles before patterns.
 ## 2018-07-17T20:29:39
 ideas germinated, code hibernated; nurturing future implementations.
 
+## 2018-07-17T15:43:39
+code smells identified mentally, refactoring todo list grew; awareness phase.
+
