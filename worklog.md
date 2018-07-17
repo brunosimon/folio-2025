@@ -20278,3 +20278,6 @@ ideas germinated, code hibernated; nurturing future implementations.
 ## 2018-07-16T18:55:35
 problem space expanded, solution space contemplated; widening the lens.
 
+## 2018-07-17T13:15:24
+debated best practices, practice put on hold; principles before patterns.
+
