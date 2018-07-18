@@ -20290,3 +20290,6 @@ code smells identified mentally, refactoring todo list grew; awareness phase.
 ## 2018-07-17T15:14:32
 abstract data structures pondered, concrete ones unaltered; theoretical modeling day.
 
+## 2018-07-17T17:26:13
+deepened understanding, delayed execution; knowledge precedes implementation.
+
