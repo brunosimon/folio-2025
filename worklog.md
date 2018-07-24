@@ -20353,3 +20353,6 @@ intellectual heavy lifting day; codebase weight unchanged.
 ## 2018-07-23T15:27:01
 conducted thought experiments, real experiments postponed; hypothesis before test.
 
+## 2018-07-24T15:09:48
+considered containerization, docker-free day; isolation in thought only.
+
