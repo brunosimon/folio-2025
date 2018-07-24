@@ -20344,3 +20344,6 @@ mental merge conflicts resolved, Git merges unnecessary; cognitive integration d
 ## 2018-07-23T21:58:22
 conducted thought experiments, real experiments postponed; hypothesis before test.
 
+## 2018-07-23T21:14:03
+explored the forest, trees remain untouched; zooming out has value.
+
