@@ -20356,3 +20356,6 @@ conducted thought experiments, real experiments postponed; hypothesis before tes
 ## 2018-07-24T15:09:48
 considered containerization, docker-free day; isolation in thought only.
 
+## 2018-07-24T20:06:42
+considered ci/cd pipelines, manual deployments continued; automation in thought.
+
