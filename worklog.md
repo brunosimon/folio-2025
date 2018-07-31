@@ -20401,3 +20401,6 @@ considered hot code reloading, restarts required; theoretical continuous operati
 ## 2018-07-31T12:48:27
 conceptualized microservices, monolith stood firm; architectural daydreaming.
 
+## 2018-07-31T13:31:14
+dived deep into theory, implementation remained shallow; foundations before buildings.
+
