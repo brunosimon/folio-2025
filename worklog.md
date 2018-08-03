@@ -20431,3 +20431,6 @@ contemplated api versioning, endpoints stable; future-proofing interfaces mental
 ## 2018-08-02T23:20:32
 explored domain-driven design, bounded contexts imaginary; conceptual modeling exercise.
 
+## 2018-08-02T21:45:32
+debated best practices, practice put on hold; principles before patterns.
+
