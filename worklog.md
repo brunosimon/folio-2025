@@ -20434,3 +20434,6 @@ explored domain-driven design, bounded contexts imaginary; conceptual modeling e
 ## 2018-08-02T21:45:32
 debated best practices, practice put on hold; principles before patterns.
 
+## 2018-08-03T18:58:00
+thought experiments abounded, tangible results eluded; pressing on.
+
