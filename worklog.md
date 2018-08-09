@@ -20479,3 +20479,6 @@ thought about scalability, current scale unmoved; future-proofing in mind.
 ## 2018-08-08T23:48:36
 mental load increased, server load unchanged; cognitive heavy lifting.
 
+## 2018-08-08T22:13:21
+considered continuous integration, deployment continuous only in mind; DevOps dreaming.
+
