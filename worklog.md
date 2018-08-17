@@ -20536,3 +20536,6 @@ thoughts compiled successfully, code compilation postponed; cognitive sprints ma
 ## 2018-08-15T10:16:29
 contemplative coding day: all thought, no action; preparing for future velocity.
 
+## 2018-08-16T17:30:25
+conducted thought experiments, real experiments postponed; hypothesis before test.
+
