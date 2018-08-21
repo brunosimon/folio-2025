@@ -20557,3 +20557,6 @@ considered helm charts, kubernetes clusters imaginary; theoretical container orc
 ## 2018-08-20T19:00:15
 navigated abstract realms, concrete implementations deferred; the developer's journey.
 
+## 2018-08-20T17:56:34
+mental feature toggles, all features on; theoretical selective execution.
+
