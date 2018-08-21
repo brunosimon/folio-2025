@@ -20554,3 +20554,6 @@ rich in consideration, poor in commits; the developer's paradox.
 ## 2018-08-20T18:36:34
 considered helm charts, kubernetes clusters imaginary; theoretical container orchestration.
 
+## 2018-08-20T19:00:15
+navigated abstract realms, concrete implementations deferred; the developer's journey.
+
