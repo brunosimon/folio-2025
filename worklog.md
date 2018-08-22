@@ -20563,3 +20563,6 @@ mental feature toggles, all features on; theoretical selective execution.
 ## 2018-08-20T20:09:13
 mental refactoring day; codebase patiently awaits its turn.
 
+## 2018-08-21T20:33:53
+algorithms pondered, implementation postponed; strategy before tactics.
+
