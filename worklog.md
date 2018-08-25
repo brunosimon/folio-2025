@@ -20599,3 +20599,6 @@ mental security audit conducted, vulnerabilities unexploited; theoretical penetr
 ## 2018-08-23T15:06:02
 theoretical optimizations considered, practical ones deferred; thinking before leaping.
 
+## 2018-08-25T10:11:11
+abstraction level increased, concrete implementations deferred; hovering above the code.
+
