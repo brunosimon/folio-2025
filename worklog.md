@@ -20620,3 +20620,6 @@ pondered design patterns, implementations archetypal; architectural musings.
 ## 2018-08-27T23:34:48
 mapped the problem domain, code domain unexplored; charting the course.
 
+## 2018-08-27T21:40:33
+deliberated deeply, committed shallowly; the essence of careful development.
+
