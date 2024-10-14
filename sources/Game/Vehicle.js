@@ -7,11 +7,10 @@ export class Vehicle
     {
         this.game = new Game()
 
-        const chassisDescription = RAPIER.RigidBodyDesc.dynamic().setTranslation(0.0, 1.0, 0.0)
+        const chassisDescription = RAPIER.RigidBodyDesc.dynamic().setTranslation(0.0, 1.0, 0.0).setCanSleep(false)
         this.chassisBody = this.game.physics.world.createRigidBody(chassisDescription)
         this.game.physics.world.createCollider(RAPIER.ColliderDesc.cuboid(1, 0.5, 2), this.chassisBody);
 
-        // this.controller = new RAPIER.DynamicRayCastVehicleController(this.chassisBody)
         this.controller = this.game.physics.world.createVehicleController(this.chassisBody)
 
         const wheelGeneral = {
@@ -27,7 +26,6 @@ export class Vehicle
             suspensionRestLength: 0.125, // No default
             suspensionStiffness: 24,     // 5.88
             offset: new THREE.Vector3(0.65, -0.2,  0.75), // No default
-
         }
         const wheelsPositions = [
             new THREE.Vector3(  wheelGeneral.offset.x, wheelGeneral.offset.y,   wheelGeneral.offset.z),
