@@ -39,7 +39,10 @@ export class View
     update()
     {
         const vehicle = this.game.vehicle
-        this.cameraControls.setTarget(vehicle.position.x, vehicle.position.y, vehicle.position.z)
+
+        if(vehicle)
+            this.cameraControls.setTarget(vehicle.position.x, vehicle.position.y, vehicle.position.z)
+            
         this.cameraControls.update(this.game.time.delta)
     }
 }
