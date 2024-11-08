@@ -34,13 +34,13 @@ export class WheelTracks
             }
         )
 
-        this.debugPlaneCurrent = new THREE.Mesh(
-            new THREE.PlaneGeometry(5, 5),
-            new THREE.MeshBasicMaterial({ map: this.renderTarget.texture, transparent: false })
-        )
-        this.debugPlaneCurrent.position.y = 5
-        this.debugPlaneCurrent.position.x = - 3
-        this.game.scene.add(this.debugPlaneCurrent)
+        // this.debugPlaneCurrent = new THREE.Mesh(
+        //     new THREE.PlaneGeometry(5, 5),
+        //     new THREE.MeshBasicMaterial({ map: this.renderTarget.texture, transparent: false })
+        // )
+        // this.debugPlaneCurrent.position.y = 5
+        // this.debugPlaneCurrent.position.x = - 3
+        // this.game.scene.add(this.debugPlaneCurrent)
     }
 
     createTrack()
@@ -53,7 +53,7 @@ export class WheelTracks
 
     update()
     {
-        this.group.position.set(- this.game.view.focusPoint.position.x, - this.game.view.focusPoint.position.y, - this.game.view.focusPoint.position.z)
+        this.group.position.set(- this.game.vehicle.position.x, 0, - this.game.vehicle.position.z)
 
         // Render
         const clearAlpha = this.game.rendering.renderer.getClearAlpha()

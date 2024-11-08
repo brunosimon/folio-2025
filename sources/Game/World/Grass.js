@@ -9,8 +9,8 @@ export class Grass
     {
         this.game = new Game()
 
-        this.details = 400
-        this.size = 60
+        this.details = 500
+        this.size = 80
         this.count = this.details * this.details
         this.fragmentSize = this.size / this.details
         this.bladeWidthRatio = 1.5
@@ -93,6 +93,7 @@ export class Grass
     {
         this.material = new THREE.MeshMatcapNodeMaterial()
         this.center = uniform(new THREE.Vector2())
+        this.trackDelta = uniform(new THREE.Vector2())
 
         const vertexLoopIndex = varying(vertexIndex.toFloat().mod(3))
         const tipness = varying(vertexLoopIndex.step(0.5))
@@ -134,7 +135,7 @@ export class Grass
             // Wheel tracks
             const wheelTracksColor = texture(
                 this.game.vehicle.wheelTracks.renderTarget.texture,
-                worldPosition.xz.sub(- this.game.vehicle.wheelTracks.halfSize).sub(this.center).div(this.game.vehicle.wheelTracks.size)
+                worldPosition.xz.sub(- this.game.vehicle.wheelTracks.halfSize).sub(this.center).add(this.trackDelta).div(this.game.vehicle.wheelTracks.size)
             )
             const wheelsTracksHeight = wheelTracksColor.a.oneMinus().toVar()
 
@@ -224,6 +225,14 @@ export class Grass
     update()
     {
         const offset = new THREE.Vector2(this.game.view.spherical.offset.x, this.game.view.spherical.offset.z).setLength(this.size / 2).negate()
-        this.center.value.set(this.game.view.camera.position.x, this.game.view.camera.position.z).add(offset)
+        this.center.value.set(
+            this.game.view.position.x,
+            this.game.view.position.z
+        ).add(offset)
+
+        this.trackDelta.value.set(
+            this.center.value.x - this.game.vehicle.position.x,
+            this.center.value.y - this.game.vehicle.position.z
+        )
     }
 }

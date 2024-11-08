@@ -13,6 +13,7 @@ export class View
         this.game = new Game()
 
         this.mode = 'default'
+        this.position = new THREE.Vector3()
 
         if(this.game.debug.active)
         {
@@ -257,15 +258,19 @@ export class View
                 this.focusPoint.position.x -= mapMovement.x
                 this.focusPoint.position.z -= mapMovement.y
             }
+        }
 
-            if(this.focusPoint.isTracking)
-                this.focusPoint.position.copy(this.focusPoint.trackedPosition)
+        if(this.focusPoint.isTracking)
+            this.focusPoint.position.copy(this.focusPoint.trackedPosition)
 
-            const newSmoothFocusPoint = this.focusPoint.smoothedPosition.clone().lerp(this.focusPoint.position, this.game.time.delta * 10)
-            const smoothFocusPointDelta = newSmoothFocusPoint.clone().sub(this.focusPoint.smoothedPosition)
-            const focusPointSpeed = Math.hypot(smoothFocusPointDelta.x, smoothFocusPointDelta.z) / this.game.time.delta
-            this.focusPoint.smoothedPosition.copy(newSmoothFocusPoint)
-            
+        const newSmoothFocusPoint = this.focusPoint.smoothedPosition.clone().lerp(this.focusPoint.position, this.game.time.delta * 10)
+        const smoothFocusPointDelta = newSmoothFocusPoint.clone().sub(this.focusPoint.smoothedPosition)
+        const focusPointSpeed = Math.hypot(smoothFocusPointDelta.x, smoothFocusPointDelta.z) / this.game.time.delta
+        this.focusPoint.smoothedPosition.copy(newSmoothFocusPoint)
+        
+        // Default mode
+        if(this.mode === 'default')
+        {
             // Zoom
             const zoomSpeedRatio = smoothstep(focusPointSpeed, this.zoom.speedEdgeLow, this.zoom.speedEdgeHigh)
             this.zoom.ratio = this.zoom.baseRatio
@@ -274,15 +279,19 @@ export class View
                 this.zoom.ratio += this.zoom.speedAmplitude * zoomSpeedRatio
 
             this.zoom.smoothedRatio = lerp(this.zoom.smoothedRatio, this.zoom.ratio, this.game.time.delta * 10)
+        }
 
-            // Radius
-            this.spherical.radius.current = lerp(this.spherical.radius.min, this.spherical.radius.max, 1 - this.zoom.smoothedRatio)
-            
-            // Spherical offset
-            this.spherical.offset.setFromSphericalCoords(this.spherical.radius.current, this.spherical.phi, this.spherical.theta)
+        // Radius
+        this.spherical.radius.current = lerp(this.spherical.radius.min, this.spherical.radius.max, 1 - this.zoom.smoothedRatio)
+        this.spherical.offset.setFromSphericalCoords(this.spherical.radius.current, this.spherical.phi, this.spherical.theta)
 
-            // Position
-            this.camera.position.copy(this.focusPoint.smoothedPosition).add(this.spherical.offset)
+        // Position
+        this.position.copy(this.focusPoint.smoothedPosition).add(this.spherical.offset)
+
+        // Default mode
+        if(this.mode === 'default')
+        {
+            this.camera.position.copy(this.position)
 
             // Look at
             this.camera.lookAt(this.focusPoint.smoothedPosition)
