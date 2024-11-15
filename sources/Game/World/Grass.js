@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { Game } from '../Game.js'
-import { mix, matcapUV, float, mod, texture, transformNormalToView, uniformArray, varying, vertexIndex, rotateUV, cameraPosition, vec4, atan2, vec3, vec2, modelWorldMatrix, Fn, attribute, uniform } from 'three'
+import { sin, time, smoothstep, mix, matcapUV, float, mod, texture, transformNormalToView, uniformArray, varying, vertexIndex, rotateUV, cameraPosition, vec4, atan2, vec3, vec2, modelWorldMatrix, Fn, attribute, uniform } from 'three'
 import getWind from '../tsl/getWind.js'
 
 export class Grass
@@ -151,7 +151,7 @@ export class Grass
             const vertexPosition = position3.add(shape)
 
             // Wind
-            wind.assign(getWind([this.resources.noisesTexture, worldPosition.xz]).mul(tipness).mul(height))
+            wind.assign(getWind([this.resources.noisesTexture, worldPosition.xz]).mul(tipness).mul(height).mul(2))
             vertexPosition.addAssign(vec3(wind.x, 0, wind.y))
 
             // Vertex rotation
@@ -161,25 +161,22 @@ export class Grass
             return vertexPosition
         })()
 
-        this.material.normalNode = Fn(() =>
-        {
-            const normal = vec3(wind.y.mul(-10), 1, wind.y.mul(-10)).normalize()
-            return transformNormalToView(normal)
-        })()
+        // Normal
+        const normal = vec3(wind.y.mul(-10), 1, wind.y.mul(-10)).normalize()
+        this.material.normalNode = transformNormalToView(normal)
 
-        this.material.outputNode = Fn(() =>
-        {
-            const colorVariationUv = texture(this.resources.noisesTexture, bladePosition.mul(0.02)).smoothstep(0.4, 0.6)
+        // Output
+        const colorVariationUv = varying(texture(this.resources.noisesTexture, bladePosition.mul(0.02)).smoothstep(0.4, 0.6))
 
-            const inverseMatcapUV = matcapUV.sub(0.5).mul(-0.5).add(0.5).toVar()
-            const newMatcapUv = mix(matcapUV, inverseMatcapUV, colorVariationUv.r)
+        const inverseMatcapUV = matcapUV.sub(0.5).mul(-0.5).add(0.5).toVar()
+        const newMatcapUv = mix(matcapUV, inverseMatcapUV, colorVariationUv.r)
 
-            const matcapColor = texture(this.resources.matcapGrassOnGreen, newMatcapUv)
-            const finalColor = matcapColor.mul(tipness)
+        const matcapColor = texture(this.resources.matcapGrassOnGreen, newMatcapUv)
+        const finalColor = matcapColor.mul(tipness)
 
-            return vec4(finalColor.rgb, 1)
-        })()
+        this.material.outputNode = vec4(finalColor.rgb, 1)
 
+        // Test
         // // const testGeometry = new THREE.PlaneGeometry(20, 20, 1, 1)
         // const testGeometry = new THREE.SphereGeometry(2, 32, 32)
         // testGeometry.rotateX(- Math.PI * 0.5)

@@ -16,16 +16,20 @@ export class World
         this.floor = new Floor()
         this.grass = new Grass()
         // this.setTestCube()
+        this.setAxesHelper()
+        this.setBushes()
+    }
 
-        // const axesHelper = new THREE.AxesHelper()
-        // axesHelper.position.y = 2
-        // this.game.scene.add(axesHelper)
-
-        // this.setBushes()
+    setAxesHelper()
+    {
+        const axesHelper = new THREE.AxesHelper()
+        axesHelper.position.y = 2
+        this.game.scene.add(axesHelper)
     }
 
     setBushes()
     {
+        // Clusters
         const items = []
         for(let i = 0; i < 80; i++)
         {
@@ -52,6 +56,36 @@ export class World
                 items.push(matrix)
             }
         }
+
+        // // One
+        // const items = []
+        // const position = new THREE.Vector3(0, 0.5, 2)
+        // const quaternion = new THREE.Quaternion()
+        // const scale = new THREE.Vector3(1, 1, 1)
+
+        // const matrix = new THREE.Matrix4()
+        // matrix.compose(position, quaternion, scale)
+        // items.push(matrix)
+
+        // // Grid
+        // const items = []
+        // const subdivisions = 100
+        // for(let i = 0; i < subdivisions; i++)
+        // {
+        //     for(let j = 0; j < subdivisions; j++)
+        //     {
+        //         const x = ((i / subdivisions) - 0.5) * subdivisions * 3
+        //         const z = ((j / subdivisions) - 0.5) * subdivisions * 3
+
+        //         const position = new THREE.Vector3(x, 0, z)
+        //         const quaternion = new THREE.Quaternion()
+        //         const scale = new THREE.Vector3(1, 1, 1)
+
+        //         const matrix = new THREE.Matrix4()
+        //         matrix.compose(position, quaternion, scale)
+        //         items.push(matrix)
+        //     }
+        // }
 
         this.bushes = new Bushes(items)
     }

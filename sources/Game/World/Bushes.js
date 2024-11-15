@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { Game } from '../Game.js'
 import getWind from '../tsl/getWind.js'
-import { Fn, positionLocal, vec3, transformNormalToView, normalWorld, positionWorld, frontFacing, If } from 'three'
+import { smoothstep, vec4, PI, vertexIndex, rotateUV, time, sin, uv, texture, float, Fn, positionLocal, vec3, transformNormalToView, normalWorld, positionWorld, frontFacing, If } from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { remap } from '../utilities/maths.js'
 
@@ -39,12 +39,12 @@ export class Bushes
 
     setGeometry()
     {
-        const count = 80
+        const count = 100
         const planes = []
 
         for(let i = 0; i < count; i++)
         {
-            const plane = new THREE.PlaneGeometry(1, 1)
+            const plane = new THREE.PlaneGeometry(0.8, 0.8)
 
             // Position
             const spherical = new THREE.Spherical(
@@ -114,14 +114,18 @@ export class Bushes
             
             return transformNormalToView(normal)
         })()
-    
-        this.material.positionNode = Fn(() =>
-        {
-            const wind = getWind([this.resources.noisesTexture, positionWorld.xz.mul(0.2)])
-            const multiplier = positionWorld.y.mul(1.5)
-            const windPosition = positionLocal.add(vec3(wind.x, 0, wind.y).mul(multiplier))
-            return windPosition
-        })()
+
+        const wind = getWind([this.resources.noisesTexture, positionLocal.xz])
+        // const multiplier = positionLocal.y.clamp(0, 1).mul(40.5)
+        // this.material.positionNode = positionLocal.add(vec3(wind.x, 0, wind.y).mul(multiplier))
+
+        const timeOffset = float(vertexIndex).div(4).floor().div(100)
+        const shakeStrength = smoothstep(0.1, 0.2, wind.length()).mul(0.2)
+        const shake = sin(time.add(timeOffset).mul(30))
+        const shakyUv = rotateUV(uv(), shake.mul(shakeStrength))
+        this.material.opacityNode = texture(this.resources.bushLeaves, shakyUv).r
+
+        // this.material.outputNode = vec4(vec3(positionLocal.xz), 1)
     }
 
     setInstancedMesh()
