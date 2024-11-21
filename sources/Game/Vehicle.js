@@ -65,7 +65,7 @@ export class Vehicle
                     const luminanceCoefficients = new THREE.Vector3()
                     THREE.ColorManagement.getLuminanceCoefficients(luminanceCoefficients)
                     const luminance = child.material.color.r * luminanceCoefficients.x + child.material.color.g * luminanceCoefficients.y + child.material.color.b * luminanceCoefficients.z
-                    child.material.color.multiplyScalar(1.5 / luminance)
+                    child.material.color.multiplyScalar(1.1 / luminance)
                 }
             }
         })
@@ -77,7 +77,7 @@ export class Vehicle
                 type: 'dynamic',
                 position: { x: 0, y: 5, z: 0 },
                 // rotation: new THREE.Quaternion().setFromAxisAngle(new THREE.Euler(1, 0, 0.2), Math.PI * 0.5),
-                colliders: [ { shape: 'cuboid', parameters: [ 1.5, 0.5, 1 ] } ],
+                colliders: [ { shape: 'cuboid', parameters: [ 1.5, 0.5, 0.85 ] } ],
                 canSleep: false,
             },
             model

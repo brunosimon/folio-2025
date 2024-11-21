@@ -64,9 +64,9 @@ export class Rendering
                 expanded: true,
             })
 
-            debugPanel.addBinding(bloomPass.threshold, 'value', { min: 0, max: 2, step: 0.01 })
-            debugPanel.addBinding(bloomPass.strength, 'value', { min: 0, max: 3, step: 0.01 })
-            debugPanel.addBinding(bloomPass.radius, 'value', { min: 0, max: 1, step: 0.01 })
+            debugPanel.addBinding(bloomPass.threshold, 'value', { label: 'threshold', min: 0, max: 2, step: 0.01 })
+            debugPanel.addBinding(bloomPass.strength, 'value', { label: 'strength', min: 0, max: 3, step: 0.01 })
+            debugPanel.addBinding(bloomPass.radius, 'value', { label: 'radius', min: 0, max: 1, step: 0.01 })
         }
     }
 

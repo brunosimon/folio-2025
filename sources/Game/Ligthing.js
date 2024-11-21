@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { Game } from './Game.js'
-import { uniform } from 'three'
+import { uniform, color } from 'three'
 
 export class Lighting
 {
@@ -11,6 +11,8 @@ export class Lighting
         this.spherical = new THREE.Spherical(25, 1.44, 1.31)
         this.direction = new THREE.Vector3().setFromSpherical(this.spherical).normalize()
         this.directionUniform = uniform(this.direction)
+        this.colorUniform = uniform(color('#ffffff'))
+        this.intensityUniform = uniform(2)
         this.count = 1
         this.lights = []
         this.mapSizeMin = 512
@@ -44,9 +46,12 @@ export class Lighting
         {
             const debugPanel = this.game.debug.panel.addFolder({
                 title: '💡 Lights',
-                expanded: false,
+                expanded: true,
             })
 
+            debugPanel.addBinding(this.colorUniform, 'value', { label: 'colorUniform', color: { type: 'float' } })
+            debugPanel.addBinding(this.intensityUniform, 'value', { label: 'intensity', min: 0, max: 10 })
+            debugPanel.addBlade({ view: 'separator' })
             debugPanel.addBinding(this.spherical, 'phi', { min: 0, max: Math.PI * 0.5 }).on('change', () => this.updateCoordinates())
             debugPanel.addBinding(this.spherical, 'theta', { min: - Math.PI, max: Math.PI }).on('change', () => this.updateCoordinates())
             debugPanel.addBinding(this.spherical, 'radius', { min: 0, max: 100 }).on('change', () => this.updateCoordinates())

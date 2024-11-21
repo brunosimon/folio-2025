@@ -25,7 +25,7 @@ export class World
     setAxesHelper()
     {
         const axesHelper = new THREE.AxesHelper()
-        axesHelper.position.y = 2
+        axesHelper.position.y = 1.5
         this.game.scene.add(axesHelper)
     }
 
