@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { positionLocal, varying, max, positionWorld, float, Fn, uniform, color, mix, vec3, vec4, normalWorld } from 'three'
 import { Game } from './Game.js'
+import { blendDarken_2 } from './tsl/blendings.js'
 
 export class Materials
 {
@@ -13,37 +14,45 @@ export class Materials
         {
             this.debugPanel = this.game.debug.panel.addFolder({
                 title: '🎨 Materials',
-                expanded: false,
+                expanded: true,
             })
         }
 
+        this.setLuminance()
         this.setTest()
         this.setNodes()
         this.setPremades()
     }
 
+    setLuminance()
+    {
+        this.luminance = {}
+        this.luminance.coefficients = new THREE.Vector3()
+        THREE.ColorManagement.getLuminanceCoefficients(this.luminance.coefficients)
+
+        this.luminance.get = (color) =>
+        {
+            return color.r * this.luminance.coefficients.x + color.g * this.luminance.coefficients.y + color.b * this.luminance.coefficients.z
+        }
+    }
+
     setPremades()
     {
-        const luminanceCoefficients = new THREE.Vector3()
-        THREE.ColorManagement.getLuminanceCoefficients(luminanceCoefficients)
-
-        const getLuminance = (color) =>
-        {
-            return color.r * luminanceCoefficients.x + color.g * luminanceCoefficients.y + color.b * luminanceCoefficients.z
-        }
-
         const createEmissiveTweak = (material) =>
         {
             if(!this.game.debug.active)
                 return false
+
             const update = () =>
             {
                 material.color.set(dummy.color)
-                material.color.multiplyScalar(material.userData.intensity / getLuminance(material.color))
+                material.color.multiplyScalar(material.userData.intensity / this.luminance.get(material.color))
             }
+
+            // console.log(material.color.getHex(THREE.SRGBColorSpace))
             const dummy = { color: material.color.getHex(THREE.SRGBColorSpace) }
             this.debugPanel.addBinding(material.userData, 'intensity', { min: 0, max: 300, step: 1 }).on('change', update)
-            this.debugPanel.addBinding(dummy, 'color', { color: { type: 'float' } }).on('change', update)
+            this.debugPanel.addBinding(dummy, 'color', { view: 'color' }).on('change', update)
         }
 
         // Pure white
@@ -56,26 +65,29 @@ export class Materials
         const emissiveWarnWhite = new THREE.MeshBasicNodeMaterial({ color: '#fba866' })
         emissiveWarnWhite.name = 'emissiveWarnWhite'
         emissiveWarnWhite.userData.intensity = 100
-        emissiveWarnWhite.color.multiplyScalar(emissiveWarnWhite.userData.intensity / getLuminance(emissiveWarnWhite.color))
         createEmissiveTweak(emissiveWarnWhite)
+        emissiveWarnWhite.color.multiplyScalar(emissiveWarnWhite.userData.intensity / this.luminance.get(emissiveWarnWhite.color))
         this.save('emissiveWarnWhite', emissiveWarnWhite)
     
         // Emissive red
         const emissiveRed = new THREE.MeshBasicNodeMaterial({ color: '#ff3131' })
         emissiveRed.name = 'emissiveRed'
         emissiveRed.userData.intensity = 100
-        emissiveRed.color.multiplyScalar(emissiveRed.userData.intensity / getLuminance(emissiveRed.color))
+        console.log(emissiveRed.color)
+        console.log(this.luminance.get(emissiveRed.color))
         createEmissiveTweak(emissiveRed)
+        emissiveRed.color.multiplyScalar(emissiveRed.userData.intensity / this.luminance.get(emissiveRed.color))
         this.save('emissiveRed', emissiveRed)
     }
 
     setNodes()
     {
-        this.lightBounceColor = uniform(color('#4c4700'))
-        this.lightBounceEdgeLow = uniform(float(0))
+        this.lightBounceColor = uniform(color('#7d7f19'))
+        this.lightBounceEdgeLow = uniform(float(-1))
         this.lightBounceEdgeHigh = uniform(float(1))
+        this.lightBounceDistance = uniform(float(1.5))
 
-        this.shadowColorMultiplier = uniform(color(0.14, 0.17, 0.45))
+        this.shadowColor = uniform(color('#0085db'))
         this.coreShadowEdgeLow = uniform(float(-0.25))
         this.coreShadowEdgeHigh = uniform(float(1))
 
@@ -102,8 +114,8 @@ export class Materials
 
             // Bounce color
             const bounceOrientation = normalWorld.dot(vec3(0, - 1, 0)).smoothstep(this.lightBounceEdgeLow, this.lightBounceEdgeHigh)
-            const bounceDistance = float(1.5).sub(positionWorld.y).div(1.5).max(0).pow(2)
-            finalColor.addAssign(this.lightBounceColor.mul(bounceOrientation).mul(bounceDistance))
+            const bounceDistance = this.lightBounceDistance.sub(positionWorld.y).div(this.lightBounceDistance).max(0).pow(2)
+            finalColor.assign(mix(finalColor, this.lightBounceColor, bounceOrientation.mul(bounceDistance)))
 
             // Core shadow
             const coreShadowMix = normalWorld.dot(this.game.lighting.directionUniform).smoothstep(this.coreShadowEdgeHigh, this.coreShadowEdgeLow)
@@ -113,21 +125,29 @@ export class Materials
 
             // Combined shadows
             const combinedShadowMix = max(coreShadowMix, castShadowMix)
-            const shadowColor = colorBase.rgb.mul(this.shadowColorMultiplier).rgb
+            // const combinedShadowMix = coreShadowMix.add(castShadowMix).min(1)
+            
+            const shadowColor = colorBase.rgb.mul(this.shadowColor).rgb
             finalColor.assign(mix(finalColor, shadowColor, combinedShadowMix))
             
+            // finalColor.assign(blendDarken_2(finalColor.rgb, this.shadowColor, combinedShadowMix))
+            
+            // return vec4(vec3(combinedShadowMix.oneMinus()), 1)
             return vec4(finalColor.rgb, 1)
         })
         
         // Debug
         if(this.game.debug.active)
         {
-            this.debugPanel.addBinding({ color: this.lightBounceColor.value.getHex(THREE.SRGBColorSpace) }, 'color', { color: { type: 'float' } })
+            this.debugPanel.addBinding({ color: this.lightBounceColor.value.getHex(THREE.SRGBColorSpace) }, 'color', { label: 'lightBounceColor', view: 'color' })
                 .on('change', tweak => { this.lightBounceColor.value.set(tweak.value) })
             this.debugPanel.addBinding(this.lightBounceEdgeLow, 'value', { label: 'lightBounceEdgeLow', min: - 1, max: 1, step: 0.01 })
             this.debugPanel.addBinding(this.lightBounceEdgeHigh, 'value', { label: 'lightBounceEdgeHigh', min: - 1, max: 1, step: 0.01 })
+            this.debugPanel.addBinding(this.lightBounceDistance, 'value', { label: 'lightBounceDistance', min: 0, max: 5, step: 0.01 })
 
-            this.debugPanel.addBinding(this.shadowColorMultiplier, 'value', { label: 'shadowColorMultiplier', color: { type: 'float' } })
+            this.debugPanel.addBinding({ color: this.shadowColor.value.getHex(THREE.SRGBColorSpace) }, 'color', { label: 'shadowColor', view: 'color' })
+                .on('change', tweak => { this.shadowColor.value.set(tweak.value) })
+
             this.debugPanel.addBinding(this.coreShadowEdgeLow, 'value', { label: 'coreShadowEdgeLow', min: - 1, max: 1, step: 0.01 })
             this.debugPanel.addBinding(this.coreShadowEdgeHigh, 'value', { label: 'coreShadowEdgeHigh', min: - 1, max: 1, step: 0.01 })
         }

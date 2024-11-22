@@ -13,7 +13,7 @@ export class Rendering
         {
             this.debugPanel = this.game.debug.panel.addFolder({
                 title: '📸 Rendering',
-                expanded: true,
+                expanded: false,
             })
         }
 
@@ -36,7 +36,7 @@ export class Rendering
         this.renderer = new THREE.WebGPURenderer({ forceWebGL: false })
         this.renderer.setSize(this.game.viewport.width, this.game.viewport.height)
         this.renderer.setPixelRatio(this.game.viewport.pixelRatio)
-        this.renderer.setClearColor(0x1b191f)
+        this.renderer.setClearColor(0x000000)
         this.renderer.domElement.classList.add('experience')
         this.renderer.shadowMap.enabled = true
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
@@ -61,7 +61,7 @@ export class Rendering
         {
             const debugPanel = this.debugPanel.addFolder({
                 title: 'Postprocessing',
-                expanded: true,
+                expanded: false,
             })
 
             debugPanel.addBinding(bloomPass.threshold, 'value', { label: 'threshold', min: 0, max: 2, step: 0.01 })

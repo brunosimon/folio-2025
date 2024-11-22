@@ -99,33 +99,26 @@ export class Bushes
         this.material.shadowPositionNode = positionLocal.add(this.game.lighting.directionUniform.mul(shadowOffset))
 
         // Shadow receive
-        const totalShadows = float(1).toVar()
-        this.material.receivedShadowNode = Fn(([ shadow ]) => 
-        {
-            totalShadows.mulAssign(shadow)
-
-            return float(1)
-        })
+        const totalShadows = this.game.materials.getTotalShadow(this.material)
 
         // Output
-        const colorA = uniform(color('#204c40').rgb)
-        const colorB = uniform(color('#9eaf33').rgb)
-        const colorMix = normalLocal.dot(this.game.lighting.directionUniform).smoothstep(-0.5, 1)
-        const finalColor = mix(colorA, colorB, colorMix).varying()
-        this.material.outputNode = vec4(mix(finalColor, colorA, totalShadows.oneMinus()), 1)
+        const colorA = uniform(color('#9eaf33').rgb)
+
+        // const colorBase = colorA
+        //     .mul(this.game.lighting.colorUniform.mul(this.game.lighting.intensityUniform))
+
+        this.material.outputNode = this.game.materials.lightOutputNode(colorA, totalShadows)
 
         // Bushes
         if(this.game.debug.active)
         {
             const debugPanel = this.game.debug.panel.addFolder({
                 title: '🌳 Bushes',
-                expanded: false,
+                expanded: true,
             })
 
-            debugPanel.addBinding({ color: colorA.value.getHex(THREE.SRGBColorSpace) }, 'color', { color: { type: 'float' } })
+            debugPanel.addBinding({ color: colorA.value.getHex(THREE.SRGBColorSpace) }, 'color', { label: 'colorA', view: 'color' })
                 .on('change', tweak => { colorA.value.set(tweak.value) })
-            debugPanel.addBinding({ color: colorB.value.getHex(THREE.SRGBColorSpace) }, 'color', { color: { type: 'float' } })
-                .on('change', tweak => { colorB.value.set(tweak.value) })
             debugPanel.addBinding(shadowOffset, 'value', { label: 'shadowOffset', min: 0, max: 2, step: 0.001 })
         }
     }

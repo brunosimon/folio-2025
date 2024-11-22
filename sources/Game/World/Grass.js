@@ -150,35 +150,34 @@ export class Grass
         this.material.normalNode = transformNormalToView(normal)
 
         // Shadow
-        const totalShadows = float(1).toVar()
-        this.material.receivedShadowNode = Fn(([ shadow ]) => 
-        {
-            totalShadows.mulAssign(shadow)
-
-            return float(1)
-        })
+        const totalShadows = this.game.materials.getTotalShadow(this.material)
 
         // Output
         const colorA = uniform(color('#72a51e'))
         const colorB = uniform(color('#e0e239'))
         const colorVariation = varying(texture(this.game.resources.noisesTexture, bladePosition.mul(0.02)).smoothstep(0.2, 0.8))
 
-        const colorBase = colorVariation.mix(colorA, colorB).rgb.varying()
-        const colorShadow = colorBase.mul(vec3(0.25, 0.5, 3, 1)).rgb.varying()
+        const colorBase = colorVariation.mix(colorA, colorB).rgb
+            .mul(this.game.lighting.colorUniform.mul(this.game.lighting.intensityUniform))
+            .mul(tipness)
+            .varying()
+        
+        const colorShadow = colorBase.mul(this.game.materials.shadowColor).rgb.varying()
+        const shadowMix = totalShadows.oneMinus()
 
-        this.material.outputNode = vec4(mix(colorBase, colorShadow, totalShadows.oneMinus()).mul(tipness), 1)
+        this.material.outputNode = vec4(mix(colorBase, colorShadow, shadowMix), 1)
 
         // Debug
         if(this.game.debug.active)
         {
             const debugPanel = this.game.debug.panel.addFolder({
                 title: '🌱 Grass',
-                expanded: false,
+                expanded: true,
             })
 
-            debugPanel.addBinding({ color: colorA.value.getHex(THREE.SRGBColorSpace) }, 'color', { color: { type: 'float' } })
+            debugPanel.addBinding({ color: colorA.value.getHex(THREE.SRGBColorSpace) }, 'color', { label: 'colorA', view: 'color' })
                 .on('change', tweak => { colorA.value.set(tweak.value) })
-            debugPanel.addBinding({ color: colorB.value.getHex(THREE.SRGBColorSpace) }, 'color', { color: { type: 'float' } })
+            debugPanel.addBinding({ color: colorB.value.getHex(THREE.SRGBColorSpace) }, 'color', { label: 'colorB', view: 'color' })
                 .on('change', tweak => { colorB.value.set(tweak.value) })
             debugPanel.addBinding(bladeWidth, 'value', { label: 'bladeWidth', min: 0, max: 1, step: 0.001 })
             debugPanel.addBinding(bladeHeight, 'value', { label: 'bladeHeight', min: 0, max: 2, step: 0.001 })

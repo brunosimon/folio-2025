@@ -19,7 +19,7 @@ export class Lighting
         this.shadowAmplitude = 20
         this.near = 1
         this.depth = 100
-        this.shadowBias = 0
+        this.shadowBias = - 0.01
         this.shadowNormalBias = 0
 
         for(let i = 0; i < this.count; i++)
@@ -49,7 +49,8 @@ export class Lighting
                 expanded: true,
             })
 
-            debugPanel.addBinding(this.colorUniform, 'value', { label: 'colorUniform', color: { type: 'float' } })
+            debugPanel.addBinding({ color: this.colorUniform.value.getHex(THREE.SRGBColorSpace) }, 'color', { view: 'color' })
+                .on('change', tweak => { this.colorUniform.value.set(tweak.value) })
             debugPanel.addBinding(this.intensityUniform, 'value', { label: 'intensity', min: 0, max: 10 })
             debugPanel.addBlade({ view: 'separator' })
             debugPanel.addBinding(this.spherical, 'phi', { min: 0, max: Math.PI * 0.5 }).on('change', () => this.updateCoordinates())
