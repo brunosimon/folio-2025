@@ -48,7 +48,7 @@ export class BlackFriday
         this.intro = {}
         this.intro.visible = true
         this.intro.element = this.element.querySelector('.intro')
-        this.intro.closeElement = this.intro.element.querySelector('.close')
+        this.intro.closeElements = this.intro.element.querySelectorAll('.close')
 
         this.intro.show = () =>
         {
@@ -68,11 +68,14 @@ export class BlackFriday
             this.intro.visible = false
         }
 
-        this.intro.closeElement.addEventListener('click', (event) =>
+        for(const _closeElement of this.intro.closeElements)
         {
-            event.preventDefault()
-            this.intro.hide()
-        })
+            _closeElement.addEventListener('click', (event) =>
+            {
+                event.preventDefault()
+                this.intro.hide()
+            })
+        }
     }
 
     setOutro()

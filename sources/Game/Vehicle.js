@@ -546,6 +546,10 @@ export class Vehicle
         this.upsideDownRatio = this.upward.dot(new THREE.Vector3(0, - 1, 0)) * 0.5 + 0.5
         this.goingForward = this.direction.dot(this.forward) > 0.5
 
+        // Reset on fall
+        if(this.position.y < -10)
+            this.reset.activate()
+
         // Stop
         if(this.absoluteSpeed < this.stop.lowEdge)
         {
