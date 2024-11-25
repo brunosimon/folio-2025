@@ -24,7 +24,16 @@ export class Entities
         this.list.set(this.key, entity)
 
         if(_visual)
+        {
             this.game.scene.add(_visual)
+
+            // If sleeping or fixed apply transform directly
+            if(_physicalDescription.sleeping || _physicalDescription.type === 'fixed')
+            {
+                entity.visual.position.copy(entity.physical.body.translation())
+                entity.visual.quaternion.copy(entity.physical.body.rotation())
+            }
+        }
 
         return entity
     }
@@ -71,8 +80,11 @@ export class Entities
         {
             if(_entity.visual)
             {
-                _entity.visual.position.copy(_entity.physical.body.translation())
-                _entity.visual.quaternion.copy(_entity.physical.body.rotation())
+                if(!_entity.physical.body.isSleeping())
+                {
+                    _entity.visual.position.copy(_entity.physical.body.translation())
+                    _entity.visual.quaternion.copy(_entity.physical.body.rotation())
+                }
             }
         })
     }

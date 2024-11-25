@@ -104,8 +104,6 @@ export class Physics
     update()
     {
         this.world.timestep = this.game.time.deltaScaled
-        // this.world.timestep = 0.03
-        // this.world.timestep = Number(this.game.time.deltaScaled.toFixed(3))
         this.world.vehicleControllers.forEach((_vehicleController) =>
         {
             _vehicleController.updateVehicle(this.game.time.delta)
