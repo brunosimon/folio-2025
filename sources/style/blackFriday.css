@@ -1,95 +1,3 @@
-html, body, .game
-{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.tp-dfwv
-{
-    top: 20px !important;
-    right: 30px !important;
-    width: 400px !important;
-}
-
-.tp-lblv_v
-{
-    width: 200px !important;
-}
-
-/*
-/* Mute
- */
-.mute-toggle-container
-{
-    position: absolute;
-    bottom: 10vh;
-    right: 10vh;
-    width: 0;
-    height: 0;
-}
-
-.mute-toggle
-{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: -30px;
-    left: -30px;
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
-    opacity: 0.5;
-    transform: scaleY(0.5);
-    transition: opacity 0.3s, transform 0.3s;
-}
-
-.mute-toggle .icon
-{
-    position: relative;
-    width: 30px;
-    height: 20px;
-}
-
-.mute-toggle .bar
-{
-    position: absolute;
-    width: 1px;
-    height: 100%;
-    background: #ffffff;
-    animation: mute-bar infinite 2s both paused;
-}
-
-.mute-toggle.is-active
-{
-    opacity: 1;
-    transform: scaleY(1);
-}
-
-.mute-toggle.is-active .bar
-{
-    animation-play-state: running;
-}
-
-.mute-toggle .bar:nth-child(1) { left: calc(100% / 5 * 0); animation-delay: 0.8s; }
-.mute-toggle .bar:nth-child(2) { left: calc(100% / 5 * 1); animation-delay: 0.4s; }
-.mute-toggle .bar:nth-child(3) { left: calc(100% / 5 * 2); animation-delay: 1.2s; }
-.mute-toggle .bar:nth-child(4) { left: calc(100% / 5 * 3); animation-delay: 1.0s; }
-.mute-toggle .bar:nth-child(5) { left: calc(100% / 5 * 4); animation-delay: 1.4s; }
-.mute-toggle .bar:nth-child(6) { left: calc(100% / 5 * 5); animation-delay: 0.2s; }
-
-@keyframes mute-bar
-{
-    0% { transform: scaleY(0.2); }
-    100% { transform: scaleY(1); }
-}
-
-/*
-/* Black Friday
- */
 .black-friday
 {
     position: absolute;
@@ -107,13 +15,13 @@ html, body, .game
     -moz-osx-font-smoothing: grayscale;
 }
 
-::-moz-selection
+.black-friday::-moz-selection
 {
     color: #000000;
     background: #ffffff;
 }
 
-::selection
+.black-friday::selection
 {
     color: #000000;
     background: #ffffff;

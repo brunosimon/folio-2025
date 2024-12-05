@@ -16,8 +16,6 @@ import { Monitoring } from './Monitoring.js'
 import { Lighting } from './Ligthing.js'
 import { Materials } from './Materials.js'
 import { Entities } from './Entities.js'
-import { BlackFriday } from './BlackFriday/BlackFriday.js'
-import { Sounds } from './Sounds.js'
 
 export class Game
 {
@@ -44,9 +42,9 @@ export class Game
                     { path: 'playground/playgroundVisual.glb', type: 'gltf', name: 'playgroundVisual' },
                     { path: 'playground/playgroundPhysical.glb', type: 'gltf', name: 'playgroundPhysical' },
                     { path: 'floor/keys.png', type: 'texture', name: 'floorKeysTexture' },
-                    { path: 'blackFriday/fragment.glb', type: 'gltf', name: 'fragment' },
-                    { path: 'blackFriday/fragments.glb', type: 'gltf', name: 'fragments' },
                     { path: 'bricksWalls/bricksWalls.glb', type: 'gltf', name: 'bricksWalls' },
+                    // { path: 'blackFriday/fragment.glb', type: 'gltf', name: 'fragment' },
+                    // { path: 'blackFriday/fragments.glb', type: 'gltf', name: 'fragments' },
                 ],
                 (resources) =>
                 {
@@ -91,7 +89,7 @@ export class Game
             { name: 'close', keys: [ 'Escape' ] },
         ])
         this.viewport = new Viewport(this.domElement)
-        this.sounds = new Sounds()
+        // this.sounds = new Sounds()
         this.lighting = new Lighting()
         this.materials = new Materials()
         this.entities = new Entities()
@@ -100,7 +98,6 @@ export class Game
         this.view = new View()
         this.vehicle = new Vehicle()
         this.world = new World()
-        this.blackFriday = new BlackFriday()
         this.rendering = new Rendering()
         // this.monitoring = new Monitoring()
 

@@ -10,21 +10,7 @@ export class Sounds
 
         this.setMusic()
         this.setFragments()
-
-        // // Debug
-        // if(this.debug)
-        // {
-        //     this.debugFolder = this.debug.addFolder('sounds')
-        //     // this.debugFolder.open()
-        // }
-
-        // // Set up
-        // this.items = []
-
-        // this.setSettings()
-        // this.setMasterVolume()
         this.setMuteToggle()
-        // this.setEngine()
 
         this.game.time.events.on('tick', () =>
         {
