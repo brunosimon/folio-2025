@@ -5,9 +5,10 @@ import { Flowers } from './Flowers.js'
 import { Terrain } from './Terrain.js'
 import { Grass } from './Grass.js'
 import { Playground } from './Playground.js'
-import { BricksWalls } from './BricksWalls.js'
+import { Bricks } from './Bricks.js'
 import { Fn, instance, positionLocal } from 'three/tsl'
 import { Christmas } from './Christmas.js'
+import { InstancedGroup } from '../InstancedGroup.js'
 
 export class World
 {
@@ -18,10 +19,10 @@ export class World
         this.terrain = new Terrain()
         this.grass = new Grass()
         this.bushes = new Bushes()
-        // this.flowers =s new Flowers()
+        this.flowers = new Flowers()
         // this.playground = new Playground()
-        this.bricksWalls = new BricksWalls()
-        this.christmas = new Christmas( )
+        this.bricks = new Bricks()
+        // this.christmas = new Christmas()
         // this.setTestCube()
         // this.setTestShadow()
         // this.setAxesHelper()

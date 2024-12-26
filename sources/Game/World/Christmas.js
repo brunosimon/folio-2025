@@ -2,6 +2,7 @@ import { attribute, float, Fn, luminance, mix, uniform, vec4 } from 'three/tsl'
 import { Game } from '../Game.js'
 import * as THREE from 'three/webgpu'
 import { smoothstep } from '../utilities/maths.js'
+import { InstancedGroup } from '../InstancedGroup.js'
 
 export class Christmas
 {
@@ -33,34 +34,38 @@ export class Christmas
 
     setGifts()
     {
-        const originalModel = this.game.resources.christmasGiftVisualModel.scene
-        this.game.materials.updateObject(originalModel)
+        // References
+        const references = InstancedGroup.getReferencesFromChildren(this.game.resources.christmasGiftReferencesModel.scene.children)
+        
+        for(const reference of references)
+        {
+            this.game.entities.add(
+                {
+                    type: 'dynamic',
+                    position: reference.position,
+                    friction: 0.4,
+                    rotation: reference.quaternion,
+                    colliders: [
+                        { shape: 'cuboid', parameters: [ reference.scale.x, reference.scale.x, reference.scale.x ], position: { x: 0, y: 0, z: 0 } },
+                    ],
+                    canSleep: false,
+                },
+                reference
+            )
+        }
 
-        originalModel.traverse(child =>
+        // Model
+        const model = this.game.resources.christmasGiftVisualModel.scene
+        this.game.materials.updateObject(model)
+
+        model.traverse(child =>
         {
             child.castShadow = true
             child.receiveShadow = true
         })
-        
-        for(const instance of this.game.resources.christmasGiftInstancesModel.scene.children)
-        {
-            const newModel = originalModel.clone()
-            newModel.scale.copy(instance.scale)
 
-            this.game.entities.add(
-                {
-                    type: 'dynamic',
-                    position: instance.position,
-                    friction: 0.4,
-                    rotation: instance.quaternion,
-                    colliders: [
-                        { shape: 'cuboid', parameters: [ instance.scale.x, instance.scale.x, instance.scale.x ], position: { x: 0, y: 0, z: 0 } },
-                    ],
-                    canSleep: false,
-                },
-                newModel
-            )
-        }
+        // Instanced group
+        this.testInstancedGroup = new InstancedGroup(references, model, true)
     }
 
     setEmissiveMaterial()
