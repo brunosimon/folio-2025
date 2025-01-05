@@ -25,6 +25,8 @@ export class FragmentObject
         this.main = null
         this.fragments = []
 
+        this.game.materials.createEmissive('emissivePurple', '#9830ff', 3)
+
         for(const _child of this.group2.children)
         {
             if(_child.name.startsWith('main'))

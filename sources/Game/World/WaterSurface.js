@@ -19,7 +19,7 @@ export class WaterSurface
         // Material
         this.material = new THREE.MeshLambertNodeMaterial({ color: '#000000', wireframe: false })
 
-        const totalShadow = this.game.materials.getTotalShadow(this.material)
+        const totalShadow = this.game.lighting.addTotalShadowToMaterial(this.material)
 
         const slopeFrequency = uniform(10)
         const noiseFrequency = uniform(0.1)
@@ -48,7 +48,7 @@ export class WaterSurface
 
             ripple.greaterThan(threshold).discard()
 
-            return this.game.materials.lightOutputNodeBuilder(vec3(1), totalShadow, false, false)
+            return this.game.lighting.lightOutputNodeBuilder(vec3(1), totalShadow, false, false)
         })()
 
         // Mesh

@@ -15,6 +15,16 @@ export class Vehicle
                 title: '🚗 Vehicle',
                 expanded: false,
             })
+
+            this.chassisDebugPanel = this.debugPanel.addFolder({
+                title: '🎨 Chassis',
+                expanded: false,
+            })
+
+            this.headlightsDebugPanel = this.debugPanel.addFolder({
+                title: '💡 Headlights',
+                expanded: false,
+            })
         }
 
         this.events = new Events()
@@ -27,6 +37,10 @@ export class Vehicle
         this.speed = 0
         this.absoluteSpeed = 0
         this.upsideDownRatio = 0
+
+        this.game.materials.createGradient('carRed', '#ff3a3a', '#721551', this.chassisDebugPanel)
+        this.game.materials.createEmissive('emissiveWarnWhite', '#ff8641', 3, this.headlightsDebugPanel)
+        this.game.materials.createEmissive('emissiveRed', '#ff3131', 3, this.headlightsDebugPanel)
 
         this.setParts()
         this.setChassis()

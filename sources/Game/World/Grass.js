@@ -150,7 +150,7 @@ export class Grass
         })()
 
         // Shadow
-        const totalShadows = this.game.materials.getTotalShadow(this.material)
+        const totalShadows = this.game.lighting.addTotalShadowToMaterial(this.material)
 
         let baseColor = this.game.terrainData.colorNode(terrainData)
 
@@ -158,18 +158,18 @@ export class Grass
         
         const lightenColor = baseColor.mul(this.game.lighting.colorUniform.mul(this.game.lighting.intensityUniform))
 
-        const coreShadowMix = normal.dot(this.game.lighting.directionUniform).smoothstep(this.game.materials.coreShadowEdgeHigh, this.game.materials.coreShadowEdgeLow)
+        const coreShadowMix = normal.dot(this.game.lighting.directionUniform).smoothstep(this.game.lighting.coreShadowEdgeHigh, this.game.lighting.coreShadowEdgeLow)
         const castShadowMix = totalShadows.oneMinus()
         const tipnessShadowMix = tipness.oneMinus().mul(terrainDataGrass)
         const combinedShadowMix = max(max(coreShadowMix, castShadowMix), tipnessShadowMix).clamp(0, 1)
         
-        const shadowColor = baseColor.rgb.mul(this.game.materials.shadowColor).rgb
+        const shadowColor = baseColor.rgb.mul(this.game.lighting.shadowColor).rgb
         const shadedColor = mix(lightenColor, shadowColor, combinedShadowMix)
 
         const foggedColor = this.game.fog.fogStrength.mix(shadedColor, this.game.fog.fogColor)
 
         this.material.outputNode = vec4(foggedColor, 1)
-        // this.material.outputNode = vec4(this.game.materials.lightOutputNodeBuilder(baseColor), this.game.materials.getTotalShadow(this.material))
+        // this.material.outputNode = vec4(this.game.lighting.lightOutputNodeBuilder(baseColor), this.game.lighting.addTotalShadowToMaterial(this.material))
 
         // Debug
         if(this.game.debug.active)

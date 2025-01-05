@@ -97,12 +97,12 @@ export class Foliage
         this.material.shadowPositionNode = positionLocal.add(this.game.lighting.directionUniform.mul(this.shadowOffset))
 
         // Shadow receive
-        const totalShadows = this.game.materials.getTotalShadow(this.material)
+        const totalShadows = this.game.lighting.addTotalShadowToMaterial(this.material)
 
         // Output
         const uniformColor = uniform(this.color)
 
-        this.material.outputNode = this.game.materials.lightOutputNodeBuilder(uniformColor, totalShadows)
+        this.material.outputNode = this.game.lighting.lightOutputNodeBuilder(uniformColor, totalShadows)
     }
 
     setFromReferences()

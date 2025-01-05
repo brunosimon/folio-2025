@@ -25,8 +25,8 @@ export class World
         this.bushes = new Bushes()
         this.trees = new Trees()
         this.flowers = new Flowers()
-        // this.playground = new Playground()
         this.bricks = new Bricks()
+        // this.playground = new Playground()
         // this.christmas = new Christmas()
     }
 

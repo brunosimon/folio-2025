@@ -153,7 +153,7 @@ export class Flowers
         })()
 
         // Shadow receive
-        const totalShadows = this.game.materials.getTotalShadow(this.material)
+        const totalShadows = this.game.lighting.addTotalShadowToMaterial(this.material)
 
         // Output
         this.material.outputNode = Fn(() =>
@@ -172,7 +172,7 @@ export class Flowers
 
             baseColor.addAssign(foliageColor.r.sub(0.5).mul(0.75).mul(baseLuminance))
 
-            const lightOutputColor = this.game.materials.lightOutputNodeBuilder(baseColor, totalShadows, true, false)
+            const lightOutputColor = this.game.lighting.lightOutputNodeBuilder(baseColor, totalShadows, true, false)
 
             const emissiveColor = baseColor.div(baseLuminance).mul(foliageColor.r.pow(2)).mul(10)
             return mix(lightOutputColor, emissiveColor, this.colors.emissiveIntensity)

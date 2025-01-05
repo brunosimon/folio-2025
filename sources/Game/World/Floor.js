@@ -16,7 +16,7 @@ export class Floor
         if(this.game.debug.active)
         {
             this.debugPanel = this.game.debug.panel.addFolder({
-                title: 'Floor',
+                title: '🌐 Floor',
                 expanded: false,
             })
         }
@@ -36,9 +36,9 @@ export class Floor
         const terrainDataGrass = terrainData.g.smoothstep(0.4, 0.6)
         const baseColor = this.game.terrainData.colorNode(terrainData)
 
-        const totalShadow = this.game.materials.getTotalShadow(material).mul(terrainDataGrass.oneMinus())
+        const totalShadow = this.game.lighting.addTotalShadowToMaterial(material).mul(terrainDataGrass.oneMinus())
 
-        material.outputNode = this.game.materials.lightOutputNodeBuilder(baseColor.rgb, totalShadow, false, false)
+        material.outputNode = this.game.lighting.lightOutputNodeBuilder(baseColor.rgb, totalShadow, false, false)
 
         this.mesh = new THREE.Mesh(this.geometry, material)
         this.mesh.receiveShadow = true

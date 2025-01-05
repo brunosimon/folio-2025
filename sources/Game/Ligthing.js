@@ -1,6 +1,6 @@
 import * as THREE from 'three/webgpu'
 import { Game } from './Game.js'
-import { uniform, color } from 'three/tsl'
+import { uniform, color, float, vec2, time, texture, Fn, vec4, positionWorld, normalWorld, vec3, mix, max } from 'three/tsl'
 
 export class Lighting
 {
@@ -27,6 +27,15 @@ export class Lighting
         this.shadowBias = 0
         this.shadowNormalBias = 0
 
+        if(this.game.debug.active)
+        {
+            this.debugPanel = this.game.debug.panel.addFolder({
+                title: '💡 Lighting',
+                expanded: false,
+            })
+        }
+
+        this.setNodes()
         this.setLights()
         this.setHelper()
         this.updateShadow()
@@ -39,24 +48,19 @@ export class Lighting
         // Debug
         if(this.game.debug.active)
         {
-            const debugPanel = this.game.debug.panel.addFolder({
-                title: '💡 Lighting',
-                expanded: false,
-            })
-
-            debugPanel.addBinding(this.helper, 'visible', { label: 'helperVisible' })
-            debugPanel.addBinding(this, 'useCycles')
-            debugPanel.addBinding(this, 'phi', { min: 0, max: Math.PI * 0.5 }).on('change', () => this.updateCoordinates())
-            debugPanel.addBinding(this, 'theta', { min: - Math.PI, max: Math.PI }).on('change', () => this.updateCoordinates())
-            debugPanel.addBinding(this, 'phiAmplitude', { min: 0, max: Math.PI}).on('change', () => this.updateCoordinates())
-            debugPanel.addBinding(this, 'thetaAmplitude', { min: - Math.PI, max: Math.PI }).on('change', () => this.updateCoordinates())
-            debugPanel.addBinding(this.spherical, 'radius', { min: 0, max: 100 }).on('change', () => this.updateCoordinates())
-            debugPanel.addBlade({ view: 'separator' })
-            debugPanel.addBinding(this, 'near', { min: 0.1, max: 50, step: 0.1 }).on('change', () => this.updateShadow())
-            debugPanel.addBinding(this, 'depth', { min: 0.1, max: 100, step: 0.1 }).on('change', () => this.updateShadow())
-            debugPanel.addBinding(this, 'shadowAmplitude', { min: 1, max: 50 }).on('change', () => this.updateShadow())
-            debugPanel.addBinding(this, 'shadowBias', { min: -0.1, max: 0.1 }).on('change', () => this.updateShadow())
-            debugPanel.addBinding(this, 'shadowNormalBias', { min: -0.1, max: 0.1 }).on('change', () => this.updateShadow())
+            this.debugPanel.addBinding(this.helper, 'visible', { label: 'helperVisible' })
+            this.debugPanel.addBinding(this, 'useCycles')
+            this.debugPanel.addBinding(this, 'phi', { min: 0, max: Math.PI * 0.5 }).on('change', () => this.updateCoordinates())
+            this.debugPanel.addBinding(this, 'theta', { min: - Math.PI, max: Math.PI }).on('change', () => this.updateCoordinates())
+            this.debugPanel.addBinding(this, 'phiAmplitude', { min: 0, max: Math.PI}).on('change', () => this.updateCoordinates())
+            this.debugPanel.addBinding(this, 'thetaAmplitude', { min: - Math.PI, max: Math.PI }).on('change', () => this.updateCoordinates())
+            this.debugPanel.addBinding(this.spherical, 'radius', { min: 0, max: 100 }).on('change', () => this.updateCoordinates())
+            this.debugPanel.addBlade({ view: 'separator' })
+            this.debugPanel.addBinding(this, 'near', { min: 0.1, max: 50, step: 0.1 }).on('change', () => this.updateShadow())
+            this.debugPanel.addBinding(this, 'depth', { min: 0.1, max: 100, step: 0.1 }).on('change', () => this.updateShadow())
+            this.debugPanel.addBinding(this, 'shadowAmplitude', { min: 1, max: 50 }).on('change', () => this.updateShadow())
+            this.debugPanel.addBinding(this, 'shadowBias', { min: -0.1, max: 0.1 }).on('change', () => this.updateShadow())
+            this.debugPanel.addBinding(this, 'shadowNormalBias', { min: -0.1, max: 0.1 }).on('change', () => this.updateShadow())
 
             const mapSizes = {}
             for(let i = 0; i < 12; i++)
@@ -64,7 +68,124 @@ export class Lighting
                 const size = Math.pow(2, i + 1)
                 mapSizes[size] = size
             }
-            debugPanel.addBinding(this, 'mapSizeMin', { options: mapSizes }).on('change', () => this.updateShadow())
+            this.debugPanel.addBinding(this, 'mapSizeMin', { options: mapSizes }).on('change', () => this.updateShadow())
+        }
+    }
+
+    setNodes()
+    {
+        this.lightBounceEdgeLow = uniform(float(-1))
+        this.lightBounceEdgeHigh = uniform(float(1))
+        this.lightBounceDistance = uniform(float(1.5))
+        this.lightBounceMultiplier = uniform(float(0.5))
+
+        this.shadowColor = uniform(this.game.cycles.day.values.properties.shadowColor.value)
+        this.coreShadowEdgeLow = uniform(float(-0.25))
+        this.coreShadowEdgeHigh = uniform(float(1))
+
+        this.cloudsFrequency = uniform(0.02)
+        this.cloudsSpeed = uniform(1)
+        this.cloudsEdgeLow = uniform(0.2)
+        this.cloudsEdgeHigh = uniform(0.5)
+        this.cloudsMultiplier = uniform(0.7)
+
+        this.waterThreshold = uniform(-0.3)
+        this.waterAmplitude = uniform(0.3)
+        this.waterPower = uniform(5)
+
+        // Get total shadow
+        this.addTotalShadowToMaterial = (material) =>
+        {
+            const cloudsUv = positionWorld.xz.add(vec2(time.mul(this.cloudsSpeed.negate()), time.mul(this.cloudsSpeed))).mul(this.cloudsFrequency)
+            const clouds = texture(this.game.noises.texture, cloudsUv).r.smoothstep(this.cloudsEdgeLow, this.cloudsEdgeHigh).mul(this.cloudsMultiplier).add(this.cloudsMultiplier.oneMinus())
+
+            const totalShadows = clouds.toVar()
+
+            material.receivedShadowNode = Fn(([ shadow ]) => 
+            {
+                totalShadows.mulAssign(shadow)
+                return float(1)
+            })
+
+            return totalShadows
+        }
+
+        // Light output
+        this.lightOutputNodeBuilder = (inputColor, totalShadows, withBounce = true, withWater = true) =>
+        {
+            return Fn(([inputColor, totalShadows]) =>
+            {
+                const baseColor = inputColor.toVar()
+
+                if(withBounce)
+                {
+                    const terrainUv = this.game.terrainData.worldPositionToUvNode(positionWorld.xz)
+                    const terrainData = this.game.terrainData.terrainDataNode(terrainUv)
+
+                    // Bounce color
+                    const bounceOrientation = normalWorld.dot(vec3(0, - 1, 0)).smoothstep(this.lightBounceEdgeLow, this.lightBounceEdgeHigh)
+                    const bounceDistance = this.lightBounceDistance.sub(positionWorld.y).div(this.lightBounceDistance).max(0).pow(2)
+                    // const bounceWater = positionWorld.y.step(-0.3).mul(0.9).add(1)
+                    const bounceColor = this.game.terrainData.colorNode(terrainData)
+                    baseColor.assign(mix(baseColor, bounceColor, bounceOrientation.mul(bounceDistance).mul(this.lightBounceMultiplier)))
+                }
+
+                // Water
+                if(withWater)
+                {
+                    const waterMix = positionWorld.y
+                        .remapClamp(this.waterThreshold, this.waterThreshold.sub(this.waterAmplitude), 1, 0)
+                        .mul(positionWorld.y.step(this.waterThreshold))
+                        .pow(this.waterPower)
+                    
+                    baseColor.assign(mix(baseColor, color('#ffffff'), waterMix))
+                }
+
+                // Light
+                const lightenColor = baseColor.mul(this.game.lighting.colorUniform.mul(this.game.lighting.intensityUniform))
+
+                // Core shadow
+                const coreShadowMix = normalWorld.dot(this.game.lighting.directionUniform).smoothstep(this.coreShadowEdgeHigh, this.coreShadowEdgeLow)
+                
+                // Cast shadow
+                const castShadowMix = totalShadows.oneMinus()
+
+                // Combined shadows
+                const combinedShadowMix = max(coreShadowMix, castShadowMix).clamp(0, 1)
+                
+                const shadowColor = baseColor.rgb.mul(this.shadowColor).rgb
+                const shadedColor = mix(lightenColor, shadowColor, combinedShadowMix)
+                
+                // Fog
+                const foggedColor = this.game.fog.fogStrength.mix(shadedColor, this.game.fog.fogColor)
+
+                return vec4(foggedColor.rgb, 1)
+            })([inputColor, totalShadows])
+        }
+
+        // Debug
+        if(this.game.debug.active)
+        {
+            this.debugPanel.addBinding(this.lightBounceEdgeLow, 'value', { label: 'lightBounceEdgeLow', min: - 1, max: 1, step: 0.01 })
+            this.debugPanel.addBinding(this.lightBounceEdgeHigh, 'value', { label: 'lightBounceEdgeHigh', min: - 1, max: 1, step: 0.01 })
+            this.debugPanel.addBinding(this.lightBounceDistance, 'value', { label: 'lightBounceDistance', min: 0, max: 5, step: 0.01 })
+            this.debugPanel.addBinding(this.lightBounceMultiplier, 'value', { label: 'lightBounceMultiplier', min: 0, max: 1, step: 0.01 })
+
+            this.debugPanel.addBlade({ view: 'separator' })
+            this.debugPanel.addBinding(this.coreShadowEdgeLow, 'value', { label: 'coreShadowEdgeLow', min: - 1, max: 1, step: 0.01 })
+            this.debugPanel.addBinding(this.coreShadowEdgeHigh, 'value', { label: 'coreShadowEdgeHigh', min: - 1, max: 1, step: 0.01 })
+
+            this.debugPanel.addBlade({ view: 'separator' })
+            this.debugPanel.addBinding(this.cloudsFrequency, 'value', { label: 'cloudsFrequency', min: 0, max: 0.1, step: 0.001 })
+            this.debugPanel.addBinding(this.cloudsSpeed, 'value', { label: 'cloudsSpeed', min: 0, max: 10, step: 0.01 })
+            this.debugPanel.addBinding(this.cloudsEdgeLow, 'value', { label: 'cloudsEdgeLow', min: 0, max: 1, step: 0.001 })
+            this.debugPanel.addBinding(this.cloudsEdgeHigh, 'value', { label: 'cloudsEdgeHigh', min: 0, max: 1, step: 0.001 })
+            this.debugPanel.addBinding(this.cloudsMultiplier, 'value', { label: 'cloudsMultiplier', min: 0, max: 1, step: 0.001 })
+
+            this.debugPanel.addBlade({ view: 'separator' })
+            this.debugPanel.addBinding(this.waterThreshold, 'value', { label: 'waterThreshold', min: -1, max: 0, step: 0.001 })
+            this.debugPanel.addBinding(this.waterAmplitude, 'value', { label: 'waterAmplitude', min: 0, max: 2, step: 0.001 })
+            this.debugPanel.addBinding(this.waterPower, 'value', { label: 'waterPower', min: 1, max: 10, step: 1 })
         }
     }
 

@@ -74,14 +74,14 @@ export class Christmas
         this.emissiveIntensity = uniform(float(0))
 
         // Shadow receive
-        const totalShadows = this.game.materials.getTotalShadow(this.emissiveMaterial)
+        const totalShadows = this.game.lighting.addTotalShadowToMaterial(this.emissiveMaterial)
 
         // Output
         this.emissiveMaterial.outputNode = Fn(() =>
         {
             const baseColor = attribute('color')
 
-            const lightOutputColor = this.game.materials.lightOutputNodeBuilder(baseColor, totalShadows, false, false)
+            const lightOutputColor = this.game.lighting.lightOutputNodeBuilder(baseColor, totalShadows, false, false)
 
             const emissiveColor = baseColor.div(luminance(baseColor)).mul(2)
             return mix(lightOutputColor, emissiveColor, this.emissiveIntensity)

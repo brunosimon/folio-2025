@@ -18,9 +18,7 @@ export class Materials
         }
 
         this.setLuminance()
-        this.setTest()
-        this.setNodes()
-        this.setPremades()
+        this.setPreviews()
     }
 
     setLuminance()
@@ -35,223 +33,68 @@ export class Materials
         }
     }
 
-    setPremades()
+    // Create materials functions
+    createEmissive(_name = 'material', _color = '#ffffff', _intensity = 3, debugPanel = null)
     {
-        // Create materials functions
-        const createEmissiveMaterial = (_name = 'material', _color = '#ffffff', _intensity = 3) =>
-        {
-            const threeColor = new THREE.Color(_color)
+        const threeColor = new THREE.Color(_color)
 
-            const dummy = {}
-            dummy.color = threeColor.getHex(THREE.SRGBColorSpace)
-            dummy.intensity = _intensity
+        const dummy = {}
+        dummy.color = threeColor.getHex(THREE.SRGBColorSpace)
+        dummy.intensity = _intensity
 
-            const material = new THREE.MeshBasicNodeMaterial({ color: threeColor })
-            material.fog = false
-            this.save(_name, material)
-            
-            const update = () =>
-            {
-                material.color.set(dummy.color)
-                material.color.multiplyScalar(dummy.intensity / this.luminance.get(material.color))
-            }
-
-            update()
-
-            if(this.game.debug.active)
-            {
-                const debugPanel = this.debugPanel.addFolder({
-                    title: _name,
-                    expanded: true
-                })
-                debugPanel.addBinding(dummy, 'intensity', { min: 0, max: 10, step: 0.01 }).on('change', update)
-                debugPanel.addBinding(dummy, 'color', { view: 'color' }).on('change', update)
-            }
-        }
-
-        const createGradientMaterial = (_name = 'material', _colorA = 'red', _colorB = 'blue') =>
-        {
-            const threeColorA = new THREE.Color(_colorA)
-            const threeColorB = new THREE.Color(_colorB)
-
-            const material = new THREE.MeshLambertNodeMaterial()
-            material.shadowSide = THREE.BackSide
-            
-            const colorA = uniform(threeColorA)
-            const colorB = uniform(threeColorB)
-            const baseColor = mix(colorA, colorB, uv().y)
-            material.outputNode = this.lightOutputNodeBuilder(baseColor, this.getTotalShadow(material))
-            
-            this.save(_name, material)
-
-            if(this.game.debug.active)
-            {
-                const debugPanel = this.debugPanel.addFolder({
-                    title: _name,
-                    expanded: true
-                })
-                this.game.debug.addThreeColorBinding(debugPanel, threeColorA, 'colorA')
-                this.game.debug.addThreeColorBinding(debugPanel, threeColorB, 'colorB')
-            }
-        }
-
-        // Car red
-        createGradientMaterial('carRed', '#ff3a3a', '#721551')
-
-        // Pure white
-        const pureWhite = new THREE.MeshLambertNodeMaterial()
-        pureWhite.shadowSide = THREE.BackSide
-        pureWhite.outputNode = this.lightOutputNodeBuilder(color('#ffffff'), this.getTotalShadow(pureWhite))
-        this.save('pureWhite', pureWhite)
-    
-        // Emissive warn white
-        createEmissiveMaterial('emissiveWarnWhite', '#ff8641', 3)
-    
-        // // Emissive red
-        createEmissiveMaterial('emissiveRed', '#ff3131', 3)
-    
-        // // Emissive red
-        createEmissiveMaterial('emissivePurple', '#9830ff', 3)
-    }
-
-    setNodes()
-    {
-        this.lightBounceColor = uniform(color('#72a51e'))
-        this.lightBounceEdgeLow = uniform(float(-1))
-        this.lightBounceEdgeHigh = uniform(float(1))
-        this.lightBounceDistance = uniform(float(1.5))
-        this.lightBounceMultiplier = uniform(float(0.5))
-
-        this.shadowColor = uniform(this.game.cycles.day.values.properties.shadowColor.value)
-        this.coreShadowEdgeLow = uniform(float(-0.25))
-        this.coreShadowEdgeHigh = uniform(float(1))
-
-        this.cloudsFrequency = uniform(0.02)
-        this.cloudsSpeed = uniform(1)
-        this.cloudsEdgeLow = uniform(0.2)
-        this.cloudsEdgeHigh = uniform(0.5)
-        this.cloudsMultiplier = uniform(0.7)
-
-        this.waterThreshold = uniform(-0.3)
-        this.waterAmplitude = uniform(0.3)
-        this.waterPower = uniform(5)
-
-        // Get total shadow
-        this.getTotalShadow = (material) =>
-        {
-            const cloudsUv = positionWorld.xz.add(vec2(time.mul(this.cloudsSpeed.negate()), time.mul(this.cloudsSpeed))).mul(this.cloudsFrequency)
-            const clouds = texture(this.game.noises.texture, cloudsUv).r.smoothstep(this.cloudsEdgeLow, this.cloudsEdgeHigh).mul(this.cloudsMultiplier).add(this.cloudsMultiplier.oneMinus())
-
-            const totalShadows = clouds.toVar()
-
-            material.receivedShadowNode = Fn(([ shadow ]) => 
-            {
-                totalShadows.mulAssign(shadow)
-                return float(1)
-            })
-
-            return totalShadows
-        }
-
-        // Light output
-        this.lightOutputNodeBuilder = function(inputColor, totalShadows, withBounce = true, withWater = true)
-        {
-            return Fn(([inputColor, totalShadows]) =>
-            {
-                const baseColor = inputColor.toVar()
-
-                if(withBounce)
-                {
-                    const terrainUv = this.game.terrainData.worldPositionToUvNode(positionWorld.xz)
-                    const terrainData = this.game.terrainData.terrainDataNode(terrainUv)
-
-                    // Bounce color
-                    const bounceOrientation = normalWorld.dot(vec3(0, - 1, 0)).smoothstep(this.lightBounceEdgeLow, this.lightBounceEdgeHigh)
-                    const bounceDistance = this.lightBounceDistance.sub(positionWorld.y).div(this.lightBounceDistance).max(0).pow(2)
-                    // const bounceWater = positionWorld.y.step(-0.3).mul(0.9).add(1)
-                    const bounceColor = this.game.terrainData.colorNode(terrainData)
-                    baseColor.assign(mix(baseColor, bounceColor, bounceOrientation.mul(bounceDistance).mul(this.lightBounceMultiplier)))
-                }
-
-                // Water
-                if(withWater)
-                {
-                    const waterMix = positionWorld.y
-                        .remapClamp(this.waterThreshold, this.waterThreshold.sub(this.waterAmplitude), 1, 0)
-                        .mul(positionWorld.y.step(this.waterThreshold))
-                        .pow(this.waterPower)
-                    
-                    baseColor.assign(mix(baseColor, color('#ffffff'), waterMix))
-                }
-
-                // Light
-                const lightenColor = baseColor.mul(this.game.lighting.colorUniform.mul(this.game.lighting.intensityUniform))
-
-                // Core shadow
-                const coreShadowMix = normalWorld.dot(this.game.lighting.directionUniform).smoothstep(this.coreShadowEdgeHigh, this.coreShadowEdgeLow)
-                
-                // Cast shadow
-                const castShadowMix = totalShadows.oneMinus()
-
-                // Combined shadows
-                const combinedShadowMix = max(coreShadowMix, castShadowMix).clamp(0, 1)
-                
-                const shadowColor = baseColor.rgb.mul(this.shadowColor).rgb
-                const shadedColor = mix(lightenColor, shadowColor, combinedShadowMix)
-                
-                // Fog
-                const foggedColor = this.game.fog.fogStrength.mix(shadedColor, this.game.fog.fogColor)
-
-                // const cloudsUv = positionWorld.xz.add(vec2(time.mul(this.cloudsSpeed.negate()), time.mul(this.cloudsSpeed))).mul(this.cloudsFrequency)
-                // const clouds = texture(this.game.noises.texture, cloudsUv).r.smoothstep(this.cloudsEdgeLow, this.cloudsEdgeHigh).mul(this.cloudsMultiplier).add(this.cloudsMultiplier.oneMinus())
-                // return vec4(vec3(clouds), 1)
-
-                return vec4(foggedColor.rgb, 1)
-            })([inputColor, totalShadows])
-        }
-
-        // Debug
-        if(this.game.debug.active)
-        {
-            this.game.debug.addThreeColorBinding(this.debugPanel, this.lightBounceColor.value, 'lightBounceColor')
-            this.debugPanel.addBinding(this.lightBounceEdgeLow, 'value', { label: 'lightBounceEdgeLow', min: - 1, max: 1, step: 0.01 })
-            this.debugPanel.addBinding(this.lightBounceEdgeHigh, 'value', { label: 'lightBounceEdgeHigh', min: - 1, max: 1, step: 0.01 })
-            this.debugPanel.addBinding(this.lightBounceDistance, 'value', { label: 'lightBounceDistance', min: 0, max: 5, step: 0.01 })
-            this.debugPanel.addBinding(this.lightBounceMultiplier, 'value', { label: 'lightBounceMultiplier', min: 0, max: 1, step: 0.01 })
-
-            this.debugPanel.addBlade({ view: 'separator' })
-            this.debugPanel.addBinding(this.coreShadowEdgeLow, 'value', { label: 'coreShadowEdgeLow', min: - 1, max: 1, step: 0.01 })
-            this.debugPanel.addBinding(this.coreShadowEdgeHigh, 'value', { label: 'coreShadowEdgeHigh', min: - 1, max: 1, step: 0.01 })
-
-            this.debugPanel.addBlade({ view: 'separator' })
-            this.debugPanel.addBinding(this.cloudsFrequency, 'value', { label: 'cloudsFrequency', min: 0, max: 0.1, step: 0.001 })
-            this.debugPanel.addBinding(this.cloudsSpeed, 'value', { label: 'cloudsSpeed', min: 0, max: 10, step: 0.01 })
-            this.debugPanel.addBinding(this.cloudsEdgeLow, 'value', { label: 'cloudsEdgeLow', min: 0, max: 1, step: 0.001 })
-            this.debugPanel.addBinding(this.cloudsEdgeHigh, 'value', { label: 'cloudsEdgeHigh', min: 0, max: 1, step: 0.001 })
-            this.debugPanel.addBinding(this.cloudsMultiplier, 'value', { label: 'cloudsMultiplier', min: 0, max: 1, step: 0.001 })
-
-            this.debugPanel.addBlade({ view: 'separator' })
-            this.debugPanel.addBinding(this.waterThreshold, 'value', { label: 'waterThreshold', min: -1, max: 0, step: 0.001 })
-            this.debugPanel.addBinding(this.waterAmplitude, 'value', { label: 'waterAmplitude', min: 0, max: 2, step: 0.001 })
-            this.debugPanel.addBinding(this.waterPower, 'value', { label: 'waterPower', min: 1, max: 10, step: 1 })
-        }
-    }
-
-    setTest()
-    {
-        this.tests = {}
-        this.tests.list = new Map()
-        this.tests.sphereGeometry = new THREE.IcosahedronGeometry(1, 3)
-        this.tests.boxGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5)
-        this.tests.group = new THREE.Group()
-        this.tests.group.visible = false
-        this.game.scene.add(this.tests.group)
+        const material = new THREE.MeshBasicNodeMaterial({ color: threeColor })
+        material.fog = false
+        this.save(_name, material)
         
-        this.tests.update = () =>
+        const update = () =>
+        {
+            material.color.set(dummy.color)
+            material.color.multiplyScalar(dummy.intensity / this.luminance.get(material.color))
+        }
+
+        update()
+
+        if(this.game.debug.active && debugPanel)
+        {
+            debugPanel.addBinding(dummy, 'intensity', { min: 0, max: 10, step: 0.01 }).on('change', update)
+            debugPanel.addBinding(dummy, 'color', { view: 'color' }).on('change', update)
+        }
+    }
+
+    createGradient(_name = 'material', _colorA = 'red', _colorB = 'blue', debugPanel = null)
+    {
+        const material = new THREE.MeshLambertNodeMaterial()
+        material.shadowSide = THREE.BackSide
+        
+        const colorA = uniform(new THREE.Color(_colorA))
+        const colorB = uniform(new THREE.Color(_colorB))
+        const baseColor = mix(colorA, colorB, uv().y)
+        material.outputNode = this.game.lighting.lightOutputNodeBuilder(baseColor, this.game.lighting.addTotalShadowToMaterial(material))
+        
+        this.save(_name, material)
+
+        if(this.game.debug.active && debugPanel)
+        {
+            this.game.debug.addThreeColorBinding(debugPanel, colorA.value, 'colorA')
+            this.game.debug.addThreeColorBinding(debugPanel, colorB.value, 'colorB')
+        }
+    }
+
+    setPreviews()
+    {
+        this.previews = {}
+        this.previews.list = new Map()
+        this.previews.sphereGeometry = new THREE.IcosahedronGeometry(1, 3)
+        this.previews.boxGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5)
+        this.previews.group = new THREE.Group()
+        this.previews.group.visible = false
+        this.game.scene.add(this.previews.group)
+        
+        this.previews.update = () =>
         {
             this.list.forEach((material, name) =>
             {
-                if(!this.tests.list.has(name))
+                if(!this.previews.list.has(name))
                 {
                     const test = {}
 
@@ -261,33 +104,33 @@ export class Materials
                     if(maxLength > 1)
                         pureColor.set(pureColor.r / maxLength, pureColor.g / maxLength, pureColor.b / maxLength)
                     
-                    const boxPure = new THREE.Mesh(this.tests.boxGeometry, new THREE.MeshBasicMaterial({ color: pureColor }))
+                    const boxPure = new THREE.Mesh(this.previews.boxGeometry, new THREE.MeshBasicMaterial({ color: pureColor }))
                     boxPure.position.y = 0.75
                     boxPure.position.x = this.list.size * 3
                     boxPure.position.z = 0
                     boxPure.castShadow = true
                     boxPure.receiveShadow = true
-                    this.tests.group.add(boxPure)
+                    this.previews.group.add(boxPure)
                 
                     // Box
-                    const box = new THREE.Mesh(this.tests.boxGeometry, material)
+                    const box = new THREE.Mesh(this.previews.boxGeometry, material)
                     box.position.y = 0.75
                     box.position.x = this.list.size * 3
                     box.position.z = 3
                     box.castShadow = true
                     box.receiveShadow = true
-                    this.tests.group.add(box)
+                    this.previews.group.add(box)
 
                     // Sphere
-                    const sphere = new THREE.Mesh(this.tests.sphereGeometry, material)
+                    const sphere = new THREE.Mesh(this.previews.sphereGeometry, material)
                     sphere.position.z = 6
                     sphere.position.y = 0.75
                     sphere.position.x = this.list.size * 3
                     sphere.castShadow = true
                     sphere.receiveShadow = true
-                    this.tests.group.add(sphere)
+                    this.previews.group.add(sphere)
 
-                    this.tests.list.set(name, test)
+                    this.previews.list.set(name, test)
                 }
             })
         }
@@ -295,14 +138,14 @@ export class Materials
         // Debug
         if(this.game.debug.active)
         {
-            this.debugPanel.addBinding(this.tests.group, 'visible', { label: 'testsVisibile' })
+            this.debugPanel.addBinding(this.previews.group, 'visible', { label: 'previewsVisibile' })
         }
     }
 
     save(name, material)
     {
         this.list.set(name, material)
-        this.tests.update()
+        this.previews.update()
     }
 
     getFromName(name, baseMaterial)
@@ -333,7 +176,7 @@ export class Materials
         {
             // Shadow
             material.shadowSide = THREE.BackSide
-            material.outputNode = this.lightOutputNodeBuilder(baseMaterial.color, this.getTotalShadow(material))
+            material.outputNode = this.game.lighting.lightOutputNodeBuilder(baseMaterial.color, this.game.lighting.addTotalShadowToMaterial(material))
         }
 
         return material
