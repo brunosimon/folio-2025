@@ -83,6 +83,7 @@ export class Trees
         if(this.game.debug.active)
         {
             this.game.debug.addThreeColorBinding(this.debugPanel, this.leavesColor, 'leavesColor')
+            this.debugPanel.addBinding(this.leaves.shadowOffset, 'value', { label: 'shadowOffset', min: 0, max: 2, step: 0.001 })
         }
     }
 

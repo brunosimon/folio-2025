@@ -93,8 +93,8 @@ export class Foliage
         })()
 
         // Received shadow position
-        const shadowOffset = uniform(1)
-        this.material.shadowPositionNode = positionLocal.add(this.game.lighting.directionUniform.mul(shadowOffset))
+        this.shadowOffset = uniform(1)
+        this.material.shadowPositionNode = positionLocal.add(this.game.lighting.directionUniform.mul(this.shadowOffset))
 
         // Shadow receive
         const totalShadows = this.game.materials.getTotalShadow(this.material)
@@ -103,17 +103,6 @@ export class Foliage
         const uniformColor = uniform(this.color)
 
         this.material.outputNode = this.game.materials.lightOutputNodeBuilder(uniformColor, totalShadows)
-
-        // Debug
-        if(this.game.debug.active)
-        {
-            const debugPanel = this.game.debug.panel.addFolder({
-                title: '🍃 Foliage',
-                expanded: false,
-            })
-
-            debugPanel.addBinding(shadowOffset, 'value', { label: 'shadowOffset', min: 0, max: 2, step: 0.001 })
-        }
     }
 
     setFromReferences()
