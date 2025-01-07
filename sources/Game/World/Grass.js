@@ -196,7 +196,7 @@ export class Grass
 
     update()
     {
-        this.center.value.copy(this.game.view.optimalArea.position)
+        this.center.value.set(this.game.view.optimalArea.position.x, this.game.view.optimalArea.position.z)
 
         // Ground data delta
         this.groundDataDelta.value.set(
