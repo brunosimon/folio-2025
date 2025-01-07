@@ -2,6 +2,7 @@ import { Game } from '../Game.js'
 import RAPIER from '@dimforge/rapier3d-compat'
 import { PhysicsWireframe } from './PhysicsWireframe.js'
 import { remapClamp } from '../utilities/maths.js'
+import * as THREE from 'three'
 
 export class Physics
 {
@@ -14,7 +15,21 @@ export class Physics
         this.water = {}
         this.water.edgeLow = 0
         this.water.edgeHigh = -0.4
-        this.water.gravityMultiplier = - 0.75
+        this.water.gravityMultiplier = - 0.75 // - 0.75
+
+        this.groups = {
+            all: 0b0000000000000001,
+            object:  0b0000000000000010,
+            bumper:  0b0000000000000100
+        }
+        this.categories = {
+            floor: (this.groups.all) << 16 |
+                     (this.groups.all),
+            object: (this.groups.all | this.groups.object) << 16 |
+                    (this.groups.all | this.groups.bumper),
+            bumper: (this.groups.bumper) << 16 |
+                    this.groups.object,
+        }
 
         // this.world.integrationParameters.numSolverIterations = 4 // 4
         // this.world.numAdditionalFrictionIterations = 0 // 0
@@ -47,6 +62,16 @@ export class Physics
             this.debugPanel.addBinding(this.water, 'edgeHigh', { label: 'waterEdgeHigh', min: -1, max: 0 })
             this.debugPanel.addBinding(this.water, 'gravityMultiplier', { label: 'waterGravityMultiplier', min: -1, max: 1 })
         }
+    }
+
+    getBinaryGroups(groupNames)
+    {
+        let binary = 0b0000000000000000
+        
+        for(const groupName of groupNames)
+            binary |= this.groups[groupName]
+
+        return binary
     }
 
     getPhysical(_physicalDescription)
@@ -100,13 +125,26 @@ export class Physics
                 colliderDescription = colliderDescription.setRotation(_colliderDescription.quaternion)
                 
             if(typeof _colliderDescription.mass !== 'undefined')
-                colliderDescription = colliderDescription.setMass(_colliderDescription.mass)
+            {
+                if(typeof _colliderDescription.centerOfMass !== 'undefined')
+                    colliderDescription = colliderDescription.setMassProperties(_colliderDescription.mass, _colliderDescription.centerOfMass, { x: 1, y: 1, z: 1 }, new THREE.Quaternion().setFromAxisAngle(new THREE.Euler(0, 1, 0), - Math.PI * 0))
+                else
+                    colliderDescription = colliderDescription.setMass(_colliderDescription.mass)
+            }
 
             if(typeof _physicalDescription.friction !== 'undefined')
                 colliderDescription = colliderDescription.setFriction(_physicalDescription.friction)
                 
             if(typeof _physicalDescription.restitution !== 'undefined')
                 colliderDescription = colliderDescription.setRestitution(_physicalDescription.restitution)
+                
+            let category = 'object'
+            if(typeof _colliderDescription.category !== 'undefined')
+                category = _colliderDescription.category
+
+            colliderDescription = colliderDescription.setCollisionGroups(this.categories[category])
+            // colliderDescription = colliderDescription.setCollisionGroups(this.getBinaryGroups(groups))
+            // colliderDescription = colliderDescription.setSolverGroups(this.getBinaryGroups(groups))
 
             const collider = this.world.createCollider(colliderDescription, physical.body)
             physical.colliders.push(collider)

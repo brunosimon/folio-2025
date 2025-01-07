@@ -57,11 +57,16 @@ export class Entities
         // Colliders
         for(const physical of _physicalModel.children)
         {
+            let collidersOverload = {}
+            if(typeof _physicalDescription.collidersOverload !== 'undefined')
+                collidersOverload = _physicalDescription.collidersOverload
+
             colliders.push({
                 shape: 'trimesh',
                 parameters: [ physical.geometry.attributes.position.array, physical.geometry.index.array ],
                 position: physical.position,
                 quaternion: physical.quaternion,
+                ...collidersOverload
             })
         }
 

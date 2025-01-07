@@ -128,7 +128,7 @@ export class Floor
             friction: 0.25,
             restitution: 0,
             colliders: [
-                { shape: 'cuboid', parameters: [ 1000, 1, 1000 ], position: { x: 0, y: - 1.01, z: 0 } },
+                { shape: 'cuboid', parameters: [ 1000, 1, 1000 ], position: { x: 0, y: - 1.01, z: 0 }, category: 'floor' },
             ]
         })
     }
@@ -159,7 +159,7 @@ export class Floor
             friction: 0.25,
             restitution: 0,
             colliders: [
-                { shape: 'heightfield', parameters: [ rowsCount - 1, rowsCount - 1, heights, { x: this.subdivision, y: 1, z: this.subdivision } ] }
+                { shape: 'heightfield', parameters: [ rowsCount - 1, rowsCount - 1, heights, { x: this.subdivision, y: 1, z: this.subdivision } ], category: 'floor' }
             ]
         })
     }

@@ -30,6 +30,7 @@ export class World
         // this.christmas = new Christmas()
 
         // this.setAxesHelper()
+        // this.setCollisionGroupsTest()
     }
 
     setTestShadow()
@@ -102,5 +103,35 @@ export class World
         const axesHelper = new THREE.AxesHelper()
         axesHelper.position.y = 0
         this.game.scene.add(axesHelper)
+    }
+
+    setCollisionGroupsTest()
+    {
+        // // Left (object)
+        // this.game.entities.add(
+        //     {
+        //         type: 'dynamic',
+        //         position: { x: 4, y: 2, z: 0.1 },
+        //         colliders: [ { shape: 'cuboid', parameters: [ 0.5, 0.5, 0.5 ], category: 'object' } ]
+        //     }
+        // )
+
+        // Right (terrain)
+        this.game.entities.add(
+            {
+                type: 'dynamic',
+                position: { x: 4, y: 2, z: -1.1 },
+                colliders: [ { shape: 'cuboid', parameters: [ 0.5, 0.5, 0.5 ], category: 'floor' } ]
+            }
+        )
+
+        // // Top (bumper)
+        // this.game.entities.add(
+        //     {
+        //         type: 'dynamic',
+        //         position: { x: 4, y: 4, z: -0.5 },
+        //         colliders: [ { shape: 'cuboid', parameters: [ 0.5, 0.5, 0.5 ], category: 'bumper' } ]
+        //     }
+        // )
     }
 }

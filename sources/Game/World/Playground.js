@@ -11,7 +11,8 @@ export class Playground
             this.game.resources.playgroundVisual.scene,
             {
                 type: 'fixed',
-                friction: 0
+                friction: 0,
+                collidersOverload: { category: 'floor' }
             }
         )
     }

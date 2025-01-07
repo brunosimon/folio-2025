@@ -117,8 +117,9 @@ export class Vehicle
                 rotation: new THREE.Quaternion().setFromAxisAngle(new THREE.Euler(0, 1, 0), - Math.PI * 0),
                 // rotation: new THREE.Quaternion().setFromAxisAngle(new THREE.Euler(0, 0, 1), - Math.PI * 0.5),
                 colliders: [
-                    { shape: 'cuboid', parameters: [ 1.5, 0.4, 0.85 ], position: { x: 0, y: - 0.125, z: 0 } },
-                    { shape: 'cuboid', parameters: [ 0.5, 0.15, 0.65 ], position: { x: 0, y: 0.4, z: 0 } },
+                    { shape: 'cuboid', mass: 2.5, parameters: [ 1, 0.4, 0.85 ], position: { x: 0, y: -0.1, z: 0 }, centerOfMass: { x: 0, y: -0.5, z: 0 } }, // Main
+                    { shape: 'cuboid', mass: 0, parameters: [ 0.5, 0.15, 0.65 ], position: { x: 0, y: 0.4, z: 0 } }, // Top
+                    { shape: 'cuboid', mass: 0, parameters: [ 1.5, 0.5, 0.9 ], position: { x: 0.1, y: -0.2, z: 0 }, category: 'bumper' }, // Bumper
                 ],
                 canSleep: false,
             },
@@ -185,9 +186,9 @@ export class Vehicle
             maxSuspensionForce: 100,
             maxSuspensionTravel: 2,
             sideFrictionStiffness: 3,
-            suspensionCompression: 10,
+            suspensionCompression: 40,
             suspensionRelaxation: 1.88,
-            suspensionStiffness: 30,
+            suspensionStiffness: 40,
         }
 
         this.wheels.updateSettings = () =>
@@ -446,22 +447,6 @@ export class Vehicle
             
             for(let i = 0; i < 4; i++)
                 this.controller.setWheelSuspensionRestLength(i, activeHydraulics[i] ? restLength : this.hydraulics.low)
-
-            // Jump
-            if(_event.down && _event.name === 'hydraulics' && this.wheels.inContact >= 1 && (this.game.inputs.keys.left || this.game.inputs.keys.right))
-            {
-                // Torque
-                let torqueY = 0
-                if(this.game.inputs.keys.left)
-                    torqueY = 4 * (this.speed > - 0.1 ? 1 : - 1)
-                else if(this.game.inputs.keys.right)
-                    torqueY = -4 * (this.speed > - 0.1 ? 1 : - 1)
-
-                const torque = new THREE.Vector3(0, torqueY, 0)
-                torque.applyQuaternion(this.chassis.physical.body.rotation())
-
-                this.chassis.physical.body.applyTorqueImpulse(torque)
-            }
         }
 
         this.game.inputs.events.on('hydraulics', this.hydraulics.update)

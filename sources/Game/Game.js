@@ -54,7 +54,7 @@ export class Game
                     { path: 'bricks/bricksReferences.glb', type: 'gltf', name: 'bricksReferencesModel' },
                     { path: 'bricks/bricksVisual.glb', type: 'gltf', name: 'bricksVisualModel' },
                     { path: 'terrain/terrain.png', type: 'texture', name: 'terrainTexture' },
-                    // { path: 'terrain/flatGrass.png', type: 'texture', name: 'terrainFlatGrassTexture' },
+                    // { path: 'terrain/flatGrass.png', type: 'texture', name: 'terrainTexture' },
                     { path: 'terrain/terrain.glb', type: 'gltf', name: 'terrainModel' },
                     { path: 'trees/treesVisual.glb', type: 'gltf', name: 'treesVisualModel' },
                     { path: 'trees/treesReferences.glb', type: 'gltf', name: 'treesReferencesModel' },
@@ -67,6 +67,7 @@ export class Game
                 (resources) =>
                 {
                     this.resources = resources
+
                     this.resources.terrainTexture.flipY = false
 
                     // Init
