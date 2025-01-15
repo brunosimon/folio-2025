@@ -1,11 +1,11 @@
 import * as THREE from 'three/webgpu'
 import { Game } from '../Game.js'
 import MeshGridMaterial, { MeshGridMaterialLine } from '../Materials/MeshGridMaterial.js'
-import { uv } from 'three/tsl'
+import { uv, vec4 } from 'three/tsl'
 
 export class Floor
 {
-    constructor()
+    constructor(mode = 'grid')
     {
         this.game = Game.getInstance()
 
@@ -21,11 +21,19 @@ export class Floor
             })
         }
 
-        // this.setGrid()
-        this.setMesh()
+
+        if(mode === 'terrain')
+        {
+            this.setMesh()
+            this.setPhysicalHeightfield()
+        }
+        else if(mode === 'grid')
+        {
+            this.setGrid()
+            this.setPhysicalBox()
+        }
+        
         // this.setKeys()
-        // this.setPhysicalBox()
-        this.setPhysicalHeightfield()
     }
 
     setMesh()
@@ -75,8 +83,8 @@ export class Floor
         const lines = [
             // new MeshGridMaterialLine(0x705df2, 1, 0.03, 0.2),
             // new MeshGridMaterialLine(0xffffff, 10, 0.003, 1),
-            new MeshGridMaterialLine(0x423f25, 1, 0.03, 0.2),
-            new MeshGridMaterialLine(0x696969, 10, 0.003, 1),
+            new MeshGridMaterialLine(0x6f53bf, 1, 0.03, 0.2),
+            new MeshGridMaterialLine(0xcfcfcf, 10, 0.003, 1),
         ]
 
         const uvGridMaterial = new MeshGridMaterial({
@@ -87,6 +95,9 @@ export class Floor
             side: THREE.DoubleSide,
             lines
         })
+
+        // uvGridMaterial.outputNode = vec4(1)
+        // uvGridMaterial.outputNode = this.game.lighting.lightOutputNodeBuilder(uvGridMaterial.outputNode.rgb, this.game.lighting.addTotalShadowToMaterial(uvGridMaterial))
 
         const ground = new THREE.Mesh(
             new THREE.PlaneGeometry(1000, 1000),

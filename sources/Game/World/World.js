@@ -15,6 +15,7 @@ import { WaterSurface } from './WaterSurface.js'
 import { Scenery } from './Scenery.js'
 import { WindLines } from './WindLines.js'
 import { PoleLights } from './PoleLights.js'
+import { Leaves } from './Leaves.js'
 
 export class World
 {
@@ -22,8 +23,8 @@ export class World
     {
         this.game = Game.getInstance()
 
-        this.floor = new Floor()
-        this.secnery = new Scenery()
+        this.floor = new Floor('terrain')
+        this.scenery = new Scenery()
         this.waterSurface = new WaterSurface()
         this.grass = new Grass()
         this.bushes = new Bushes()
@@ -34,6 +35,7 @@ export class World
         this.bricks = new Bricks()
         this.windLines = new WindLines()
         this.poleLights = new PoleLights()
+        this.leaves = new Leaves()
         // this.playground = new Playground()
         // this.christmas = new Christmas()
 
