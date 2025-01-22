@@ -19,86 +19,7 @@ const hash = /*#__PURE__*/ Fn( ( [ p_immutable ] ) => {
 	]
 } );
 
-// const voronoi = /*#__PURE__*/ Fn( ( [ p_immutable, repeat_immutable ] ) => {
-
-// 	const repeat = float( repeat_immutable ).toVar();
-// 	const p = vec2( p_immutable ).toVar();
-// 	p.assign( mod( p, repeat ) );
-// 	const i = vec2( floor( p ) ).toVar();
-// 	const f = vec2( fract( p ) ).toVar();
-// 	const minDist = float( 1.0 ).toVar();
-
-// 	Loop( { start: int( - 1 ), end: int( 1 ), name: 'y', condition: '<=' }, ( { y } ) => {
-
-// 		Loop( { start: int( - 1 ), end: int( 1 ), name: 'x', condition: '<=' }, ( { x } ) => {
-
-// 			const neighbor = vec2( x, y ).toVar();
-// 			const point = vec2( hash( mod( i.add( neighbor ), repeat ) ) ).toVar();
-// 			const diff = vec2( neighbor.add( point.sub( f ) ) ).toVar();
-// 			const dist = float( length( diff ) ).toVar();
-// 			minDist.assign( min( minDist, dist ) );
-
-// 		} );
-
-// 	} );
-
-// 	return minDist;
-
-// } ).setLayout( {
-// 	name: 'repeatingVoronoi',
-// 	type: 'float',
-// 	inputs: [
-// 		{ name: 'p', type: 'vec2' },
-// 		{ name: 'repeat', type: 'float' }
-// 	]
-// } );
-
-// const voronoi = /*#__PURE__*/ Fn( ( [ p_immutable, repeat_immutable ] ) => {
-
-// 	const repeat = float( repeat_immutable ).toVar();
-// 	const p = vec2( p_immutable ).toVar();
-// 	p.assign( mod( p, repeat ) );
-// 	const i = vec2( floor( p ) ).toVar();
-// 	const f = vec2( fract( p ) ).toVar();
-// 	const minDist = float( 1.0 ).toVar();
-// 	const secondMinDist = float( 1.0 ).toVar();
-
-// 	Loop( { start: int( - 1 ), end: int( 1 ), name: 'y', condition: '<=' }, ( { y } ) => {
-
-// 		Loop( { start: int( - 1 ), end: int( 1 ), name: 'x', condition: '<=' }, ( { x } ) => {
-
-// 			const neighbor = vec2( x, y ).toVar();
-// 			const point = vec2( hash( mod( i.add( neighbor ), repeat ) ) ).toVar();
-// 			const diff = vec2( neighbor.add( point.sub( f ) ) ).toVar();
-// 			const dist = float( length( diff ) ).toVar();
-
-// 			If( dist.lessThan( minDist ), () => {
-
-// 				secondMinDist.assign( minDist );
-// 				minDist.assign( dist );
-
-// 			} ).ElseIf( dist.lessThan( secondMinDist ), () => {
-
-// 				secondMinDist.assign( dist );
-
-// 			} );
-
-// 		} );
-
-// 	} );
-
-// 	return vec2( minDist, secondMinDist.sub(minDist) );
-
-// } ).setLayout( {
-// 	name: 'repeatingVoronoiEdge',
-// 	type: 'vec2',
-// 	inputs: [
-// 		{ name: 'p', type: 'vec2' },
-// 		{ name: 'repeat', type: 'float' }
-// 	]
-// } );
-
-const voronoi = /*#__PURE__*/ Fn( ( [ uv_immutable, repeat_immutable ] ) => {
+const voronoiNode = /*#__PURE__*/ Fn( ( [ uv_immutable, repeat_immutable ] ) => {
 
 	const repeat = float( repeat_immutable ).toVar();
 	const uv = vec2( uv_immutable ).toVar();
@@ -132,43 +53,13 @@ const voronoi = /*#__PURE__*/ Fn( ( [ uv_immutable, repeat_immutable ] ) => {
 
 			} );
 
-			// const neighbor = vec2( x, y ).toVar();
-			// const point = vec2( hash( mod( i.add( neighbor ), repeat ) ) ).toVar();
-			// const diff = vec2( neighbor.add( point.sub( f ) ) ).toVar();
-			// const dist = float( length( diff ) ).toVar();
-
-			// If( dist.lessThan( minDist ), () => {
-
-			// 	minEdge.assign( minDist );
-			// 	minDist.assign( dist );
-			// 	bestId.assign( i.add( neighbor ) );
-
-			// } ).ElseIf( dist.lessThan( minEdge ), () => {
-
-			// 	minEdge.assign( dist );
-
-			// } );
-			// const neighbor = vec2( x, y ).toVar();
-			// const point = vec2( hash( mod( i.add( neighbor ), repeat ) ) ).toVar();
-			// const diff = vec2( neighbor.add( point.sub( f ) ) ).toVar();
-			// const dist = float( length( diff ) ).toVar();
-
-			// If( dist.lessThan( minDist ), () => {
-
-			// 	minDist.assign( dist );
-			// 	bestId.assign( i.add( neighbor ) );
-
-			// } );
-
-			// minEdge.assign( min( minEdge, abs( length( diff ).sub( sqrt( minDist ) ) ) ) );
-
 		} );
 
 	} );
 
 	cellId.assign( fract( bestId.div( repeat ) ) );
 
-	return vec3( minDist, minEdge.sub(minDist), cellId.x.add(cellId.y).div(2) );
+	return vec3( minDist, minEdge.sub(minDist), hash(cellId).x );
 
 } ).setLayout( {
 	name: 'voronoi',
@@ -212,7 +103,7 @@ export const random = /*#__PURE__*/ Fn( ( [ value_immutable ] ) => {
 	]
 } );
 
-export const seamless_noise = /*#__PURE__*/ Fn( ( [ uv_immutable, cell_amount_immutable, period_immutable ] ) => {
+export const perlinNode = /*#__PURE__*/ Fn( ( [ uv_immutable, cell_amount_immutable, period_immutable ] ) => {
 
 	const period = vec2( period_immutable ).toVar();
 	const cell_amount = float( cell_amount_immutable ).toVar();
@@ -233,7 +124,7 @@ export const seamless_noise = /*#__PURE__*/ Fn( ( [ uv_immutable, cell_amount_im
 	return mix( mix( dot( lowerLeftDirection, fraction.sub( vec2( int( 0 ), int( 0 ) ) ) ), dot( lowerRightDirection, fraction.sub( vec2( int( 1 ), int( 0 ) ) ) ), blur.x ), mix( dot( upperLeftDirection, fraction.sub( vec2( int( 0 ), int( 1 ) ) ) ), dot( upperRightDirection, fraction.sub( vec2( int( 1 ), int( 1 ) ) ) ), blur.x ), blur.y ).mul( 0.8 ).add( 0.5 );
 
 } ).setLayout( {
-	name: 'seamless_noise',
+	name: 'perlinNode',
 	type: 'float',
 	inputs: [
 		{ name: 'uv', type: 'vec2' },
@@ -264,11 +155,13 @@ export class Noises
 
         // Material
         this.material = new THREE.MeshBasicNodeMaterial({ color: 'red', wireframe: false })
+
+		const perlin = perlinNode(uv(), 6.0, 6.0).remap(0.1, 0.9, 0.0, 1.0)
+		const voronoi = voronoiNode(uv(), 8)
+		
         this.material.outputNode = vec4(
-            seamless_noise(uv(), 6.0, 6.0).remap(0.1, 0.9, 0.0, 1.0),
-            voronoi(uv(), 8).y,
-            0,
-            1
+            perlin,
+            voronoi.xyz
         )
 
         // Quad mesh
