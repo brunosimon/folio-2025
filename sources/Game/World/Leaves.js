@@ -1,6 +1,6 @@
 import * as THREE from 'three/webgpu'
 import { Game } from '../Game.js'
-import { float, Fn, hash, instancedArray, instanceIndex, materialNormal, max, mod, positionGeometry, rotateUV, sin, smoothstep, step, storage, texture, uniform, vec2, vec3, vec4 } from 'three/tsl'
+import { float, Fn, hash, instancedArray, instanceIndex, materialNormal, max, mod, modelViewMatrix, positionGeometry, rotateUV, sin, smoothstep, step, storage, texture, uniform, vec2, vec3, vec4 } from 'three/tsl'
 
 export class Leaves
 {
@@ -103,8 +103,8 @@ export class Leaves
         for(let i = 0; i < this.count; i++)
         {
             const normal = new THREE.Vector3(0, 1, 0)
-            normal.applyAxisAngle(new THREE.Vector3(1, 0, 0), (Math.random() - 0.5) * 1.2)
-            normal.applyAxisAngle(new THREE.Vector3(0, 0, 1), (Math.random() - 0.5) * 1.2)
+            normal.applyAxisAngle(new THREE.Vector3(1, 0, 0), (Math.random() - 0.5) * 2)
+            normal.applyAxisAngle(new THREE.Vector3(0, 0, 1), (Math.random() - 0.5) * 2)
             normal.toArray(normalArray, i * 3)
         }
         const normalBuffer = storage(new THREE.StorageInstancedBufferAttribute(normalArray, 3), 'vec3', this.count).toAttribute()
@@ -116,7 +116,7 @@ export class Leaves
         this.material.positionNode = Fn(() =>
         {
             // Normal
-            materialNormal.assign(normalBuffer)
+            materialNormal.assign(modelViewMatrix.mul(vec4(normalBuffer, 0)))
 
             // Position
             const leavePosition = this.positionBuffer.toAttribute().toVar()
