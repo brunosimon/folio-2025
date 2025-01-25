@@ -45,7 +45,7 @@ export class World
         // this.playground = new Playground()
         // this.christmas = new Christmas()
 
-        this.setAxesHelper()
+        // this.setAxesHelper()
         // this.setCollisionGroupsTest()
         // this.setNormalTest()
     }

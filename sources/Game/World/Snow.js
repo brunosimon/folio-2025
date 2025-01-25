@@ -1,6 +1,6 @@
 import * as THREE from 'three/webgpu'
 import { Game } from '../Game.js'
-import { attribute, cameraNormalMatrix, color, cross, dot, float, Fn, If, materialNormal, min, mix, modelNormalMatrix, modelViewMatrix, PI, positionGeometry, positionLocal, positionWorld, rotateUV, texture, time, uniform, varying, vec2, vec3, vec4 } from 'three/tsl'
+import { attribute, cameraNormalMatrix, color, cross, dot, float, Fn, If, materialNormal, min, mix, modelNormalMatrix, modelViewMatrix, PI, positionGeometry, positionLocal, positionWorld, rotateUV, texture, time, uniform, uv, varying, vec2, vec3, vec4, viewportSize } from 'three/tsl'
 
 export class Snow
 {
@@ -9,6 +9,7 @@ export class Snow
         this.game = Game.getInstance()
 
         this.size = this.game.view.optimalArea.radius * 2
+        this.halfSize = this.size * 0.5
         this.subdivisions = 256
         // this.size = 10
         // this.subdivisions = 3
@@ -24,6 +25,8 @@ export class Snow
             })
         }
 
+        this.setNodes()
+        this.setSnowElevation()
         this.setGeometry()
         this.setMaterial()
         this.setMesh()
@@ -32,6 +35,103 @@ export class Snow
         {
             this.update()
         }, 9)
+    }
+
+    setNodes()
+    {
+        this.roundedPosition = uniform(vec2(0))
+        this.groundDataDelta = uniform(vec2(0))
+        this.elevation = uniform(0.5)
+        this.noiseMultiplier = uniform(1)
+        this.noise1Frequency = uniform(0.1)
+        this.noise2Frequency = uniform(0.07)
+        this.waterDropEdgeLow = uniform(0.185)
+        this.waterDropEdgeHigh = uniform(0.235)
+        this.waterDropAmplitude = uniform(1)
+        
+        this.elevationNode = Fn(([position]) =>
+        {
+            const elevation = this.elevation.toVar()
+
+            // Terrain
+            const terrainUv = this.game.terrainData.worldPositionToUvNode(position.xy)
+            const terrainData = this.game.terrainData.terrainDataNode(terrainUv)
+
+            // Noise
+            const noiseUv1 = position.mul(this.noise1Frequency).xy
+            const noise1 = texture(this.game.noises.texture, noiseUv1).r
+
+            const noiseUv2 = position.mul(this.noise2Frequency).xy
+            const noise2 = texture(this.game.noises.texture, noiseUv2).r
+
+            elevation.addAssign(noise1.mul(noise2).smoothstep(0, 1).mul(this.noiseMultiplier))
+
+            // Wheel tracks
+            const groundDataColor = texture(
+                this.game.groundData.renderTarget.texture,
+                position.xy.sub(- this.game.groundData.halfSize).sub(this.roundedPosition).add(this.groundDataDelta).div(this.game.groundData.size)
+            )
+
+            const wheelsTracksHeight = groundDataColor.r.oneMinus().toVar()
+            const chassisTracksHeight = groundDataColor.g.oneMinus().toVar().remapClamp(0.5, 1, 0.25, 1)
+            const tracksHeight = min(wheelsTracksHeight, chassisTracksHeight)
+            // elevation.assign(min(elevation, tracksHeight))
+            elevation.mulAssign(tracksHeight)
+
+            elevation.addAssign(terrainData.b.remap(0, 1, 0, -2))
+
+            return elevation
+        })
+    }
+
+    setSnowElevation()
+    {
+        this.snowElevation = {}
+
+        const material = new THREE.MeshBasicNodeMaterial({ wireframe: false })
+        const textureSize = this.subdivisions + 1
+
+        material.outputNode = Fn(() =>
+        {
+            const position = uv().sub(0.5).mul(this.size + this.subdivisionSize).add(this.roundedPosition)
+            const elevation = this.elevationNode(position)
+
+            return vec4(elevation, 0, 0, 1)
+        })()
+
+        this.snowElevation.renderTarget = new THREE.RenderTarget(
+            textureSize,
+            textureSize,
+            {
+                depthBuffer: false,
+                type: THREE.HalfFloatType,
+                minFilter: THREE.LinearFilter,
+                magFilter: THREE.LinearFilter,
+                wrapS: THREE.ClampToEdgeWrapping,
+                wrapT: THREE.ClampToEdgeWrapping
+            }
+        )
+        this.snowElevation.texture = this.snowElevation.renderTarget.texture
+
+        // Quad mesh
+        this.snowElevation.quadMesh = new THREE.QuadMesh(material)
+        
+        // // Debug
+        // const debugMaterial = new THREE.MeshBasicNodeMaterial({ map: this.snowElevation.renderTarget.texture, transparent: true, depthTest: false, depthWrite: false })
+        // debugMaterial.vertexNode = Fn(() =>
+        // {
+        //     const ratio = viewportSize.x.div(viewportSize.y)
+        //     const position = attribute('position').mul(vec3(1, ratio, 0)).mul(0.5).sub(vec3(0.75, 0.5, 0))
+        //     return vec4(position, 1)
+        // })()
+     
+        // const debugMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), debugMaterial)
+        
+        // debugMesh.position.y = 5
+        // debugMesh.position.x = - 3
+        // debugMesh.frustumCulled = false
+        // debugMesh.renderOrder = 1
+        // this.game.scene.add(debugMesh)
     }
 
     setGeometry()
@@ -126,57 +226,24 @@ export class Snow
     {
         this.material = new THREE.MeshLambertNodeMaterial({ color: '#ffffff', transparent: true, wireframe: false })
 
-        this.roundedPosition = uniform(vec2(0))
-        this.groundDataDelta = uniform(vec2(0))
         this.color = uniform(color('#ffffff'))
-        this.colorEdgeTop = uniform(0.5)
-        this.colorEdgeBottom = uniform(0.022)
-        this.normalNeighbourShift = uniform(this.subdivisionSize)
-        this.elevation = uniform(0.5)
-        this.noiseMultiplier = uniform(1)
-        this.noise1Frequency = uniform(0.1)
-        this.noise2Frequency = uniform(0.07)
+        this.fadeEdgeHigh = uniform(0.5)
+        this.fadeEdgeLow = uniform(0.022)
+        this.normalNeighbourShift = uniform(0.2)
 
         const baseColor = varying(color())
         const deltaY = varying(float())
-        
-        const elevationNode = Fn(([position]) =>
-        {
-            const elevation = this.elevation.toVar()
-
-            // Terrain
-            const terrainUv = this.game.terrainData.worldPositionToUvNode(position.xy)
-            const terrainData = this.game.terrainData.terrainDataNode(terrainUv)
-
-            elevation.addAssign(terrainData.b.remap(0, 1, 0, -2))
-
-            // Noise
-            const noiseUv1 = position.mul(this.noise1Frequency).xy
-            const noise1 = texture(this.game.noises.texture, noiseUv1).r
-
-            const noiseUv2 = position.mul(this.noise2Frequency).xy
-            const noise2 = texture(this.game.noises.texture, noiseUv2).r
-
-            elevation.addAssign(noise1.mul(noise2).smoothstep(0, 1).mul(this.noiseMultiplier))
-
-            // Wheel tracks
-            const groundDataColor = texture(
-                this.game.groundData.renderTarget.texture,
-                position.xy.sub(- this.game.groundData.halfSize).sub(this.roundedPosition).add(this.groundDataDelta).div(this.game.groundData.size)
-            )
-
-            const wheelsTracksHeight = groundDataColor.r.oneMinus().toVar()
-            const chassisTracksHeight = groundDataColor.g.oneMinus().toVar().remapClamp(0.5, 1, 0.25, 1)
-            const tracksHeight = min(wheelsTracksHeight, chassisTracksHeight)
-            elevation.mulAssign(tracksHeight)
-
-            return elevation
-        })
 
         const pivot = attribute('pivot')
         const debugColor = varying(color('red'))
 
         const flipRotation = Math.PI * 0.5
+
+        const elevationFromTexture = Fn(([position]) =>
+        {
+            const newUv = position.sub(this.roundedPosition).div(this.size).add(0.5)
+            return texture(this.snowElevation.texture, newUv)
+        })
 
         this.material.positionNode = Fn(() =>
         {
@@ -189,10 +256,10 @@ export class Snow
             const pivotC = pivotCenter.add(vec3(this.subdivisionSize, 0, this.subdivisionSize)).toVar()
             const pivotD = pivotCenter.add(vec3(-this.subdivisionSize, 0, this.subdivisionSize)).toVar()
 
-            pivotA.y.assign(elevationNode(pivotA.xz))
-            pivotB.y.assign(elevationNode(pivotB.xz))
-            pivotC.y.assign(elevationNode(pivotC.xz))
-            pivotD.y.assign(elevationNode(pivotD.xz))
+            pivotA.y.assign(elevationFromTexture(pivotA.xz))
+            pivotB.y.assign(elevationFromTexture(pivotB.xz))
+            pivotC.y.assign(elevationFromTexture(pivotC.xz))
+            pivotD.y.assign(elevationFromTexture(pivotD.xz))
 
             const acDelta = pivotA.y.sub(pivotC.y).abs()
             const bdDelta = pivotB.y.sub(pivotD.y).abs()
@@ -203,9 +270,6 @@ export class Snow
                 debugColor.assign(color('cyan'))
                 rotation.assign(flipRotation)
             })
-            // const rotation = pivotCDelta.step(pivotBDelta).mul(flipRotation)
-            
-            // positionGeometry.add(vec3(this.normalNeighbourShift, 0, this.normalNeighbourShift.negate()))
 
             const newPosition = positionGeometry.toVar()
             newPosition.x.addAssign(this.roundedPosition.x)
@@ -218,9 +282,9 @@ export class Snow
             const positionB = positionA.toVar().add(vec3(this.normalNeighbourShift, 0, 0))
             const positionC = positionA.toVar().add(vec3(0, 0, this.normalNeighbourShift.negate()))
 
-            positionA.y.assign(elevationNode(positionA.xz))
-            positionB.y.assign(elevationNode(positionB.xz))
-            positionC.y.assign(elevationNode(positionC.xz))
+            positionA.y.assign(elevationFromTexture(positionA.xz))
+            positionB.y.assign(elevationFromTexture(positionB.xz))
+            positionC.y.assign(elevationFromTexture(positionC.xz))
 
             // Terrain data
             const terrainUv = this.game.terrainData.worldPositionToUvNode(positionA.xz)
@@ -234,7 +298,7 @@ export class Snow
             materialNormal.assign(modelViewMatrix.mul(vec4(newNormal, 0)))
 
             // Push down further more in water (after calculating normal)
-            const waterDrop = terrainData.b.remapClamp(0, 0.3, 0, -3)
+            const waterDrop = terrainData.b.remapClamp(this.waterDropEdgeLow, this.waterDropEdgeHigh, 0, this.waterDropAmplitude.negate())
             positionA.y.addAssign(waterDrop)
 
             // Color
@@ -252,7 +316,7 @@ export class Snow
         this.material.outputNode = Fn(() =>
         {
             const lightOutput = this.game.lighting.lightOutputNodeBuilder(this.color, totalShadow, false, false).rgb
-            const alpha = deltaY.smoothstep(this.colorEdgeBottom, this.colorEdgeTop)
+            const alpha = deltaY.smoothstep(this.fadeEdgeLow, this.fadeEdgeHigh)
 
             return vec4(lightOutput, alpha)
         })()
@@ -267,13 +331,19 @@ export class Snow
         {
             this.debugPanel.addBinding(this.material, 'wireframe')
             this.game.debug.addThreeColorBinding(this.debugPanel, this.color.value, 'color')
-            this.debugPanel.addBinding(this.colorEdgeTop, 'value', { label: 'colorEdgeTop', min: - 2, max: 2, step: 0.001 })
-            this.debugPanel.addBinding(this.colorEdgeBottom, 'value', { label: 'colorEdgeBottom', min: - 2, max: 2, step: 0.001 })
-            this.debugPanel.addBinding(this.normalNeighbourShift, 'value', { label: 'normalNeighbourShift', min: 0, max: 0.4, step: 0.001 })
             this.debugPanel.addBinding(this.elevation, 'value', { label: 'elevation', min: -1, max: 1, step: 0.001 })
+            this.debugPanel.addBlade({ view: 'separator' })
+            this.debugPanel.addBinding(this.fadeEdgeHigh, 'value', { label: 'fadeEdgeHigh', min: - 2, max: 2, step: 0.001 })
+            this.debugPanel.addBinding(this.fadeEdgeLow, 'value', { label: 'fadeEdgeLow', min: - 2, max: 2, step: 0.001 })
+            this.debugPanel.addBlade({ view: 'separator' })
+            this.debugPanel.addBinding(this.normalNeighbourShift, 'value', { label: 'normalNeighbourShift', min: 0, max: 2, step: 0.001 })
+            this.debugPanel.addBlade({ view: 'separator' })
             this.debugPanel.addBinding(this.noiseMultiplier, 'value', { label: 'noiseMultiplier', min: 0, max: 2, step: 0.001 })
             this.debugPanel.addBinding(this.noise1Frequency, 'value', { label: 'noise1Frequency', min: 0, max: 0.4, step: 0.001 })
             this.debugPanel.addBinding(this.noise2Frequency, 'value', { label: 'noise2Frequency', min: 0, max: 0.4, step: 0.001 })
+            this.debugPanel.addBinding(this.waterDropEdgeLow, 'value', { label: 'waterDropEdgeLow', min: 0, max: 1, step: 0.001 })
+            this.debugPanel.addBinding(this.waterDropEdgeHigh, 'value', { label: 'waterDropEdgeHigh', min: 0, max: 1, step: 0.001 })
+            this.debugPanel.addBinding(this.waterDropAmplitude, 'value', { label: 'waterDropAmplitude', min: 0, max: 5, step: 0.001 })
         }
     }
 
@@ -298,5 +368,9 @@ export class Snow
             this.roundedPosition.value.x - this.game.groundData.focusPoint.x,
             this.roundedPosition.value.y - this.game.groundData.focusPoint.y
         )
+
+        this.game.rendering.renderer.setRenderTarget(this.snowElevation.renderTarget)
+        this.snowElevation.quadMesh.renderAsync(this.game.rendering.renderer)
+        this.game.rendering.renderer.setRenderTarget(null)
     }
 }
