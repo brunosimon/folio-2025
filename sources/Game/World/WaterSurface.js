@@ -90,7 +90,7 @@ export class WaterSurface
 
         this.splashesRatio = uniform(0)
         const splashesNoiseFrequency = uniform(0.33)
-        const splashesTimeFrequency = uniform(10)
+        const splashesTimeFrequency = uniform(4)
         const splashesThickness = uniform(0.4)
         const splashesEdgeAttenuationLow = uniform(0.74)
         const splashesEdgeAttenuationHigh = uniform(0.76)
@@ -108,7 +108,7 @@ export class WaterSurface
 
         const ripplesNode = Fn(([terrainData]) =>
         {           
-            const baseRipple = terrainData.b.add(this.game.wind.localTime).mul(ripplesSlopeFrequency).toVar()
+            const baseRipple = terrainData.b.add(this.game.wind.localTime.mul(0.5)).mul(ripplesSlopeFrequency).toVar()
             const rippleIndex = baseRipple.floor()
 
             const ripplesNoise = texture(
@@ -117,7 +117,7 @@ export class WaterSurface
             ).r
             
             const ripples = terrainData.b
-                .add(this.game.wind.localTime)
+                .add(this.game.wind.localTime.mul(0.5))
                 .mul(ripplesSlopeFrequency)
                 .mod(1)
                 .sub(terrainData.b.remap(0, 1, -0.3, 1).oneMinus())
