@@ -32,7 +32,7 @@ export class Vehicle
         this.sideward = new THREE.Vector3(0, 0, 1)
         this.upward = new THREE.Vector3(0, 1, 0)
         this.forward = new THREE.Vector3(1, 0, 0)
-        this.position = new THREE.Vector3()
+        this.position = new THREE.Vector3(0, 5, 0)
         this.velocity = new THREE.Vector3()
         this.direction = this.forward.clone()
         this.goingForward = false
@@ -108,7 +108,7 @@ export class Vehicle
         this.chassis.entity = this.game.entities.add(
             {
                 type: 'dynamic',
-                position: { x: 0, y: 5, z: 0 },
+                position: this.position,
                 friction: 0.4,
                 rotation: new THREE.Quaternion().setFromAxisAngle(new THREE.Euler(0, 1, 0), - Math.PI * 0),
                 // rotation: new THREE.Quaternion().setFromAxisAngle(new THREE.Euler(0, 0, 1), - Math.PI * 0.5),
