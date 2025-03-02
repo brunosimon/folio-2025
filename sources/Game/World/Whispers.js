@@ -116,6 +116,8 @@ export class Whispers
 
         this.data.delete = (input) =>
         {
+            this.data.items.delete(input.id)
+
             this.data.needsUpdate = true
         }
 
@@ -135,6 +137,7 @@ export class Whispers
             // Delete
             else if(data.type === 'whispersDelete')
             {
+                console.log(data)
                 for(const whisper of data.whispers)
                 {
                     this.data.delete(whisper)
@@ -159,7 +162,8 @@ export class Whispers
             if(event.key === 'Enter' && input.value !== '')
             {
                 // Insert
-                this.game.serverWhispers.insert({
+                this.game.server.send({
+                    type: 'whispersInsert',
                     message: input.value,
                     x: this.game.vehicle.position.x,
                     y: this.game.vehicle.position.y,
