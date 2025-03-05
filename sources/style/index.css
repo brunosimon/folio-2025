@@ -1,13 +1,207 @@
-@import url('./sound.css');
-@import url('./blackFriday.css');
+/* @import url('./sound.css'); */
+/* @import url('./blackFriday.css'); */
 @import url('./tweakpane.css');
 
-html, body, .game
+*
+{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+button, input
+{
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    outline: inherit;
+}
+
+button
+{
+    cursor: pointer;
+}
+
+html, body, .game, .modals
 {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+.title
+{
+    margin-bottom: 0.25em;
+    font-size: 50px;
+    font-family: "Amatic SC", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.text
+{
+    margin-bottom: 0.75em;
+    font-size: 20px;
+}
+
+.text-small
+{
+    font-size: 16px;
+}
+
+.text-faded
+{
+    opacity: 0.8;
+}
+
+.modals
+{
+    display: none;
+    position: fixed;
+    top: 0;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.modals.is-displayed
+{
+    display: flex;
+}
+
+.modals.is-visible
+{
+    opacity: 1;
+}
+
+.modals .modal
+{
+    display: none;
+}
+
+.modals .modal.is-displayed
+{
+    display: block;
+}
+
+.modals *::selection {
+  color: #222222;
+  background-color: #ffffff;
+}
+
+.modals .container
+{
+    display: flex;
+    width: 1000px;
+}
+
+.modals .preview
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    position: relative;
+    padding-bottom: 10%;
+}
+
+.modals .preview .message
+{
+    position: relative;
+    background: #222222;
+    padding: 0 15px 4px 15px;
+    font-size: 50px;
+    white-space: nowrap;
+    color: #ffffff;
+    border: none;
+    outline: none;
+}
+
+.modals .preview .background
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modals .content
+{
+    position: relative;
+    width: 50%;
+    padding: 25px 40px 40px 40px;
+    background: radial-gradient(ellipse at top left, #222222, #111111);
+}
+
+.modals .content .close
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 38px;
+    right: 38px;
+    width: 40px;
+    height: 40px;
+    opacity: 0.65;
+}
+
+.modals .content .close:hover
+{
+    opacity: 1;
+}
+
+.modals .content .input-group
+{
+    display: flex;
+    width: 100%;
+    height: 58px;
+    margin-top: 1.5em;
+}
+
+.modals .content .input-group.is-valide button
+{
+    cursor: pointer;
+    border-color: #ffceca;
+}
+
+.modals .content .input-group.is-valide button svg *
+{
+    stroke: #ffceca;
+}
+
+.modals .content .input-group input[type=text]
+{
+    border-radius: 8px 0 0 8px;
+    border: 1px solid #555555;
+    width: calc(100% - 62px);
+    padding: 0 15px;
+}
+
+.modals .content .input-group button
+{
+    padding: 0 8px 0 4px;
+    border-radius: 0 8px 8px 0;
+    border: 1px solid #555555;
+    width: 62px;
+    cursor: default;
+}
+/* ffceca */
+.modals .content .input-group button svg *
+{
+    stroke: #555555;
+}

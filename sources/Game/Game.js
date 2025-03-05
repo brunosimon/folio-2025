@@ -26,6 +26,7 @@ import { TerrainData } from './TerrainData.js'
 import { Explosions } from './Explosions.js'
 import { YearCycles } from './Cycles/YearCycles.js'
 import { Server } from './Server.js'
+import { Modals } from './Modals.js'
 
 export class Game
 {
@@ -106,29 +107,36 @@ export class Game
         this.server = new Server()
         this.ticker = new Ticker()
         this.inputs = new Inputs([
-            { name: 'forward', keys: [ 'ArrowUp', 'KeyW' ] },
-            { name: 'right', keys: [ 'ArrowRight', 'KeyD' ] },
-            { name: 'backward', keys: [ 'ArrowDown', 'KeyS' ] },
-            { name: 'left', keys: [ 'ArrowLeft', 'KeyA' ] },
-            { name: 'boost', keys: [ 'ShiftLeft', 'ShiftRight' ] },
-            { name: 'brake', keys: [ 'KeyB' ] },
-            { name: 'reset', keys: [ 'KeyR' ] },
-            { name: 'hydraulics', keys: [ 'Numpad5', 'Space' ] },
-            { name: 'hydraulicsFront', keys: [ 'Numpad8' ] },
-            { name: 'hydraulicsBack', keys: [ 'Numpad2' ] },
-            { name: 'hydraulicsRight', keys: [ 'Numpad6' ] },
-            { name: 'hydraulicsLeft', keys: [ 'Numpad4' ] },
-            { name: 'hydraulicsFrontLeft', keys: [ 'Numpad7' ] },
+            // Vehicle
+            { name: 'forward',              keys: [ 'ArrowUp', 'KeyW' ] },
+            { name: 'right',                keys: [ 'ArrowRight', 'KeyD' ] },
+            { name: 'backward',             keys: [ 'ArrowDown', 'KeyS' ] },
+            { name: 'left',                 keys: [ 'ArrowLeft', 'KeyA' ] },
+            { name: 'boost',                keys: [ 'ShiftLeft', 'ShiftRight' ] },
+            { name: 'brake',                keys: [ 'KeyB' ] },
+            { name: 'reset',                keys: [ 'KeyR' ] },
+            { name: 'hydraulics',           keys: [ 'Numpad5', 'Space' ] },
+            { name: 'hydraulicsFront',      keys: [ 'Numpad8' ] },
+            { name: 'hydraulicsBack',       keys: [ 'Numpad2' ] },
+            { name: 'hydraulicsRight',      keys: [ 'Numpad6' ] },
+            { name: 'hydraulicsLeft',       keys: [ 'Numpad4' ] },
+            { name: 'hydraulicsFrontLeft',  keys: [ 'Numpad7' ] },
             { name: 'hydraulicsFrontRight', keys: [ 'Numpad9' ] },
-            { name: 'hydraulicsBackRight', keys: [ 'Numpad3' ] },
-            { name: 'hydraulicsBackLeft', keys: [ 'Numpad1' ] },
-            { name: 'close', keys: [ 'Escape' ] },
-            { name: 'viewToggle', keys: [ 'KeyV' ] },
-            { name: 'debugToggle', keys: [ 'KeyH' ] },
+            { name: 'hydraulicsBackRight',  keys: [ 'Numpad3' ] },
+            { name: 'hydraulicsBackLeft',   keys: [ 'Numpad1' ] },
+            { name: 'whisper',              keys: [ 'KeyT' ] },
+
+            // UI
+            { name: 'close',                keys: [ 'Escape' ] },
+
+            // Debug
+            { name: 'viewToggle',           keys: [ 'KeyV' ] },
+            { name: 'debugToggle',          keys: [ 'KeyH' ] },
         ])
         this.debug = new Debug()
         this.time = new Time()
         this.viewport = new Viewport(this.domElement)
+        this.modals = new Modals()
         this.view = new View()
         this.rendering = new Rendering(() =>
         {

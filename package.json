@@ -11,7 +11,6 @@
   "description": "",
   "dependencies": {
     "@dimforge/rapier3d-compat": "^0.14.0",
-    "@supabase/supabase-js": "^2.49.1",
     "@tweakpane/plugin-camerakit": "^0.3.0",
     "@tweakpane/plugin-essentials": "^0.2.1",
     "camera-controls": "^2.9.0",

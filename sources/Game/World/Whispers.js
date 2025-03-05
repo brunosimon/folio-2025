@@ -1,8 +1,9 @@
 import * as THREE from 'three/webgpu'
 import { Game } from '../Game.js'
-import { createClient } from '@supabase/supabase-js'
-import { billboarding, cameraPosition, Fn, instanceIndex, min, modelViewMatrix, mul, normalWorld, positionGeometry, positionViewDirection, positionWorld, smoothstep, texture, time, uv, vec2, vec3, vec4 } from 'three/tsl'
+import { billboarding, cameraPosition, color, Fn, instanceIndex, min, mix, modelViewMatrix, mul, normalWorld, positionGeometry, positionViewDirection, positionWorld, smoothstep, texture, time, uv, vec2, vec3, vec4 } from 'three/tsl'
 import { hash } from 'three/tsl'
+import gsap from 'gsap'
+import { Bubble } from './Bubble.js'
 
 export class Whispers
 {
@@ -15,6 +16,8 @@ export class Whispers
         this.setMesh()
         this.setData()
         this.setInput()
+        this.setBubble()
+        this.setModal()
         // this.connectServer()
         // this.connectSupabase()
 
@@ -22,6 +25,14 @@ export class Whispers
         {
             this.update()
         }, 3)
+
+        this.game.inputs.events.on('whisper', (event) =>
+        {
+            if(event.down)
+            {
+                this.game.modals.open('whispers')
+            }
+        })
     }
 
     setMesh()
@@ -128,16 +139,14 @@ export class Whispers
             if(data.type === 'init' || data.type === 'whispersUpsert')
             {
                 for(const whisper of data.whispers)
-                {
                     this.data.upsert(whisper)
-                }
+                    
                 this.needsUpdate = true
             }
 
             // Delete
             else if(data.type === 'whispersDelete')
             {
-                console.log(data)
                 for(const whisper of data.whispers)
                 {
                     this.data.delete(whisper)
@@ -145,6 +154,15 @@ export class Whispers
                 this.needsUpdate = true
             }
         })
+
+        // Message already received
+        if(this.game.server.initData)
+        {
+            for(const whisper of this.game.server.initData.whispers)
+                this.data.upsert(whisper)
+                
+            this.needsUpdate = true
+        }
     }
 
     setInput()
@@ -173,9 +191,23 @@ export class Whispers
             }
         })
     }
+    
+    setBubble()
+    {
+        this.bubble = {}
+        this.bubble.instance = new Bubble()
+        this.bubble.closest = null
+        this.bubble.minDistance = 3
+    }
+
+    setModal()
+    {
+        this.modal = {}
+    }
 
     update()
     {
+        // Data
         if(this.data.needsUpdate)
         {
             let i = 0
@@ -198,6 +230,34 @@ export class Whispers
 
             this.mesh.visible = true
             this.data.needsUpdate = false
+        }
+
+        // Bubble
+        let closestWhisper = null
+        let closestDistance = Infinity
+        this.data.items.forEach(whisper =>
+        {
+            const distance = this.game.vehicle.position.distanceTo(whisper.position)
+
+            if(distance < closestDistance && distance < this.bubble.minDistance)
+            {
+                closestDistance = distance
+                closestWhisper = whisper
+            }
+        })
+
+        if(closestWhisper !== this.bubble.closest)
+        {
+            if(!closestWhisper)
+                this.bubble.instance.hide()
+            else
+            {
+                const position = closestWhisper.position.clone()
+                position.y += 1.25
+                this.bubble.instance.tryShow(closestWhisper.message, position)
+            }
+
+            this.bubble.closest = closestWhisper
         }
     }
 }

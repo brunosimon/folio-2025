@@ -35,7 +35,7 @@ export class Rendering
 
     setRenderer()
     {
-        this.renderer = new THREE.WebGPURenderer({ forceWebGL: true })
+        this.renderer = new THREE.WebGPURenderer({ forceWebGL: false })
         this.renderer.setSize(this.game.viewport.width, this.game.viewport.height)
         this.renderer.setPixelRatio(this.game.viewport.pixelRatio)
         // this.renderer.sortObjects = false

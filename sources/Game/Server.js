@@ -16,6 +16,7 @@ export class Server
 
         // Socket connexion
         this.connected = false
+        this.initData = null
         this.socket = new WebSocket(import.meta.env.VITE_SERVER_WS_URL)
         this.socket.binaryType = 'arraybuffer'
 
@@ -36,6 +37,10 @@ export class Server
     onReceive(message)
     {
         const data = this.decode(message.data)
+    
+        if(data.type === 'init')
+            this.initData = data
+
         this.events.trigger('message', [ data ])
     }
 
