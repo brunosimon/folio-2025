@@ -270,9 +270,11 @@ export class WaterSurface
 
          this.blurOutputNode = Fn(() =>
          {
-            const depthDiff = viewportLinearDepth.sub(linearDepth()).mul(10)
+            const blurStrength = viewportLinearDepth.sub(linearDepth()).mul(10)
+            // const blurStrength = 0.01
+            
             let blurOutput = viewportSharedTexture(screenUV)
-            blurOutput = hashBlur(blurOutput, depthDiff).rgb
+            blurOutput = hashBlur(blurOutput, blurStrength).rgb
 
             return vec3(blurOutput)
          })

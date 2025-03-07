@@ -98,8 +98,11 @@ export class Vehicle
         this.parts.stopLights.visible = false
 
         // Wheel
-        this.parts.wheel = this.game.resources.vehicle.scene.getObjectByName('wheel')
-        this.game.materials.updateObject(this.parts.wheel)
+        this.parts.wheelContainer = this.game.resources.vehicle.scene.getObjectByName('wheelContainer')
+        this.game.materials.updateObject(this.parts.wheelContainer)
+
+        // this.parts.wheel = this.game.resources.vehicle.scene.getObjectByName('wheel')
+        // this.game.materials.updateObject(this.parts.wheel)
     }
 
     setChassis()
@@ -157,15 +160,18 @@ export class Vehicle
             this.controller.addWheel(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), 1, 1)
 
             // Visual
-            wheel.visual = new THREE.Group()
-            this.chassis.entity.visual.add(wheel.visual)
+            wheel.container = this.parts.wheelContainer.clone(true)
+            this.chassis.entity.visual.add(wheel.container)
 
-            const actualWheel = this.parts.wheel.clone(true)
-            wheel.visual.add(actualWheel)
-            actualWheel.position.set(0, 0, 0)
+            wheel.suspension = wheel.container.getObjectByName('wheelSuspension')
+            
+            wheel.cylinder = wheel.container.getObjectByName('wheelCylinder')
+            wheel.cylinder.position.set(0, 0, 0)
             
             if(i === 0 || i === 2)
-                actualWheel.rotation.y = Math.PI
+            {
+                wheel.container.rotation.y = Math.PI
+            }
 
             // Add track to ground data
             wheel.track = this.game.groundData.addTrack(new Track(0.5, 'r'))
@@ -179,7 +185,7 @@ export class Vehicle
         // Settings
         this.wheels.settings = {
             offset: { x: 0.90, y: - 0.5, z: 0.75 },
-            radius: 0.5,
+            radius: 0.42,
             directionCs: { x: 0, y: -1, z: 0 },
             axleCs: { x: 0, y: 0, z: 1 },
             frictionSlip: 0.9,
@@ -219,8 +225,8 @@ export class Vehicle
                 this.controller.setWheelSuspensionRelaxation(i, this.wheels.settings.suspensionRelaxation)
                 this.controller.setWheelSuspensionStiffness(i, this.wheels.settings.suspensionStiffness)
 
-                // wheel.visual.scale.set(this.wheels.settings.radius, this.wheels.settings.radius, 1)
-                wheel.visual.position.copy(wheel.basePosition)
+                // wheel.container.scale.set(this.wheels.settings.radius, this.wheels.settings.radius, 1)
+                wheel.container.position.copy(wheel.basePosition)
 
                 i++
             }
@@ -677,12 +683,6 @@ export class Vehicle
         else
             this.flip.deactivate()
 
-        // // In water
-        // if(this.position.y < this.inWater.threshold)
-        //     this.inWater.activate()
-        // else
-        //     this.inWater.deactivate()
-        
         // Wheels
         this.wheels.visualSteering += (this.wheels.steering - this.wheels.visualSteering) * this.game.ticker.deltaScaled * 16
 
@@ -695,14 +695,32 @@ export class Vehicle
             if(!this.game.inputs.keys.brake || this.game.inputs.keys.forward || this.game.inputs.keys.backward)
             {
                 if(!this.stop.active)
-                    wheel.visual.rotation.z -= (this.speed * this.game.ticker.deltaScaled) / this.wheels.settings.radius
+                {
+                    if(i === 0 || i === 2)
+                        wheel.cylinder.rotation.z += (this.speed * this.game.ticker.deltaScaled) / this.wheels.settings.radius
+                    else
+                        wheel.cylinder.rotation.z -= (this.speed * this.game.ticker.deltaScaled) / this.wheels.settings.radius
+                }
             }
 
-            if(i === 0 || i === 1)
-                wheel.visual.rotation.y = this.wheels.visualSteering
+            if(i === 0)
+                wheel.container.rotation.y = Math.PI + this.wheels.visualSteering
 
-            const suspensionY = wheel.basePosition.y - this.controller.wheelSuspensionLength(i)
-            wheel.visual.position.y += (suspensionY - wheel.visual.position.y) * 25 * this.game.ticker.deltaScaled
+            if(i === 1)
+                wheel.container.rotation.y = this.wheels.visualSteering
+  
+            const suspensionLength = this.controller.wheelSuspensionLength(i)
+            let wheelY = wheel.basePosition.y - suspensionLength
+            wheelY = Math.min(wheelY, -0.5)
+
+            wheel.container.position.y += (wheelY - wheel.container.position.y) * 25 * this.game.ticker.deltaScaled
+            // console.log(wheel.container.position.y)
+
+            const suspensionScale = Math.abs(wheel.container.position.y) - 0.5
+            wheel.suspension.scale.y = suspensionScale
+
+            // if(i === 0)
+            //     console.log(suspensionScale)
 
             const inContact = this.controller.wheelIsInContact(i)
             if(inContact)
