@@ -1,10 +1,10 @@
 import * as THREE from 'three/webgpu'
 import { Game } from '../Game.js'
-import { float, Fn, normalWorld, step, storage, texture, uniform, vec4 } from 'three/tsl'
+import { color, float, Fn, mix, normalWorld, step, storage, texture, uniform, uv, vec2, vec3, vec4 } from 'three/tsl'
 
 export class CookieStand
 {
-    constructor(banner, cookieChimneyPosition)
+    constructor(banner, ovenHeat, blower, chimneyPosition)
     {
         this.game = Game.getInstance()
 
@@ -17,10 +17,13 @@ export class CookieStand
         }
 
         this.banner = banner
-        this.chimneyPosition = cookieChimneyPosition
+        this.ovenHeat = ovenHeat
+        this.blower = blower
+        this.chimneyPosition = chimneyPosition
 
         this.setBanner()
         this.setParticles()
+        this.setOvenHeat()
 
         this.game.ticker.events.on('tick', () =>
         {
@@ -39,7 +42,6 @@ export class CookieStand
         {
             const baseColor = texture(this.game.resources.cookieBannerTexture)
 
-            // return baseColor
             return this.game.lighting.lightOutputNodeBuilder(baseColor, normalWorld, totalShadows, true, false)
         })()
 
@@ -105,9 +107,34 @@ export class CookieStand
         this.game.scene.add(mesh)
     }
 
+    setOvenHeat()
+    {
+        const material = new THREE.MeshBasicNodeMaterial({ side: THREE.DoubleSide, transparent: true, depthTest: true, depthWrite: false })
+
+        material.outputNode = Fn(() =>
+        {
+            const noiseUv = uv().mul(vec2(2, 0.2)).toVar()
+            noiseUv.y.addAssign(this.game.ticker.elapsedScaledUniform.mul(0.05))
+            const noise = texture(this.game.noises.others, noiseUv).r
+
+            const strength = noise.mul(uv().y.pow(2)).toVar()
+
+            const emissiveMix = strength.smoothstep(0, 0.5)
+            const emissiveColor = mix(color('#ff3e00'), color('#ff8641'), emissiveMix).mul(strength.add(1).mul(2))
+
+            return vec4(vec3(emissiveColor), strength)
+        })()
+
+        this.ovenHeat.material = material
+        this.ovenHeat.castShadow = false
+    }
+
     update()
     {
-        const timeScale = (Math.sin(this.game.ticker.elapsedScaled) * 0.3 + 0.5) * 0.2
+        const timeScale = (Math.sin(this.game.ticker.elapsedScaled) * 0.3 + 0.5) * 0.3
         this.localTime.value += this.game.ticker.deltaScaled * timeScale
+
+        // console.log()
+        this.blower.scale.y = Math.sin(this.game.ticker.elapsedScaled + Math.PI) * 0.25 + 0.75
     }
 }
