@@ -1,6 +1,7 @@
 import * as THREE from 'three/webgpu'
 import { Game } from '../Game.js'
 import { InstancedGroup } from '../InstancedGroup.js'
+import { cameraPosition, color, Fn, luminance, mix, normalWorld, positionWorld, uniform, uv, vec3, vec4 } from 'three/tsl'
 
 export class Easter
 {
@@ -34,19 +35,60 @@ export class Easter
 
     setVisual()
     {
+        const colorA = uniform(color('#ff8641'))
+        const colorB = uniform(color('#ff3e00'))
+        const intensity = uniform(5)
+
+        /**
+         * Egg
+         */
         // Material
-        const material = new THREE.MeshBasicNodeMaterial()
+        const eggMaterial = new THREE.MeshBasicNodeMaterial({ transparent: true })
 
-        // Model
-        const model = this.game.resources.easterEggVisualModel.scene.children[0]
-        model.position.set(0, 3, 0)
-        model.rotation.set(0, 0, 0)
-        model.frustumCulled = false
-        model.material = material
+        eggMaterial.outputNode = Fn(() =>
+        {
+            const viewDirection = positionWorld.sub(cameraPosition).normalize()
+                
+            const fresnel = viewDirection.dot(normalWorld).abs().oneMinus().toVar()
 
+            const mixedColor = mix(colorB, colorA, fresnel)
+
+            return vec4(vec3(mixedColor.mul(intensity)), 1)
+        })()
+
+        // Mesh
+        const egg = this.game.resources.easterEggVisualModel.scene.getObjectByName('egg')
+        egg.position.set(0, 0, 0)
+        egg.frustumCulled = false
+        egg.material = eggMaterial
         
+        /**
+         * Beams
+         */
+        // Material
+        const beamsMaterial = new THREE.MeshBasicNodeMaterial({ transparent: true })
 
-        this.visual = model
+        beamsMaterial.outputNode = Fn(() =>
+        {
+            const strength = uv().y.add(this.game.ticker.elapsedScaledUniform.mul(0.05)).fract()
+
+            strength.greaterThan(0.2).discard()
+
+            const mixStrength = strength.mul(5).toVar()
+            const mixedColor = mix(colorA, colorB, mixStrength)
+
+            return vec4(vec3(mixedColor.mul(intensity)), 1)
+
+            return vec4(vec3(mixedColor.mul(intensity)), 1)
+        })()
+
+        // Mesh
+        const beams = this.game.resources.easterEggVisualModel.scene.getObjectByName('beams')
+        beams.position.set(0, 0, 0)
+        beams.frustumCulled = false
+        beams.material = beamsMaterial
+        
+        this.visual = this.game.resources.easterEggVisualModel.scene
     }
 }
 
