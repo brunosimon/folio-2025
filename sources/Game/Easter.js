@@ -1,6 +1,6 @@
 import * as THREE from 'three/webgpu'
-import { Game } from '../Game.js'
-import { InstancedGroup } from '../InstancedGroup.js'
+import { Game } from './Game.js'
+import { InstancedGroup } from './InstancedGroup.js'
 import { cameraPosition, color, Fn, luminance, mix, normalWorld, positionWorld, uniform, uv, vec3, vec4 } from 'three/tsl'
 import gsap from 'gsap'
 
@@ -194,19 +194,27 @@ export class Easter
     {
         this.modal = {}
 
-        const modalItem = this.game.modals.items.get('easter-end')
-        this.modal.element = modalItem.element
+        const endModal = this.game.modals.items.get('easter-end')
+        const introModal = this.game.modals.items.get('intro')
+        this.modal.element = endModal.element
         this.modal.time = this.modal.element.querySelector('.js-time')
         this.modal.code = this.modal.element.querySelector('.js-code')
         this.modal.link = this.modal.element.querySelector('.js-link')
         this.modal.firstOpen = true
+
+        let timeStart = null
+
+        introModal.events.on('close', () =>
+        {
+            timeStart = this.game.ticker.elapsed
+        })
         
-        modalItem.events.on('open', () =>
+        endModal.events.on('open', () =>
         {
             if(this.modal.firstOpen)
             {
                 // Time
-                let elapsed = this.game.ticker.elapsed
+                let elapsed = this.game.ticker.elapsed - timeStart
                 const hours = Math.floor(elapsed / 60 / 60)
 
                 elapsed -= hours * 60 * 60

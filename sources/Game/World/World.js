@@ -14,7 +14,7 @@ import { Snow } from './Snow.js'
 import { Whispers } from './Whispers.js'
 import { VisualVehicle } from './VisualVehicle.js'
 import { Tornado } from './Tornado.js'
-import { Easter } from '../Easter/Easter.js'
+import { Easter } from '../Easter.js'
 
 export class World
 {
