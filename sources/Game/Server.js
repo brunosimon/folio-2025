@@ -52,7 +52,6 @@ export class Server
                 this.events.trigger('disconnected')
             })
         })
-
     }
 
     onReceive(message)

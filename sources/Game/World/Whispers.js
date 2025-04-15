@@ -264,6 +264,7 @@ export class Whispers
         this.modal.inputGroupElement = this.modal.element.querySelector('.js-input-group')
         this.modal.inputElement = this.modal.inputGroupElement.querySelector('.js-input')
         this.modal.previewMessageElement = this.modal.element.querySelector('.js-preview-message')
+        this.modal.offlineElement = this.modal.element.querySelector('.js-offline')
 
         const sanatize = (text = '', trim = false, limit = false, stripEmojis = false) =>
         {
@@ -284,7 +285,7 @@ export class Whispers
         {
             const sanatized = sanatize(this.modal.inputElement.value, true, true, true)
             
-            if(sanatized.length)
+            if(sanatized.length && this.game.server.connected)
             {
                 // Insert
                 this.game.server.send({
@@ -302,7 +303,7 @@ export class Whispers
 
         const updateGroup = () =>
         {
-            if(this.modal.inputElement.value.length)
+            if(this.modal.inputElement.value.length && this.game.server.connected)
                 this.modal.inputGroupElement.classList.add('is-valide')
             else
                 this.modal.inputGroupElement.classList.remove('is-valide')
@@ -348,6 +349,22 @@ export class Whispers
         {
             this.modal.previewMessageElement.textContent = 'Your message here'
             this.modal.inputElement.value = ''
+            updateGroup()
+        })
+
+        // Server connect / disconnect
+        if(this.game.server.connected)
+            this.modal.offlineElement.style.display = 'none'
+            
+        this.game.server.events.on('connected', () =>
+        {
+            this.modal.offlineElement.style.display = 'none'
+            updateGroup()
+        })
+
+        this.game.server.events.on('disconnected', () =>
+        {
+            this.modal.offlineElement.style.display = 'block'
             updateGroup()
         })
     }

@@ -85,6 +85,16 @@ html
     font-size: 0.8rem;
 }
 
+.text-danger
+{
+    color: #ff87a2;
+}
+
+.text-danger .icon
+{
+    vertical-align: sub;
+}
+
 .text-faded
 {
     opacity: 0.8;
