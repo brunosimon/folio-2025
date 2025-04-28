@@ -22,8 +22,16 @@ export class Bubble
         this.textOffsetVertical = 2
         this.font = `700 ${this.height}px "Amatic SC"`
 
+        this.group = new THREE.Group()
+        this.group.rotation.reorder('YXZ')
+        this.group.rotation.x = - Math.PI * 0.25
+        this.group.rotation.y = Math.PI * 0.25
+        this.group.visible = false
+        this.game.scene.add(this.group)
+
         this.setCanvas()
-        this.setMesh()
+        this.setMessage()
+        this.setImage()
     }
 
     setCanvas()
@@ -49,7 +57,7 @@ export class Bubble
         // document.body.append(this.canvas.element)
     }
 
-    setMesh()
+    setMessage()
     {
         const geometry = new THREE.PlaneGeometry(1, 1)
         const material = new THREE.MeshBasicNodeMaterial({ color: 0x222222, transparent: true, depthWrite: false, depthTest: false })
@@ -73,17 +81,32 @@ export class Bubble
             return vec4(foggedColor.rgb, 1)
         })()
         
-        this.mesh = new THREE.Mesh(geometry, material)
-        this.mesh.scale.set(0, 0, 0)
-        this.mesh.rotation.reorder('YXZ')
-        this.mesh.rotation.x = -Math.PI * 0.25
-        this.mesh.rotation.y = Math.PI * 0.25
-        this.mesh.visible = false
-        this.mesh.renderOrder = 2
-        this.game.scene.add(this.mesh)
+        this.message = new THREE.Mesh(geometry, material)
+        this.message.scale.set(0.01, 0.01, 0.01)
+        this.message.renderOrder = 2
+        this.group.add(this.message)
     }
 
-    tryShow(text = '', position = null)
+    setImage()
+    {
+        const size = 0.25
+        const geometry = new THREE.PlaneGeometry(size * 3 / 2, size)
+
+        const material = new THREE.MeshBasicNodeMaterial({ color: 0xffffff, transparent: true, depthWrite: false, depthTest: false })
+
+        this.image = new THREE.Mesh(geometry, material)
+        this.image.scale.set(0.01, 0.01, 0.01)
+        this.image.position.y = 0.25
+        this.image.position.z = 0.2
+        this.image.rotation.z = -0.15
+        this.image.renderOrder = 3
+        this.group.add(this.image)
+
+        this.textureLoader = new THREE.TextureLoader()
+        this.imageTextures = new Map()
+    }
+
+    tryShow(text = '', position = null, imageUrl = null)
     {
         // // Same and already visible
         // if(
@@ -100,21 +123,23 @@ export class Bubble
         {
             this.updateText(text)
             this.updatePosition(position)
+            this.updateImage(imageUrl)
             this.show()
         }
 
         // Is visible => hide first and save as pending
         else
         {
-            this.pending = { text, position }
+            this.pending = { text, position, imageUrl }
             this.hide()
         }
     }
 
     hide()
     {
+        // Message
         gsap.to(
-            this.mesh.scale,
+            this.message.scale,
             {
                 overwrite: true,
                 duration: 0.3,
@@ -122,17 +147,28 @@ export class Bubble
                 onComplete: () =>
                 {
                     this.visible = false
-                    this.mesh.visible = false
+                    this.group.visible = false
                     
                     // Has pending => Update and show
                     if(this.pending)
                     {
                         this.updateText(this.pending.text)
                         this.updatePosition(this.pending.position)
+                        this.updateImage(this.pending.imageUrl)
                         this.pending = null
                         this.show()
                     }
                 }
+            }
+        )
+
+        // Image
+        gsap.to(
+            this.image.scale,
+            {
+                overwrite: true,
+                duration: 0.3,
+                x: 0.01, y: 0.01, z: 0.01,
             }
         )
     }
@@ -140,15 +176,29 @@ export class Bubble
     show()
     {
         this.visible = true
-        this.mesh.visible = true
+        this.group.visible = true
 
+        // Message
         gsap.to(
-            this.mesh.scale,
+            this.message.scale,
             {
                 overwrite: true,
                 duration: 0.5,
                 ease: 'back.out(3)',
                 x: 0.5 * this.textWidth / this.height, y: 0.5 * 1, z: 1
+            }
+        )
+
+        // Image
+        this.image.position.x = 0.5 * 0.5 * this.textWidth / this.height
+        gsap.to(
+            this.image.scale,
+            {
+                overwrite: true,
+                duration: 0.5,
+                delay: 0.3,
+                ease: 'back.out(3)',
+                x: 1, y: 1, z: 1
             }
         )
     }
@@ -183,7 +233,32 @@ export class Bubble
         if(position === null || position.equals(this.position))
             return
 
-        this.mesh.position.copy(position)
+        this.group.position.copy(position)
         this.position.copy(position)
+    }
+
+    updateImage(url = null)
+    {
+        // Has URL => Load, show, save
+        if(url)
+        {
+            let texture = this.imageTextures.get(url)
+
+            if(!texture)
+            {
+                texture = this.textureLoader.load(url)
+                texture.colorSpace = THREE.SRGBColorSpace
+                this.imageTextures.set(url, texture)
+            }
+
+            this.image.visible = true
+            this.image.material.map = texture
+        }
+
+        // No URL => Hide
+        else
+        {
+            this.image.visible = false
+        }
     }
 }

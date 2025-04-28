@@ -13,6 +13,7 @@ export class Whispers
         this.game = Game.getInstance()
 
         this.count = parseInt(import.meta.env.VITE_WHISPERS_COUNT)
+        this.countries = new Map()
 
         this.setFlames()
         this.setData()
@@ -149,6 +150,7 @@ export class Whispers
                         onComplete: () =>
                         {
                             item.message = input.message
+                            item.countryCode = input.countrycode
                             item.position.set(input.x, input.y, input.z)
                             item.matrix.setPosition(item.position)
                             item.needsUpdate = true
@@ -197,6 +199,7 @@ export class Whispers
                     item.id = input.id
                     item.available = false
                     item.message = input.message,
+                    item.countryCode = input.countrycode,
                     item.position = new THREE.Vector3(input.x, input.y, input.z)
                     item.matrix.setPosition(item.position)
                     item.needsUpdate = true
@@ -287,6 +290,7 @@ export class Whispers
                 this.game.server.send({
                     type: 'whispersInsert',
                     message: sanatized,
+                    countryCode: this.modal.countryCode,
                     x: this.game.player.position.x,
                     y: this.game.player.position.y,
                     z: this.game.player.position.z
@@ -393,6 +397,7 @@ export class Whispers
                 this.modal.flagButton.classList.add('has-flag')
                 this.modal.previewMessageFlag.classList.add('is-visible')
                 this.modal.previewMessageFlag.style.backgroundImage = `url(${country.imageUrl})`
+                this.modal.countryCode = country.code
                 localStorage.setItem('countryCode', country.code)
             }
 
@@ -402,6 +407,7 @@ export class Whispers
                 this.modal.flagActive = null
                 this.modal.flagButton.classList.remove('has-flag')
                 this.modal.previewMessageFlag.classList.remove('is-visible')
+                this.modal.countryCode = ''
                 localStorage.removeItem('countryCode')
             }
 
@@ -417,7 +423,6 @@ export class Whispers
 
         // Countries
         const choices = this.modal.inputFlag.querySelectorAll('.js-choice')
-        this.countries = new Map()
 
         for(const _choice of choices)
         {
@@ -518,13 +523,16 @@ export class Whispers
         })
 
         // From localstorage
-        const countryCode = localStorage.getItem('countryCode') ?? null
-        if(countryCode)
+        this.modal.countryCode = localStorage.getItem('countryCode') ?? ''
+
+        if(this.modal.countryCode)
         {
-            const country = this.countries.get(countryCode) ?? null
+            const country = this.countries.get(this.modal.countryCode) ?? null
 
             if(country)
                 selectFlag(country)
+            else
+                this.modal.countryCode = ''
         }
     }
 
@@ -579,12 +587,26 @@ export class Whispers
         if(closestWhisper !== this.bubble.closest)
         {
             if(!closestWhisper)
+            {
                 this.bubble.instance.hide()
+            }
             else
             {
                 const position = closestWhisper.position.clone()
                 position.y += 1.25
-                this.bubble.instance.tryShow(closestWhisper.message, position)
+
+
+                let imageUrl = null
+
+                if(closestWhisper.countryCode)
+                {
+                    const country = this.countries.get(closestWhisper.countryCode)
+
+                    if(country)
+                        imageUrl = country.imageUrl
+                }
+
+                this.bubble.instance.tryShow(closestWhisper.message, position, imageUrl)
             }
 
             this.bubble.closest = closestWhisper
