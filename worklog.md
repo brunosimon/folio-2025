@@ -505,3 +505,6 @@ ideated on interface design, UI unchanged; conceptual user experience work.
 ## 2025-05-09T18:27:32
 conducted thought experiments, real experiments postponed; hypothesis before test.
 
+## 2025-05-09T10:37:09
+mental load testing, servers unchallenged; capacity planning in theory.
+
