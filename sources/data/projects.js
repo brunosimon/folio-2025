@@ -9,7 +9,7 @@ export default [
             role: 'WebGL developer',
             with: 'Rémi Tran'
         },
-        distinctions: [ 'awwward', 'fwa', 'cssdesign' ],
+        distinctions: [ 'awwwards', 'cssda', 'fwa' ], // 'awwwards', 'fwa', 'cssda'
         images:
         [
             'chartogne-taillet-1.png',
@@ -26,7 +26,7 @@ export default [
             role: 'WebGL developer',
             with: 'Bonhomme Paris'
         },
-        distinctions: [ 'awwward', 'fwa', 'cssdesign' ],
+        distinctions: [ 'awwwards', 'fwa' ],
         images:
         [
             'bonhomme-10-ans-1.png',
@@ -44,7 +44,7 @@ export default [
             at: 'Hervé Studio',
             with: 'Lei Xing'
         },
-        distinctions: [ 'awwward', 'fwa' ],
+        distinctions: [ 'awwwards' ],
         images:
         [
             'madbox-1.png',

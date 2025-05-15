@@ -2,7 +2,7 @@ import * as THREE from 'three/webgpu'
 
 export class TextWrapper
 {
-    constructor(text = '', fontFamily = 'Comic Sans', fontWeight = '400', fontSize = 10, width = null, height = null, density = 1, horizontalAlign = 'center', lineHeight = 1)
+    constructor(fontFamily = 'Comic Sans', fontWeight = '400', fontSize = 10, width = null, height = null, density = 1, horizontalAlign = 'center', lineHeight = 1)
     {
         this.lines = []
         this.font = `${fontWeight} ${fontSize * density}px "${fontFamily}"`
