@@ -2,9 +2,9 @@ import * as THREE from 'three/webgpu'
 import { Game } from '../Game.js'
 import { InteractiveAreas } from '../InteractiveAreas.js'
 import gsap from 'gsap'
-import projects from '../../data/projects.js'
+import lab from '../../data/lab.js'
 import { TextCanvas } from '../TextCanvas.js'
-import { add, color, float, Fn, If, mix, mul, normalWorld, positionGeometry, sin, step, texture, uniform, uv, vec4 } from 'three/tsl'
+import { add, color, float, Fn, If, luminance, mix, mul, normalWorld, positionGeometry, positionWorld, sin, step, texture, uniform, uv, vec2, vec3, vec4 } from 'three/tsl'
 
 export class Lab
 {
@@ -23,13 +23,13 @@ export class Lab
         if(this.game.debug.active)
         {
             this.debugPanel = this.game.debug.panel.addFolder({
-                title: '📚 Projects',
+                title: '🧪 Lab',
                 expanded: false,
             })
         }
         
         this.references = references
-        this.state = Projects.STATE_CLOSED
+        this.state = Lab.STATE_CLOSED
 
         this.setInteractiveArea()
         this.setInputs()
@@ -39,16 +39,15 @@ export class Lab
         this.setHover()
         this.setProjects()
         this.setImages()
-        this.setPagination()
-        this.setAttributes()
-        this.setAdjacents()
+        // this.setAdjacents()
         this.setTitle()
         this.setUrl()
-        this.setDistinctions()
+        this.setScroller()
         this.setPendulum()
-        this.setBoard()
-        this.setFlame()
-        this.setLabels()
+        this.setBlackBoard()
+        this.setCandleFlames()
+        this.setCauldron()
+        // this.setLabels()
 
         this.changeProject(0)
 
@@ -64,7 +63,7 @@ export class Lab
     {
         this.interactiveArea = this.game.interactiveAreas.create(
             this.references.get('interactiveArea')[0].position,
-            'Projects',
+            'Lab',
             InteractiveAreas.ALIGN_RIGHT,
             () =>
             {
@@ -94,7 +93,7 @@ export class Lab
 
         this.game.inputs.events.on('interact', (event) =>
         {
-            if(!event.down && this.state === Projects.STATE_OPEN)
+            if(!event.down && this.state === Lab.STATE_OPEN)
             {
                 this.url.open()
             }
@@ -106,10 +105,10 @@ export class Lab
         this.cinematic = {}
         
         this.cinematic.position = new THREE.Vector3()
-        this.cinematic.positionOffset = new THREE.Vector3(4.65, 3.35, 4.85)
+        this.cinematic.positionOffset = new THREE.Vector3(4.65, 4.05, 4.85)
         
         this.cinematic.target = new THREE.Vector3()
-        this.cinematic.targetOffset = new THREE.Vector3(-2.60, 1.60, -4.80)
+        this.cinematic.targetOffset = new THREE.Vector3(-2.60, 1.25, -4.80)
 
         const applyPositionAndTarget = () =>
         {
@@ -158,7 +157,7 @@ export class Lab
 
             const debugUpdate = () =>
             {
-                if(this.state === Projects.STATE_OPEN || this.state === Projects.STATE_OPENING)
+                if(this.state === Lab.STATE_OPEN || this.state === Lab.STATE_OPENING)
                 {
                     this.shadeMix.images.uniform.value = this.shadeMix.images.max
                     this.shadeMix.texts.uniform.value = this.shadeMix.texts.max
@@ -240,8 +239,8 @@ export class Lab
         this.projects.current = null
         this.projects.next = null
         this.projects.previous = null
-        this.projects.current = null
-        this.projects.items = projects
+        this.projects.items = lab
+        this.projects.direction = Lab.DIRECTION_NEXT
     }
 
     setImages()
@@ -249,8 +248,6 @@ export class Lab
         this.images = {}
         this.images.width = 1920 * 0.5
         this.images.height = 1080 * 0.5
-        this.images.index = 0
-        this.images.direction = Projects.DIRECTION_NEXT
 
         // Mesh
         this.images.mesh = this.references.get('images')[0]
@@ -328,7 +325,7 @@ export class Lab
         this.images.loadEnded = (key) =>
         {
             // Current image => Reveal
-            if(this.projects.current.images[this.images.index] === key)
+            if(this.projects.current.image === key)
             {
                 this.images.textureNew.needsUpdate = true
                 gsap.to(this.images.loadProgress, { value: 1, duration: 1, overwrite: true })
@@ -341,40 +338,26 @@ export class Lab
         this.images.loadSibling = () =>
         {
             let projectIndex = this.projects.index
-            let imageIndex = this.images.index
 
-            if(this.images.direction === Projects.DIRECTION_PREVIOUS)
-                imageIndex -= 1
-            else
-                imageIndex += 1
-
-            if(imageIndex < 0)
-            {
+            if(this.projects.direction === Lab.DIRECTION_PREVIOUS)
                 projectIndex -= 1
-
-                if(projectIndex < 0)
-                    projectIndex = this.projects.items.length - 1
-
-                imageIndex = this.projects.items[projectIndex].images.length - 1
-            }
-            else if(imageIndex > this.projects.current.images.length - 1)
-            {
+            else
                 projectIndex += 1
 
-                if(projectIndex > this.projects.items.length - 1)
-                    projectIndex = 0
+            if(projectIndex < 0)
+                projectIndex = this.projects.items.length - 1
 
-                imageIndex = 0
-            }
+            if(projectIndex > this.projects.items.length - 1)
+                projectIndex = 0
 
-            const key = this.projects.items[projectIndex].images[imageIndex]
+            const key = this.projects.items[projectIndex].image
             const resource = this.images.getResourceAndLoad(key)
         }
 
         // Get resource and load
         this.images.getResourceAndLoad = (key) =>
         {
-            const path = `projects/images/${key}`
+            const path = `lab/images/${key}`
 
             // Try to retrieve resource
             let resource = this.images.resources.get(key)
@@ -413,12 +396,10 @@ export class Lab
         }
 
         // Update
-        this.images.update = (direction) =>
+        this.images.update = () =>
         {
-            this.images.direction = direction
-
             // Get resource
-            const key = this.projects.current.images[this.images.index]
+            const key = this.projects.current.image
             const resource = this.images.getResourceAndLoad(key)
 
             if(resource.loaded)
@@ -441,236 +422,7 @@ export class Lab
 
             // Animate right away
             gsap.fromTo(this.images.animationProgress, { value: 0 }, { value: 1, duration: 1, ease: 'power2.inOut', overwrite: true })
-            this.images.animationDirection.value = direction === Projects.DIRECTION_NEXT ? 1 : -1
-        }
-    }
-
-    setPagination()
-    {
-        this.pagination = {}
-        this.pagination.inter = 0.2
-        this.pagination.group = this.references.get('pagination')[0].children[0]
-        this.pagination.items = []
-
-        // List
-        let i = 0
-        const intersectPagination = this.references.get('intersectPagination')
-
-        for(const child of this.pagination.group.children)
-        {
-            if(child instanceof THREE.Mesh)
-            {
-                const item = {}
-                
-                item.index = i
-                item.visible = false
-                
-                // Mesh
-                item.mesh = child
-                item.mesh.position.x = this.pagination.inter * i    
-                item.mesh.visible = false
-                item.mesh.material = this.hover.inactiveMaterial
-
-                // Intersect
-                item.intersectReference = intersectPagination[i]
-
-                item.intersect = this.game.cursor.addIntersects({
-                    active: false,
-                    shapes:
-                    [
-                        new THREE.Sphere(new THREE.Vector3(), item.intersectReference.scale.x)
-                    ],
-                    onClick: () =>
-                    {
-                        this.changeImage(item.index)
-                    },
-                    onEnter: () =>
-                    {
-                        item.mesh.material = this.hover.activeMaterial
-                    },
-                    onLeave: () =>
-                    {
-                        item.mesh.material = this.hover.inactiveMaterial
-                    }
-                }),
-                item.intersectReference.getWorldPosition(item.intersect.shapes[0].center)
-
-                this.pagination.items.push(item)
-
-                i++
-            }
-        }
-
-
-        // Adjacents
-        const intersectPrevious = this.references.get('intersectPreviousImage')[0]
-        const intersectPreviousPosition = new THREE.Vector3()
-        intersectPrevious.getWorldPosition(intersectPreviousPosition)
-        const arrowPrevious = this.references.get('arrowPreviousImage')[0]
-        arrowPrevious.material = this.hover.inactiveMaterial
- 
-        this.pagination.previousIntersect = this.game.cursor.addIntersects({
-            active: false,
-            shapes:
-            [
-                new THREE.Sphere(intersectPreviousPosition, intersectPrevious.scale.x)
-            ],
-            onClick: () =>
-            {
-                this.previous()
-            },
-            onEnter: () =>
-            {
-                arrowPrevious.material = this.hover.activeMaterial
-            },
-            onLeave: () =>
-            {
-                arrowPrevious.material = this.hover.inactiveMaterial
-            }
-        })
-
-        const intersectNext = this.references.get('intersectNextImage')[0]
-        const intersectNextPosition = new THREE.Vector3()
-        intersectNext.getWorldPosition(intersectNextPosition)
-        const arrowNext = this.references.get('arrowNextImage')[0]
-        arrowNext.material = this.hover.inactiveMaterial
-        this.pagination.nextIntersect = this.game.cursor.addIntersects({
-            active: false,
-            shapes:
-            [
-                new THREE.Sphere(intersectNextPosition, intersectNext.scale.x)
-            ],
-            onClick: () =>
-            {
-                this.next()
-            },
-            onEnter: () =>
-            {
-                arrowNext.material = this.hover.activeMaterial
-            },
-            onLeave: () =>
-            {
-                arrowNext.material = this.hover.inactiveMaterial
-            }
-        })
-
-        // Update
-        this.pagination.update = () =>
-        {
-            let i = 0
-            for(const item of this.pagination.items)
-            {
-                if(i <= this.projects.current.images.length - 1)
-                {
-                    if(!item.visible)
-                    {
-                        gsap.to(item.mesh.scale, { x: 1, y: 1, z: 1, duration: 0.5, ease: 'power1.inOut', overwrite: true })
-                        item.mesh.visible = true
-                        item.visible = true
-                        item.intersect.active = this.state === Projects.STATE_OPENING || this.state === Projects.STATE_OPEN
-                    }
-                }
-                else
-                {
-                    if(item.visible)
-                    {
-                        gsap.to(item.mesh.scale, { x: 0.01, y: 0.01, z: 0.01, duration: 0.5, ease: 'power1.inOut', overwrite: true, onComplete: () =>
-                        {
-                            item.mesh.visible = false
-                        } })
-                        item.visible = false
-                        item.intersect.active = false
-                    }
-                }
-
-                item.mesh.rotation.z = this.images.index === i ? 0 : Math.PI
-
-                i++
-            }
-
-            const offset = - (this.projects.current.images.length - 1) * this.pagination.inter / 2
-            gsap.to(this.pagination.group.position, { x: offset, duration: 0.5, ease: 'power1.inOut', overwrite: true, onComplete: () =>
-            {
-                for(const item of this.pagination.items)
-                    item.intersectReference.getWorldPosition(item.intersect.shapes[0].center)
-            } })
-        }
-    }
-
-    setAttributes()
-    {
-        this.attributes = {}
-        this.attributes.group = this.references.get('attributes')[0]
-        this.attributes.inter = 0.75
-        this.attributes.names = ['role', 'at', 'with']
-        this.attributes.items = {}
-        this.attributes.status = 'hidden'
-        this.attributes.originalY = this.attributes.group.position.y
-
-        for(const child of this.attributes.group.children)
-        {
-            const item = {}
-            // item.textCanvas = this.texts[child.name]
-            item.group = child
-            item.visible = false
-            item.group.visible = false
-            const textMesh = item.group.children.find(_child => _child.name.startsWith('text'))
-            item.textCanvas = new TextCanvas(
-                this.texts.fontFamily,
-                this.texts.fontWeight,
-                this.texts.fontSizeMultiplier * 0.23,
-                1.4,
-                0.45,
-                this.texts.density,
-                'center',
-                0.2
-            )
-
-            this.texts.createMaterialOnMesh(textMesh, item.textCanvas.texture)
-
-            this.attributes.items[child.name] = item
-        }
-
-        this.attributes.update = () =>
-        {
-            if(this.attributes.status === 'hiding')
-                return
-
-            this.attributes.status = 'hiding'
-            let i = 0
-            for(const name of this.attributes.names)
-            {
-                const item = this.attributes.items[name]
-
-                gsap.to(item.group.scale, { x: 0.01, y: 0.01, z: 0.01, duration: 0.5, delay: 0.1 * i, ease: 'power2.in', overwrite: true })
-                i++
-            }
-
-            gsap.delayedCall(1, () =>
-            {
-                this.attributes.status = 'visible'
-
-                let i = 0
-                for(const name of this.attributes.names)
-                {
-                    const item = this.attributes.items[name]
-                    const attribute = this.projects.current.attributes[name]
-
-                    if(attribute)
-                    {
-                        item.group.visible = true
-                        gsap.to(item.group.scale, { x: 1, y: 1, z: 1, duration: 1, delay: 0.2 * i, ease: 'back.out(2)', overwrite: true })
-
-                        item.textCanvas.updateText(attribute)
-
-                        item.group.position.y = - i * 0.75
-                        
-                        i++
-                    }
-                }
-
-                this.attributes.group.position.y = this.attributes.originalY + (i - 1) * 0.75 / 2
-            })
+            this.images.animationDirection.value = this.projects.direction === Lab.DIRECTION_NEXT ? 1 : -1
         }
     }
 
@@ -831,7 +583,7 @@ export class Lab
 
             this.title.status = 'hiding'
 
-            const rotationDirection = direction === Projects.DIRECTION_NEXT ? - 1 : 1
+            const rotationDirection = direction === Lab.DIRECTION_NEXT ? - 1 : 1
 
             this.title.inner.rotation.x = 0
             gsap.to(this.title.inner.rotation, { x: Math.PI * rotationDirection, duration: 1, delay: 0, ease: 'power2.in', overwrite: true, onComplete: () =>
@@ -922,7 +674,7 @@ export class Lab
 
             this.url.status = 'hiding'
 
-            const rotationDirection = direction === Projects.DIRECTION_NEXT ? - 1 : 1
+            const rotationDirection = direction === Lab.DIRECTION_NEXT ? - 1 : 1
 
             this.url.inner.rotation.x = 0
             gsap.to(this.url.inner.rotation, { x: Math.PI * rotationDirection, duration: 1, delay: 0.3, ease: 'power2.in', overwrite: true, onComplete: () =>
@@ -949,67 +701,78 @@ export class Lab
         }
     }
 
-    setDistinctions()
+    setScroller()
     {
-        this.distinctions = {}
-        this.distinctions.status = 'hidden'
-        this.distinctions.group = this.references.get('distinctions')[0]
-        this.distinctions.names = ['awwwards', 'cssda', 'fwa']
-        this.distinctions.items = {}
-        this.distinctions.items.awwwards = this.distinctions.group.children.find(_child => _child.name.startsWith('awwwards'))
-        this.distinctions.items.fwa = this.distinctions.group.children.find(_child => _child.name.startsWith('fwa'))
-        this.distinctions.items.cssda = this.distinctions.group.children.find(_child => _child.name.startsWith('cssda'))
+        this.scroller = {}
+        this.scroller.repeatAmplitude = 0.5444
+        this.scroller.chainLeft = this.references.get('chainLeft')[0]
+        this.scroller.chainRight = this.references.get('chainRight')[0]
+        this.scroller.chainPulley = this.references.get('chainPulley')[0]
+        this.scroller.offset = 0
 
-        this.distinctions.positions = [
-            [
-                [0, 0],
-            ],
-            [
-                [-0.4582188129425049, -0.2090435028076172],
-                [0.4859628677368164, 0.47049903869628906],
-            ],
-            [
-                [-0.7032163143157959, -0.2090439796447754],
-                [0.8216180801391602, -0.16075992584228516],
-                [0.1332714557647705, 0.47049903869628906],
-            ],
-        ]
-
-        this.distinctions.update = () =>
+        // Vertical chain material
         {
-            if(this.distinctions.status === 'hiding')
-                return
+            const material = new THREE.MeshLambertNodeMaterial()
+            const totalShadows = this.game.lighting.addTotalShadowToMaterial(material)
 
-            this.distinctions.status = 'hiding'
-            let i = 0
-            for(const name of this.distinctions.names)
+            material.outputNode = Fn(() =>
             {
-                const item = this.distinctions.items[name]
+                const baseColor = color('#6f6a87')
 
-                gsap.to(item.scale, { x: 0.01, y: 0.01, z: 0.01, duration: 0.5, delay: 0.1 * i, ease: 'power2.in', overwrite: true })
-                i++
-            }
+                positionWorld.toVarying().y.greaterThan(4).discard()
+                
+                return this.game.lighting.lightOutputNodeBuilder(baseColor, float(1), vec3(0, 1, 0), totalShadows, true, false)
+            })()
 
-            gsap.delayedCall(1, () =>
+            material.castShadowNode = Fn(() =>
             {
-                this.distinctions.status = 'visible'
+                positionWorld.toVarying().y.greaterThan(4).discard()
+                
+                return vec4(0, 0, 0, 1)
+            })()
 
-                let i = 0
-                const positions = this.distinctions.positions[this.projects.current.distinctions.length - 1]
-                for(const name of this.projects.current.distinctions)
-                {
-                    const item = this.distinctions.items[name]
+            this.scroller.chainLeft.material = material
+            this.scroller.chainRight.material = material
+        }
+        
+        // Pulley chain material
+        {
+            const material = new THREE.MeshLambertNodeMaterial()
+            const totalShadows = this.game.lighting.addTotalShadowToMaterial(material)
 
-                    item.visible = true
-                    gsap.to(item.scale, { x: 1, y: 1, z: 1, duration: 1, delay: 0.2 * i, ease: 'back.out(2)', overwrite: true })
+            material.outputNode = Fn(() =>
+            {
+                const baseColor = color('#6f6a87')
 
-                    item.position.x = positions[i][0]
-                    item.position.z = positions[i][1]
+                positionWorld.toVarying().y.lessThan(4).discard()
+                
+                return this.game.lighting.lightOutputNodeBuilder(baseColor, float(1), vec3(0, 1, 0), totalShadows, true, false)
+            })()
 
-                    i++
-                }
-            })
-        } 
+            material.castShadowNode = Fn(() =>
+            {
+                positionWorld.toVarying().y.lessThan(4).discard()
+                
+                return vec4(0, 0, 0, 1)
+            })()
+
+            this.scroller.chainPulley.material = material
+        }
+
+        this.scroller.update = () =>
+        {
+            this.scroller.chainLeft.position.y = - this.scroller.repeatAmplitude * 0.5 + this.scroller.offset % this.scroller.repeatAmplitude
+            this.scroller.chainRight.position.y = - this.scroller.repeatAmplitude * 0.5 - (this.scroller.offset % this.scroller.repeatAmplitude)
+            this.scroller.chainPulley.rotation.z = - this.scroller.offset * 1.4
+        }
+
+        this.game.ticker.events.on('tick', () =>
+        {
+            this.scroller.offset -= this.game.ticker.deltaScaled * 0.2
+
+            this.scroller.update()
+            // console.log(this.scroller.offset)
+        })
     }
 
     setPendulum()
@@ -1022,38 +785,36 @@ export class Lab
         timeline1.to(this.references.get('balls')[1].rotation, { x: -0.75, ease: 'power2.out', delay: 0.75, duration: 0.75 })
     }
 
-    setBoard()
+    setBlackBoard()
     {
-        this.board = {}
-        this.board.active = true
-        this.board.mesh = this.references.get('board')[0]
+        this.blackBoard = {}
+        this.blackBoard.active = true
+        this.blackBoard.mesh = this.references.get('blackBoard')[0]
         
-        this.board.timeline = gsap.timeline({
+        this.blackBoard.timeline = gsap.timeline({
             repeat: -1,
             repeatDelay: 5,
             paused: true,
             onRepeat: () =>
             {
-                if(this.state === Projects.STATE_CLOSED || this.state === Projects.STATE_CLOSING || !this.board.active)
-                    this.board.timeline.pause()
+                if(this.state === Lab.STATE_CLOSED || this.state === Lab.STATE_CLOSING || !this.blackBoard.active)
+                    this.blackBoard.timeline.pause()
             }
         })
 
-        this.board.timeline.to(this.board.mesh.position, { y: 0.25, ease: 'power2.out', duration: 0.7 }, 0 + 2)
-        this.board.timeline.to(this.board.mesh.position, { y: 0, ease: 'power2.in', duration: 0.7 }, 0.7 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.position, { y: 0.25, ease: 'power2.out', duration: 0.7 }, 0 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.position, { y: 0, ease: 'power2.in', duration: 0.7 }, 0.7 + 2)
 
-        this.board.timeline.to(this.board.mesh.rotation, { x: 0.1, duration: 0.15 }, 0 + 2)
-        this.board.timeline.to(this.board.mesh.rotation, { x: -0.1, duration: 0.3 }, 0.15 + 2)
-        this.board.timeline.to(this.board.mesh.rotation, { x: 0.1, duration: 0.3 }, 0.45 + 2)
-        this.board.timeline.to(this.board.mesh.rotation, { x: -0.1, duration: 0.3 }, 0.75 + 2)
-        this.board.timeline.to(this.board.mesh.rotation, { x: 0, duration: 0.3 }, 1.05 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: 0.1, duration: 0.15 }, 0 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: -0.1, duration: 0.3 }, 0.15 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: 0.1, duration: 0.3 }, 0.45 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: -0.1, duration: 0.3 }, 0.75 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: 0, duration: 0.3 }, 1.05 + 2)
     }
 
-    setFlame()
+    setCandleFlames()
     {
-        const mesh = this.references.get('flame')[0]
-        mesh.scale.setScalar(0)
-        mesh.visible = false
+        const meshes = this.references.get('candleFlame')
 
         const baseMaterial = this.game.materials.getFromName('emissiveGradientWarm')
         const material = new THREE.MeshBasicNodeMaterial({ transparent: true })
@@ -1068,23 +829,93 @@ export class Lab
 
             return newPosition
         })()
-        mesh.material = material
+
+        for(const mesh of meshes)
+        {
+            mesh.scale.setScalar(0)
+            mesh.visible = false
+
+            mesh.material = material
+        }
 
         this.game.dayCycles.events.on('lights', (inInverval) =>
         {
             if(inInverval)
             {
-                mesh.visible = true
-                gsap.to(mesh.scale, { x: 1, y: 1, z: 1, duration: 10, ease: 'power1.out', overwrite: true })
+                for(const mesh of meshes)
+                {
+                    mesh.visible = true
+                    gsap.to(mesh.scale, { x: 1, y: 1, z: 1, duration: 10, ease: 'power1.out', overwrite: true })
+                }
             }
             else
             {
-                gsap.to(mesh.scale, { x: 0, y: 0, z: 0, duration: 10, ease: 'power1.in', overwrite: true, onComplete: () =>
+                for(const mesh of meshes)
                 {
-                    mesh.visible = false
-                } })
+                    gsap.to(mesh.scale, { x: 0, y: 0, z: 0, duration: 10, ease: 'power1.in', overwrite: true, onComplete: () =>
+                    {
+                        mesh.visible = false
+                    } })
+                }
             }
         })
+    }
+
+    setCauldron()
+    {
+        this.cauldron = {}
+
+        // Heat
+        {
+            const material = new THREE.MeshBasicNodeMaterial({ side: THREE.DoubleSide, transparent: true, depthTest: true, depthWrite: false })
+
+            material.outputNode = Fn(() =>
+            {
+                const noiseUv = uv().mul(vec2(2, 0.2)).toVar()
+                noiseUv.y.addAssign(this.game.ticker.elapsedScaledUniform.mul(0.05))
+                const noise = texture(this.game.noises.others, noiseUv).r
+
+                const strength = noise.mul(uv().y.pow(2)).toVar()
+
+                const emissiveMix = strength.smoothstep(0, 1)
+                const emissiveColor = mix(color('#ff3e00'), color('#ff8641'), emissiveMix).mul(strength.add(1).mul(2))
+
+                return vec4(vec3(emissiveColor), strength)
+            })()
+
+            this.cauldron.heat = this.references.get('heat')[0]
+            this.cauldron.heat.material = material
+            this.cauldron.heat.castShadow = false
+        }
+
+        // Wood
+        {
+            const material = new THREE.MeshLambertNodeMaterial()
+            const totalShadows = this.game.lighting.addTotalShadowToMaterial(material)
+
+            const colorA = uniform(color('#ff8641'))
+            const colorB = uniform(color('#ff3e00'))
+            const intensity = uniform(1.25)
+
+            material.outputNode = Fn(() =>
+            {
+                const baseUv = uv().toVar()
+
+                const baseColor = color('#f29246')
+                const lightOutput = this.game.lighting.lightOutputNodeBuilder(baseColor, float(1), vec3(0, 1, 0), totalShadows, true, false)
+
+                const emissiveColor = mix(colorA, colorB, uv().sub(0.5).length().mul(2)).toVar()
+                const emissiveOutput = emissiveColor.div(luminance(emissiveColor)).mul(intensity)
+
+                const mixStrength = baseUv.y.smoothstep(0, 1)
+                const output = mix(lightOutput, emissiveOutput, mixStrength)
+
+                return vec4(output.rgb, 1)
+            })()
+
+            this.cauldron.wood = this.references.get('wood')[0]
+            this.cauldron.wood.material = material
+        }
     }
 
     setLabels()
@@ -1097,18 +928,18 @@ export class Lab
 
     open()
     {
-        if(this.state === Projects.STATE_OPEN || this.state === Projects.STATE_OPENING)
+        if(this.state === Lab.STATE_OPEN || this.state === Lab.STATE_OPENING)
             return
 
         // State
-        this.state = Projects.STATE_OPENING
+        this.state = Lab.STATE_OPENING
 
         if(this.stateTransition)
             this.stateTransition.kill()
 
         this.stateTransition = gsap.delayedCall(1.5, () =>
         {
-            this.state = Projects.STATE_OPEN
+            this.state = Lab.STATE_OPEN
             this.stateTransition = null
         })
 
@@ -1126,21 +957,18 @@ export class Lab
         gsap.to(this.shadeMix.texts.uniform, { value: this.shadeMix.texts.max, duration: 2, ease: 'power2.inOut', overwrite: true })
 
         // Board
-        if(this.board.active)
+        if(this.blackBoard.active)
         {
-            this.board.timeline.repeat(-1)
-            this.board.timeline.resume()
+            this.blackBoard.timeline.repeat(-1)
+            this.blackBoard.timeline.resume()
         }
 
-        // Cursor
-        for(const item of this.pagination.items)
-            item.intersect.active = item.visible
-            
-        this.adjacents.next.intersect.active = true
-        this.adjacents.previous.intersect.active = true
-        this.pagination.previousIntersect.active = true
-        this.pagination.nextIntersect.active = true
-        this.url.intersect.active = true
+        // // Cursor
+        // this.adjacents.next.intersect.active = true
+        // this.adjacents.previous.intersect.active = true
+        // this.pagination.previousIntersect.active = true
+        // this.pagination.nextIntersect.active = true
+        // this.url.intersect.active = true
 
         // Deactivate physical vehicle
         this.game.physicalVehicle.deactivate()
@@ -1148,18 +976,18 @@ export class Lab
 
     close()
     {
-        if(this.state === Projects.STATE_CLOSED || this.state === Projects.STATE_CLOSING)
+        if(this.state === Lab.STATE_CLOSED || this.state === Lab.STATE_CLOSING)
             return
 
         // State
-        this.state = Projects.STATE_CLOSING
+        this.state = Lab.STATE_CLOSING
 
         if(this.stateTransition)
             this.stateTransition.kill()
 
         this.stateTransition = gsap.delayedCall(1.5, () =>
         {
-            this.state = Projects.STATE_CLOSED
+            this.state = Lab.STATE_CLOSED
             this.stateTransition = null
         })
 
@@ -1179,15 +1007,12 @@ export class Lab
             this.interactiveArea.open()
         })
 
-        // Cursor
-        for(const item of this.pagination.items)
-            item.intersect.active = false
-
-        this.adjacents.next.intersect.active = false
-        this.adjacents.previous.intersect.active = false
-        this.pagination.previousIntersect.active = false
-        this.pagination.nextIntersect.active = false
-        this.url.intersect.active = false
+        // // Cursor
+        // this.adjacents.next.intersect.active = false
+        // this.adjacents.previous.intersect.active = false
+        // this.pagination.previousIntersect.active = false
+        // this.pagination.nextIntersect.active = false
+        // this.url.intersect.active = false
 
         // Activate physical vehicle
         this.game.physicalVehicle.activate()
@@ -1195,61 +1020,25 @@ export class Lab
 
     previous()
     {
-        if(this.images.index > 0)
-            this.previousImage()
-        else
-            this.previousProject(false)
-    }
-
-    previousImage()
-    {
-        if(this.state === Projects.STATE_CLOSED || this.state === Projects.STATE_CLOSING)
+        if(this.state === Lab.STATE_CLOSED || this.state === Lab.STATE_CLOSING)
             return
 
-        this.changeImage(this.images.index - 1, Projects.DIRECTION_PREVIOUS)
+        this.changeProject(this.projects.index - 1, Lab.DIRECTION_PREVIOUS)
 
-        this.board.active = false
-    }
-
-    previousProject(firstImage = false)
-    {
-        if(this.state === Projects.STATE_CLOSED || this.state === Projects.STATE_CLOSING)
-            return
-
-        this.changeProject(this.projects.index - 1, Projects.DIRECTION_PREVIOUS, firstImage)
-
-        this.board.active = false
+        this.blackBoard.active = false
     }
 
     next()
     {
-        if(this.images.index < this.projects.current.images.length - 1)
-            this.nextImage()
-        else
-            this.nextProject()
-    }
-
-    nextImage()
-    {
-        if(this.state === Projects.STATE_CLOSED || this.state === Projects.STATE_CLOSING)
+        if(this.state === Lab.STATE_CLOSED || this.state === Lab.STATE_CLOSING)
             return
 
-        this.changeImage(this.images.index + 1, Projects.DIRECTION_NEXT)
+        this.changeProject(this.projects.index + 1, Lab.DIRECTION_NEXT)
 
-        this.board.active = false
+        this.blackBoard.active = false
     }
 
-    nextProject()
-    {
-        if(this.state === Projects.STATE_CLOSED || this.state === Projects.STATE_CLOSING)
-            return
-
-        this.changeProject(this.projects.index + 1, Projects.DIRECTION_NEXT)
-
-        this.board.active = false
-    }
-
-    changeProject(index = 0, direction = Projects.DIRECTION_NEXT, firstImage = false)
+    changeProject(index = 0, direction = Lab.DIRECTION_NEXT)
     {
         // Loop index
         let loopIndex = index
@@ -1264,33 +1053,12 @@ export class Lab
         this.projects.current = this.projects.items[this.projects.index]
         this.projects.previous = this.projects.items[(this.projects.index - 1) < 0 ? this.projects.items.length - 1 : this.projects.index - 1]
         this.projects.next = this.projects.items[(this.projects.index + 1) % this.projects.items.length]
+        this.projects.direction = direction
 
         // Update components
-        this.attributes.update()
-        this.adjacents.update()
+        // this.adjacents.update()
         this.title.update(direction)
         this.url.update(direction)
-        this.distinctions.update()
-
-        // Change image
-        let imageIndex = null
-        if(firstImage)
-            imageIndex = 0
-        else
-            imageIndex = direction === Projects.DIRECTION_NEXT ? 0 : this.projects.current.images.length - 1
-
-        this.changeImage(imageIndex, direction)
-    }
-
-    changeImage(imageIndex = 0, direction = null)
-    {
-        if(direction === null)
-            direction = imageIndex > this.images.index ? Projects.DIRECTION_NEXT : Projects.DIRECTION_PREVIOUS
-
-        this.images.index = imageIndex
-
-        // Update components
-        this.images.update(direction)
-        this.pagination.update()
+        this.images.update()
     }
 }

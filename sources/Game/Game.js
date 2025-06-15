@@ -95,8 +95,7 @@ export class Game
                     [ 'cookieBannerTexture',            'cookieStand/cookieBanner.png',                 'texture', (resource) => { resource.colorSpace = THREE.SRGBColorSpace; resource.flipY = false } ],
                     [ 'interactiveAreasKeyIconTexture', 'interactiveAreas/interactiveAreasKeyIcon.png', 'texture', (resource) => { resource.flipY = true; resource.minFilter = THREE.NearestFilter; resource.magFilter = THREE.NearestFilter; resource.generateMipmaps = false } ],
                     [ 'respawnsModel',                  'respawns/respawns.glb',                        'gltf'    ],
-                    [ 'projectsCarpetTexture',            'projects/projectsCarpet.png',                  'texture', (resource) => { resource.colorSpace = THREE.SRGBColorSpace; resource.flipY = false } ],
-                    
+
                     // [ 'easterEggVisualModel',           'easter/easterEggVisual.glb',                   'gltf'    ],
                     // [ 'easterEggReferencesModel',       'easter/easterEggReferences.glb',               'gltf'    ],
                     

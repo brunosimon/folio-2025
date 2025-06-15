@@ -1,4 +1,5 @@
 import { Game } from './Game.js'
+import { Lab } from './World/Lab.js'
 import { Projects } from './World/Projects.js'
 
 export class ClosingManager
@@ -28,6 +29,10 @@ export class ClosingManager
         // Projects => Close
         else if(this.game.world.scenery.projects?.state === Projects.STATE_OPEN || this.game.world.scenery.projects?.state === Projects.STATE_OPENING)
             this.game.world.scenery.projects.close()
+
+        // Lab => Close
+        else if(this.game.world.scenery.lab?.state === Lab.STATE_OPEN || this.game.world.scenery.lab?.state === Lab.STATE_OPENING)
+            this.game.world.scenery.lab.close()
 
         // Modals => Toggle
         else

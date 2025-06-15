@@ -45,7 +45,7 @@ export class Projects
         this.setTitle()
         this.setUrl()
         this.setDistinctions()
-        this.setBoard()
+        this.setBlackBoard()
         this.setLabels()
         this.setOven()
         this.setGrinder()
@@ -1028,31 +1028,31 @@ export class Projects
         timeline1.to(this.references.get('balls')[1].rotation, { x: -0.75, ease: 'power2.out', delay: 0.75, duration: 0.75 })
     }
 
-    setBoard()
+    setBlackBoard()
     {
-        this.board = {}
-        this.board.active = true
-        this.board.mesh = this.references.get('board')[0]
+        this.blackBoard = {}
+        this.blackBoard.active = true
+        this.blackBoard.mesh = this.references.get('blackBoard')[0]
         
-        this.board.timeline = gsap.timeline({
+        this.blackBoard.timeline = gsap.timeline({
             repeat: -1,
             repeatDelay: 5,
             paused: true,
             onRepeat: () =>
             {
-                if(this.state === Projects.STATE_CLOSED || this.state === Projects.STATE_CLOSING || !this.board.active)
-                    this.board.timeline.pause()
+                if(this.state === Projects.STATE_CLOSED || this.state === Projects.STATE_CLOSING || !this.blackBoard.active)
+                    this.blackBoard.timeline.pause()
             }
         })
 
-        this.board.timeline.to(this.board.mesh.position, { y: 0.25, ease: 'power2.out', duration: 0.7 }, 0 + 2)
-        this.board.timeline.to(this.board.mesh.position, { y: 0, ease: 'power2.in', duration: 0.7 }, 0.7 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.position, { y: 0.25, ease: 'power2.out', duration: 0.7 }, 0 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.position, { y: 0, ease: 'power2.in', duration: 0.7 }, 0.7 + 2)
 
-        this.board.timeline.to(this.board.mesh.rotation, { x: 0.1, duration: 0.15 }, 0 + 2)
-        this.board.timeline.to(this.board.mesh.rotation, { x: -0.1, duration: 0.3 }, 0.15 + 2)
-        this.board.timeline.to(this.board.mesh.rotation, { x: 0.1, duration: 0.3 }, 0.45 + 2)
-        this.board.timeline.to(this.board.mesh.rotation, { x: -0.1, duration: 0.3 }, 0.75 + 2)
-        this.board.timeline.to(this.board.mesh.rotation, { x: 0, duration: 0.3 }, 1.05 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: 0.1, duration: 0.15 }, 0 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: -0.1, duration: 0.3 }, 0.15 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: 0.1, duration: 0.3 }, 0.45 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: -0.1, duration: 0.3 }, 0.75 + 2)
+        this.blackBoard.timeline.to(this.blackBoard.mesh.rotation, { x: 0, duration: 0.3 }, 1.05 + 2)
     }
 
     setFlame()
@@ -1209,10 +1209,10 @@ export class Projects
         gsap.to(this.shadeMix.texts.uniform, { value: this.shadeMix.texts.max, duration: 2, ease: 'power2.inOut', overwrite: true })
 
         // Board
-        if(this.board.active)
+        if(this.blackBoard.active)
         {
-            this.board.timeline.repeat(-1)
-            this.board.timeline.resume()
+            this.blackBoard.timeline.repeat(-1)
+            this.blackBoard.timeline.resume()
         }
 
         // Cursor
@@ -1291,7 +1291,7 @@ export class Projects
 
         this.changeImage(this.images.index - 1, Projects.DIRECTION_PREVIOUS)
 
-        this.board.active = false
+        this.blackBoard.active = false
     }
 
     previousProject(firstImage = false)
@@ -1301,7 +1301,7 @@ export class Projects
 
         this.changeProject(this.projects.index - 1, Projects.DIRECTION_PREVIOUS, firstImage)
 
-        this.board.active = false
+        this.blackBoard.active = false
     }
 
     next()
@@ -1319,7 +1319,7 @@ export class Projects
 
         this.changeImage(this.images.index + 1, Projects.DIRECTION_NEXT)
 
-        this.board.active = false
+        this.blackBoard.active = false
     }
 
     nextProject()
@@ -1329,7 +1329,7 @@ export class Projects
 
         this.changeProject(this.projects.index + 1, Projects.DIRECTION_NEXT)
 
-        this.board.active = false
+        this.blackBoard.active = false
     }
 
     changeProject(index = 0, direction = Projects.DIRECTION_NEXT, firstImage = false)

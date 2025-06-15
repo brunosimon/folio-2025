@@ -13,6 +13,7 @@ import { Bonfire } from './Bonfire.js'
 import { Intro } from './Intro.js'
 import { Controls } from './Controls.js'
 import { Projects } from './Projects.js'
+import { Lab } from './Lab.js'
 
 export class Scenery
 {
@@ -40,6 +41,10 @@ export class Scenery
         this.flowers = new Flowers()
         this.bricks = new Bricks()
 
+        const labReferences = this.references.getStartingWith('lab')
+        if(labReferences.size)
+            this.lab = new Lab(labReferences)
+        
         const projectsReferences = this.references.getStartingWith('projects')
         if(projectsReferences.size)
             this.projects = new Projects(projectsReferences)
