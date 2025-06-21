@@ -856,3 +856,6 @@ thought bubbles aplenty, commit bubbles scarce; ideas fermenting.
 ## 2025-06-21T17:44:41
 considerations deepened, commit history static; laying cognitive foundations.
 
+## 2025-06-21T13:09:29
+considered hot code reloading, restarts required; theoretical continuous operation.
+
