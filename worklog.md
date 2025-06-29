@@ -925,3 +925,6 @@ considered helm charts, kubernetes clusters imaginary; theoretical container orc
 ## 2025-06-28T11:24:26
 intellectual heavy lifting day; codebase weight unchanged.
 
+## 2025-06-28T19:36:09
+considered scalability issues, scaling postponed; thinking big while starting small.
+
