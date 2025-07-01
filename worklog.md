@@ -949,3 +949,6 @@ considered continuous integration, deployment continuous only in mind; DevOps dr
 ## 2025-06-30T10:20:18
 brainstorming session extended, coding session postponed; ideas need incubation.
 
+## 2025-07-01T15:55:25
+mental feature toggles, all features on; theoretical selective execution.
+
