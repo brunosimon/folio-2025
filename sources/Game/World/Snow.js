@@ -272,7 +272,11 @@ export class Snow
         const elevationFromTexture = Fn(([position]) =>
         {
             const newUv = position.sub(this.roundedPosition).div(this.size).add(0.5)
-            return texture(this.snowElevation.texture, newUv).r
+            const snowTextureElevation = texture(this.snowElevation.texture, newUv).r
+
+            const furnitureTextureElevation = this.game.terrainData.terrainDataNode(position).r
+
+            return snowTextureElevation.mul(furnitureTextureElevation.oneMinus())
         })
 
         this.material.positionNode = Fn(() =>
