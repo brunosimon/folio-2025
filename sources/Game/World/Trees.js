@@ -88,11 +88,11 @@ export class Trees
             this.game.debug.addThreeColorBinding(this.debugPanel, this.leavesColor, 'leavesColor')
             this.debugPanel.addBinding(this.leaves.material.shadowOffset, 'value', { label: 'shadowOffset', min: 0, max: 2, step: 0.001 })
             this.debugPanel.addBinding(this.leaves.material.threshold, 'value', { label: 'threshold', min: 0, max: 1, step: 0.001 })
-            this.debugPanel.addBinding(this.leaves.material.xRayEdgeMin, 'value', { label: 'xRayEdgeMin', min: 0, max: 1, step: 0.001 })
-            this.debugPanel.addBinding(this.leaves.material.xRayEdgeMax, 'value', { label: 'xRayEdgeMax', min: 0, max: 1, step: 0.001 })
-            this.debugPanel.addBinding(this.leaves.material.xRayTresholdAmplitude, 'value', { label: 'xRayTresholdAmplitude', min: 0, max: 1, step: 0.001 })
-            this.debugPanel.addBinding(this.leaves.material.xRayNoiseFrequency, 'value', { label: 'xRayNoiseFrequency', min: 0, max: 1, step: 0.001 })
-            this.debugPanel.addBinding(this.leaves.material.xRayNoiseStrength, 'value', { label: 'xRayNoiseStrength', min: 0, max: 1, step: 0.001 })
+            this.debugPanel.addBinding(this.leaves.material.seeThroughEdgeMin, 'value', { label: 'seeThroughEdgeMin', min: 0, max: 1, step: 0.001 })
+            this.debugPanel.addBinding(this.leaves.material.seeThroughEdgeMax, 'value', { label: 'seeThroughEdgeMax', min: 0, max: 1, step: 0.001 })
+            this.debugPanel.addBinding(this.leaves.material.seeThroughTresholdAmplitude, 'value', { label: 'seeThroughTresholdAmplitude', min: 0, max: 1, step: 0.001 })
+            this.debugPanel.addBinding(this.leaves.material.seeThroughNoiseFrequency, 'value', { label: 'seeThroughNoiseFrequency', min: 0, max: 1, step: 0.001 })
+            this.debugPanel.addBinding(this.leaves.material.seeThroughNoiseStrength, 'value', { label: 'seeThroughNoiseStrength', min: 0, max: 1, step: 0.001 })
         }
     }
 
