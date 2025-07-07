@@ -32,9 +32,9 @@ export class World
         this.rainSnow = new Rain()
         this.lightnings = new Lightnings()
         this.snow = new Snow()
-        this.scenery = new Scenery()
         this.whispers = new Whispers()
         this.tornado = new Tornado()
+        this.scenery = new Scenery()
 
         // this.setAxesHelper()
         // this.setCollisionGroupsTest()
@@ -53,7 +53,7 @@ export class World
         this.game.scene.add(floor)
 
         const material = new THREE.MeshLambertNodeMaterial({
-            alphaMap: this.game.resources.foliateTexture,
+            alphaMap: this.game.resources.foliageTexture,
             transparent: true
         })
         material.positionNode = Fn( ( { object } ) =>
@@ -79,7 +79,7 @@ export class World
         const dummy = new THREE.Mesh(
             geometry,
             new THREE.MeshLambertNodeMaterial({
-                alphaMap: this.game.resources.foliateTexture,
+                alphaMap: this.game.resources.foliageTexture,
                 transparent: true
             }),
         )

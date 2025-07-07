@@ -124,7 +124,7 @@ export class Foliage
                 const toVehicle = screenUV.sub(this.material.seeThroughPosition).toVar()
                 toVehicle.mulAssign(vec2(screenSize.x.div(screenSize.y), 1))
                 const distanceToVehicle = toVehicle.length()
-                
+
                 // Apply noise to add variations
                 const noiseUv = screenUV.toVar()
                 noiseUv.x.mulAssign(screenSize.x.div(screenSize.y))
@@ -142,7 +142,7 @@ export class Foliage
                 ).toVar()
 
                 // Foliage texture
-                const visibility = texture(this.game.resources.foliateTexture).r
+                const visibility = texture(this.game.resources.foliageTexture).r
 
                 // Discard
                 visibility.lessThan(visibilityThreshold).discard()
@@ -150,7 +150,7 @@ export class Foliage
             else
             {
                 // Discard
-                const visibility = texture(this.game.resources.foliateTexture).r
+                const visibility = texture(this.game.resources.foliageTexture).r
                 visibility.lessThan(this.material.threshold).discard()
             }
 
@@ -160,7 +160,7 @@ export class Foliage
 
         this.material.instance.castShadowNode = Fn(() =>
         {
-            const alphaColor = texture(this.game.resources.foliateTexture).r
+            const alphaColor = texture(this.game.resources.foliageTexture).r
             alphaColor.lessThan(0.5).discard()
             return vec4(0.0)
         })()
