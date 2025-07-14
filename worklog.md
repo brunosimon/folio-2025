@@ -1042,3 +1042,6 @@ code smells identified mentally, refactoring todo list grew; awareness phase.
 ## 2025-07-14T10:27:28
 brainstormed extensively, implemented naught; future fruits await.
 
+## 2025-07-14T11:07:37
+debated best practices, practice put on hold; principles before patterns.
+
