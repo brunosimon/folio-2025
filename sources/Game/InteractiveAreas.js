@@ -239,18 +239,53 @@ export class InteractiveAreas
         group.add(label)
 
         /**
-         * Save
+         * Item
          */
         const item = {}
         item.position = new THREE.Vector2(position.x, position.z)
         item.callback = callback
         item.isIn = false
         item.state = InteractiveAreas.STATE_OPEN
+        this.items.push(item)
 
+        /**
+         * Cursor
+         */
+        item.intersect = this.game.cursor.addIntersects({
+            active: true,
+            shapes:
+            [
+                new THREE.Sphere(newPosition, 1)
+            ],
+            onClick: () =>
+            {
+                if(item.state !== InteractiveAreas.STATE_HIDDEN)
+                {
+                    item.interact()
+                    item.callback()
+                }
+            },
+            onEnter: () =>
+            {
+                if(item.state !== InteractiveAreas.STATE_HIDDEN)
+                    item.reveal()
+            },
+            onLeave: () =>
+            {
+                if(item.state !== InteractiveAreas.STATE_HIDDEN)
+                    item.conceal()
+            }
+        })
+
+        /**
+         * Methods
+         */
         // Hide
         item.hide = () =>
         {
             item.state = InteractiveAreas.STATE_HIDDEN
+
+            item.intersect.active = false
 
             gsap.to(threshold, { value: 0, ease: 'back.in(4.5)', duration: 0.6, overwrite: true })
             gsap.to(lineThickness, { value: 0.150, ease: 'back.in(4.5)', duration: 0.6, overwrite: true })
@@ -267,9 +302,11 @@ export class InteractiveAreas
         }
 
         // Open
-        item.open = () =>
+        item.reveal = () =>
         {
             item.state = InteractiveAreas.STATE_OPEN
+
+            item.intersect.active = true
 
             diamond.visible = true
             key.visible = true
@@ -285,9 +322,11 @@ export class InteractiveAreas
         }
 
         // Close
-        item.close = () =>
+        item.conceal = () =>
         {
             item.state = InteractiveAreas.STATE_CLOSED
+
+            item.intersect.active = true
             
             diamond.visible = true
 
@@ -313,9 +352,10 @@ export class InteractiveAreas
             } })
         }
 
-        this.items.push(item)
 
-        // Debug
+        /**
+         * Debug
+         */
         if(this.game.debug.active)
         {
             // this.game.debug.addThreeColorBinding(this.debugPanel, this.baseColor.value, 'this.baseColor')
@@ -354,7 +394,7 @@ export class InteractiveAreas
                     if(item.isIn)
                     {
                         item.isIn = false
-                        item.close()
+                        item.conceal()
                     }
                 }
             }
@@ -365,14 +405,14 @@ export class InteractiveAreas
             if(inItem !== this.activeItem && this.activeItem !== null)
             {
                 this.activeItem.isIn = false
-                this.activeItem.close()
+                this.activeItem.conceal()
             }
             if(!inItem.isIn)
             {
                 this.activeItem = inItem
 
                 inItem.isIn = true
-                inItem.open()
+                inItem.reveal()
             }
         }
         else

@@ -1197,7 +1197,7 @@ export class Lab
         // Interactive area
         gsap.delayedCall(1, () =>
         {
-            this.interactiveArea.open()
+            this.interactiveArea.reveal()
         })
 
         // // Cursor
