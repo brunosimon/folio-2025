@@ -1171,3 +1171,6 @@ considered logging strategies, log files unchanging; traceability in theory.
 ## 2025-07-31T09:42:47
 mental performance profiling, actual profiler idle; cognitive optimization.
 
+## 2025-07-31T10:27:25
+interface designs sketched mentally, APIs unchanged; UX of the mind.
+
