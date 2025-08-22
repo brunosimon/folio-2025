@@ -10,14 +10,14 @@ CameraControls.install( { THREE: THREE } )
 
 export class View
 {
-    static DEFAULT_MODE = 1
-    static FREE_MODE = 2
+    static MODE_DEFAULT = 1
+    static MODE_FREE = 2
 
     constructor()
     {
         this.game = Game.getInstance()
         
-        this.mode = View.DEFAULT_MODE
+        this.mode = View.MODE_DEFAULT
         this.position = new THREE.Vector3()
 
         if(this.game.debug.active)
@@ -33,8 +33,8 @@ export class View
                 {
                     options:
                     {
-                        default: View.DEFAULT_MODE,
-                        free: View.FREE_MODE,
+                        default: View.MODE_DEFAULT,
+                        free: View.MODE_FREE,
                     }
                 }
             ).on('change', () => 
@@ -85,7 +85,7 @@ export class View
 
     toggleMode()
     {
-        this.setMode(this.mode === View.FREE_MODE ? View.DEFAULT_MODE : View.FREE_MODE)
+        this.setMode(this.mode === View.MODE_FREE ? View.MODE_DEFAULT : View.MODE_FREE)
     }
 
     setMode(mode)
@@ -94,7 +94,7 @@ export class View
 
         this.focusPoint.smoothedPosition.copy(this.focusPoint.position)
 
-        this.freeMode.enabled = this.mode === View.FREE_MODE
+        this.freeMode.enabled = this.mode === View.MODE_FREE
         this.freeMode.setTarget(this.focusPoint.position.x, this.focusPoint.position.y, this.focusPoint.position.z)
         this.freeMode.setPosition(this.camera.position.x, this.camera.position.y, this.camera.position.z)
     }
@@ -328,7 +328,7 @@ export class View
 
     setCameras()
     {
-        this.camera = new THREE.PerspectiveCamera(25, this.game.viewport.ratio, 0.1, 1000)
+        this.camera = new THREE.PerspectiveCamera(25, this.game.viewport.ratio, 0.1, 50)
         this.camera.position.setFromSphericalCoords(this.spherical.radius.current, this.spherical.phi, this.spherical.theta)
 
         this.defaultCamera = this.camera.clone()
@@ -340,7 +340,7 @@ export class View
     setFree()
     {
         this.freeMode = new CameraControls(this.freeCamera, this.game.domElement)
-        this.freeMode.enabled = this.mode === View.FREE_MODE
+        this.freeMode.enabled = this.mode === View.MODE_FREE
         this.freeMode.smoothTime = 0.075
         this.freeMode.draggingSmoothTime = 0.075
         this.freeMode.dollySpeed = 0.2
@@ -354,11 +354,27 @@ export class View
         this.cinematic.target = new THREE.Vector3()
         this.cinematic.dummy = this.camera.clone()
 
+        // this.cinematic.targetHelper = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicNodeMaterial({ color: '#ff00ff', wireframe: true }))
+        // this.game.scene.add(this.cinematic.targetHelper)
+
         this.cinematic.start = (position, target) =>
         {
-            this.cinematic.position = position
-            this.cinematic.target = target
-            
+            this.cinematic.position = position.clone()
+            this.cinematic.target = target.clone()
+
+            this.cinematic.targetHelper?.position.copy(this.cinematic.target)
+
+            const idealRatio = 1920 / 1080
+            const currentRatio = this.game.viewport.width / this.game.viewport.height
+            const fixRatio = Math.max(1, idealRatio / currentRatio) - 1
+
+            if(fixRatio > 0)
+            {
+                const delta = this.cinematic.position.clone().sub(this.cinematic.target).setLength(fixRatio * 10)
+                this.cinematic.position.add(delta)
+            }
+
+
             gsap.to(this.cinematic, { progress: 1, duration: 2, ease: 'power2.inOut', overwrite: true })
         }
 
@@ -492,7 +508,7 @@ export class View
 
         this.game.inputs.events.on('viewMapPointer', (action) =>
         {
-            if(this.mode === View.DEFAULT_MODE)
+            if(this.mode === View.MODE_DEFAULT)
             {
                 // Focus point
                 if(action.active)
@@ -523,7 +539,7 @@ export class View
     update()
     {
         // Gamepad Joystick map controls
-        if(this.mode === View.DEFAULT_MODE && this.game.inputs.gamepad.joysticks.items.right.active)
+        if(this.mode === View.MODE_DEFAULT && this.game.inputs.gamepad.joysticks.items.right.active)
         {
             this.focusPoint.isTracking = false
 
@@ -548,7 +564,7 @@ export class View
         this.focusPoint.smoothedPosition.copy(newSmoothFocusPoint)
         
         // Default mode
-        if(this.mode === View.DEFAULT_MODE)
+        if(this.mode === View.MODE_DEFAULT)
         {
             // Zoom
             if(this.game.inputs.actions.get('zoomIn').active)
@@ -601,12 +617,12 @@ export class View
         }
 
         // Apply to final camera
-        if(this.mode === View.DEFAULT_MODE)
+        if(this.mode === View.MODE_DEFAULT)
         {
             this.camera.position.copy(this.defaultCamera.position)
             this.camera.quaternion.copy(this.defaultCamera.quaternion)
         }
-        else if(this.mode === View.FREE_MODE)
+        else if(this.mode === View.MODE_FREE)
         {
             this.freeMode.update(this.game.ticker.delta)
             this.camera.position.copy(this.freeCamera.position)

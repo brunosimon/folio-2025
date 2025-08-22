@@ -157,10 +157,10 @@ export class Lab
         this.cinematic = {}
         
         this.cinematic.position = new THREE.Vector3()
-        this.cinematic.positionOffset = new THREE.Vector3(4.65, 4.20, 4.85)
+        this.cinematic.positionOffset = new THREE.Vector3(4.35, 4.0, 4)
         
         this.cinematic.target = new THREE.Vector3()
-        this.cinematic.targetOffset = new THREE.Vector3(-2.60, 1.32, -4.80)
+        this.cinematic.targetOffset = new THREE.Vector3(-1.75, 1.9, -3)
 
         const applyPositionAndTarget = () =>
         {

@@ -151,7 +151,7 @@ export class Projects
         this.cinematic.positionOffset = new THREE.Vector3(4.65, 3.35, 4.85)
         
         this.cinematic.target = new THREE.Vector3()
-        this.cinematic.targetOffset = new THREE.Vector3(-2.60, 1.60, -4.80)
+        this.cinematic.targetOffset = new THREE.Vector3(-3.0, 1.60, -4.60)
 
         const applyPositionAndTarget = () =>
         {
