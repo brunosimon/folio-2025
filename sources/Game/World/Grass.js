@@ -14,6 +14,10 @@ export class Grass
         this.count = this.subdivisions * this.subdivisions
         this.fragmentSize = this.size / this.subdivisions
 
+        this.surface = this.size * this.size
+        this.surfaceIdeal = 2000
+        this.surfaceOverflow = Math.max(0, this.surface - this.surfaceIdeal) / this.surfaceIdeal
+
         this.setGeometry()
         this.setMaterial()
         this.setMesh()
@@ -22,6 +26,23 @@ export class Grass
         {
             this.update()
         }, 9)
+
+        // Resize
+        this.game.viewport.events.on('throttleChange', () =>
+        {
+            const halfExtent = this.game.view.optimalArea.radius
+            this.size = halfExtent * 2
+            this.surface = this.size * this.size
+            this.surfaceOverflow = Math.max(0, this.surface - this.surfaceIdeal) / this.surfaceIdeal
+            
+            this.sizeUniform.value = this.size
+            this.bladeWidth.value = 0.1 * (1 + this.surfaceOverflow * 0.4)
+            this.bladeHeight.value = 0.6 * (1 + this.surfaceOverflow * 0.4)
+
+            this.geometry.dispose()
+            this.setGeometry()
+            this.mesh.geometry = this.geometry
+        }, 2)
     }
 
     setGeometry()
@@ -78,9 +99,11 @@ export class Grass
         const wind = varying(vec2())
         const bladePosition = varying(vec2())
 
-        const bladeWidth = uniform(0.1)
-        const bladeHeight = uniform(0.6)
-        const bladeHeightRandomness = uniform(0.6)
+        this.bladeWidth = uniform(0.1 * (1 + this.surfaceOverflow * 0.5))
+        this.bladeHeight = uniform(0.6 * (1 + this.surfaceOverflow * 0.5))
+        this.bladeHeightRandomness = uniform(0.6)
+        this.sizeUniform = uniform(this.size)
+
         const bladeShape = uniformArray([
 
                 // Tip
@@ -108,28 +131,25 @@ export class Grass
             const position = attribute('position')
 
             const loopPosition = position.sub(this.center)
-            const halfSize = float(this.size).mul(0.5).toVar()
-            loopPosition.x.assign(mod(loopPosition.x.add(halfSize), this.size).sub(halfSize))
-            loopPosition.y.assign(mod(loopPosition.y.add(halfSize), this.size).sub(halfSize))
+            const halfSize = this.sizeUniform.mul(0.5).toVar()
+            loopPosition.x.assign(mod(loopPosition.x.add(halfSize), this.sizeUniform).sub(halfSize))
+            loopPosition.y.assign(mod(loopPosition.y.add(halfSize), this.sizeUniform).sub(halfSize))
 
             const position3 = vec3(loopPosition.x, 0, loopPosition.y).add(vec3(this.center.x, 0, this.center.y))
             const worldPosition = modelWorldMatrix.mul(position3).toVar()
             bladePosition.assign(worldPosition.xz)
 
-
             // Height
             const heightVariation = texture(this.game.noises.others, bladePosition.mul(0.0321)).r.add(0.5)
-            const height = bladeHeight
-                .mul(bladeHeightRandomness.mul(attribute('heightRandomness')).add(bladeHeightRandomness.oneMinus()))
+            const height = this.bladeHeight
+                .mul(this.bladeHeightRandomness.mul(attribute('heightRandomness')).add(this.bladeHeightRandomness.oneMinus()))
                 .mul(heightVariation)
                 .mul(terrainDataGrass)
                 .toVar()
 
-            // height
-
             // Shape
             const shape = vec3(
-                bladeShape.element(vertexLoopIndex.mod(3).mul(2)).mul(bladeWidth).mul(terrainDataGrass),
+                bladeShape.element(vertexLoopIndex.mod(3).mul(2)).mul(this.bladeWidth).mul(terrainDataGrass),
                 bladeShape.element(vertexLoopIndex.mod(3).mul(2).add(1)).mul(height),
                 0
             )
@@ -173,7 +193,7 @@ export class Grass
 
         this.material.outputNode = vec4(foggedColor, 1)
         // this.material.outputNode = vec4(this.game.lighting.lightOutputNodeBuilder(baseColor, normalWorld), this.game.lighting.addTotalShadowToMaterial(this.material))
-
+        
         // Debug
         if(this.game.debug.active)
         {
@@ -182,9 +202,9 @@ export class Grass
                 expanded: false,
             })
 
-            debugPanel.addBinding(bladeWidth, 'value', { label: 'bladeWidth', min: 0, max: 1, step: 0.001 })
-            debugPanel.addBinding(bladeHeight, 'value', { label: 'bladeHeight', min: 0, max: 2, step: 0.001 })
-            debugPanel.addBinding(bladeHeightRandomness, 'value', { label: 'bladeHeightRandomness', min: 0, max: 1, step: 0.001 })
+            debugPanel.addBinding(this.bladeWidth, 'value', { label: 'this.bladeWidth', min: 0, max: 1, step: 0.001 })
+            debugPanel.addBinding(this.bladeHeight, 'value', { label: 'this.bladeHeight', min: 0, max: 2, step: 0.001 })
+            debugPanel.addBinding(this.bladeHeightRandomness, 'value', { label: 'this.bladeHeightRandomness', min: 0, max: 1, step: 0.001 })
         }
     }
 
