@@ -27,10 +27,23 @@ export class Viewport
 
     setResize()
     {
+        const throttleDuration = 400
+        let throttleTimeout = null
         addEventListener('resize', () =>
         {
             this.measure()
             this.events.trigger('change')
+
+            if(throttleTimeout)
+            {
+                clearTimeout(throttleTimeout)
+            }
+
+            throttleTimeout = setTimeout(() =>
+            {
+                throttleTimeout = null
+                this.events.trigger('throttleChange')
+            }, throttleDuration)
         })
     }
 }

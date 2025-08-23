@@ -68,6 +68,11 @@ export class View
             this.resize()
         })
 
+        this.game.viewport.events.on('throttleChange', () =>
+        {
+            this.throttleResize()
+        }, 1)
+
         // Toggle
         if(this.game.debug.active)
         {
@@ -160,9 +165,9 @@ export class View
         this.optimalArea.helpers.near = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicNodeMaterial({ color: '#ff0000', wireframe: false }))
         this.optimalArea.helpers.far = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicNodeMaterial({ color: '#0000ff', wireframe: false }))
 
-        this.optimalArea.helpers.center.visible = false
-        this.optimalArea.helpers.near.visible = false
-        this.optimalArea.helpers.far.visible = false
+        this.optimalArea.helpers.center.visible = true
+        this.optimalArea.helpers.near.visible = true
+        this.optimalArea.helpers.far.visible = true
 
         this.game.scene.add(
             this.optimalArea.helpers.center,
@@ -214,17 +219,14 @@ export class View
                 this.optimalArea.radius = optimalRadius
 
             // Distances
-            if(this.optimalArea.nearDistance == null)
-            {
-                this.optimalArea.raycaster.setFromCamera(new THREE.Vector2(0, -1), this.defaultCamera)
-                this.optimalArea.raycaster.ray.intersectPlane(this.optimalArea.floorPlane, this.optimalArea.nearPosition)
+            this.optimalArea.raycaster.setFromCamera(new THREE.Vector2(0, -1), this.defaultCamera)
+            this.optimalArea.raycaster.ray.intersectPlane(this.optimalArea.floorPlane, this.optimalArea.nearPosition)
 
-                this.optimalArea.raycaster.setFromCamera(new THREE.Vector2(0, 1), this.defaultCamera)
-                this.optimalArea.raycaster.ray.intersectPlane(this.optimalArea.floorPlane, this.optimalArea.farPosition)
-                
-                this.optimalArea.nearDistance = this.camera.position.distanceTo(this.optimalArea.nearPosition)
-                this.optimalArea.farDistance = this.camera.position.distanceTo(this.optimalArea.farPosition)
-            }
+            this.optimalArea.raycaster.setFromCamera(new THREE.Vector2(0, 1), this.defaultCamera)
+            this.optimalArea.raycaster.ray.intersectPlane(this.optimalArea.floorPlane, this.optimalArea.farPosition)
+            
+            this.optimalArea.nearDistance = this.defaultCamera.position.distanceTo(this.optimalArea.nearPosition)
+            this.optimalArea.farDistance = this.defaultCamera.position.distanceTo(this.optimalArea.farPosition)
 
             // Put back state
             this.defaultCamera.position.copy(savedPosition)
@@ -498,6 +500,11 @@ export class View
 
         this.freeCamera.aspect = this.game.viewport.width / this.game.viewport.height
         this.freeCamera.updateProjectionMatrix()
+    }
+
+    throttleResize()
+    {
+        this.optimalArea.update()
     }
 
     setMapControls()

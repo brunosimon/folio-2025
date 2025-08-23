@@ -17,8 +17,6 @@ export class Fog
         this.color = mix(this.colorA, this.colorB, colorMix)
         this.game.scene.backgroundNode = this.color
 
-        this.amplitude = this.game.view.optimalArea.farDistance - this.game.view.optimalArea.nearDistance
-
         this.near = uniform(this.game.view.optimalArea.nearDistance)
         this.far = uniform(this.game.view.optimalArea.farDistance)
         this.strength = rangeFogFactor(this.near, this.far)
@@ -43,9 +41,10 @@ export class Fog
     update()
     {
         // Apply day cycles values
+        const amplitude = this.game.view.optimalArea.farDistance - this.game.view.optimalArea.nearDistance
         this.colorA.value.copy(this.game.dayCycles.properties.fogColorA.value)
         this.colorB.value.copy(this.game.dayCycles.properties.fogColorB.value)
-        this.near.value = this.game.view.optimalArea.nearDistance + this.game.dayCycles.properties.fogNearRatio.value * this.amplitude
-        this.far.value = this.game.view.optimalArea.nearDistance + this.game.dayCycles.properties.fogFarRatio.value * this.amplitude
+        this.near.value = this.game.view.optimalArea.nearDistance + this.game.dayCycles.properties.fogNearRatio.value * amplitude
+        this.far.value = this.game.view.optimalArea.nearDistance + this.game.dayCycles.properties.fogFarRatio.value * amplitude
     }
 }
