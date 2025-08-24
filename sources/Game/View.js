@@ -338,6 +338,15 @@ export class View
         this.freeCamera = this.camera.clone()
 
         this.game.scene.add(this.camera, this.defaultCamera, this.freeCamera)
+
+        this.cameraHelper = new THREE.CameraHelper(this.defaultCamera)
+        this.cameraHelper.visible = false
+        this.game.scene.add(this.cameraHelper)
+
+        if(this.game.debug.active)
+        {
+            this.debugPanel.addBinding(this.cameraHelper, 'visible', { label: 'cameraHelper' })
+        }
     }
 
     setFree()

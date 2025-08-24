@@ -9,11 +9,12 @@ export class Lighting
         this.game = Game.getInstance()
 
         this.useDayCycles = true
-        this.phi = 0.73
+        this.phi = 0.63
         this.theta = 0.72
-        this.phiAmplitude = 0.82
+        this.phiAmplitude = 0.62
         this.thetaAmplitude = 1.25
-        this.spherical = new THREE.Spherical(25, this.phi, this.theta)
+        this.near = 1
+        this.spherical = new THREE.Spherical(this.game.view.optimalArea.radius + this.near, this.phi, this.theta)
         this.direction = new THREE.Vector3().setFromSpherical(this.spherical).normalize()
         this.directionUniform = uniform(this.direction)
         this.colorUniform = uniform(color('#ffffff'))
@@ -21,9 +22,8 @@ export class Lighting
         this.count = 1
         this.lights = []
         this.mapSizeMin = 2048
-        this.shadowAmplitude = 20
-        this.near = 1
-        this.depth = 60
+        this.shadowAmplitude = this.game.view.optimalArea.radius
+        this.depth = this.game.view.optimalArea.radius * 2
         this.shadowBias = -0.0006
         this.shadowNormalBias = 0
 
@@ -37,18 +37,24 @@ export class Lighting
 
         this.setNodes()
         this.setLights()
-        this.setHelper()
         this.updateShadow()
+        this.setHelpers()
 
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
         }, 7)
 
+        this.game.viewport.events.on('throttleChange', () =>
+        {
+            this.spherical.radius = this.game.view.optimalArea.radius
+            this.shadowAmplitude = this.game.view.optimalArea.radius
+            this.updateShadow()
+        }, 3)
+
         // Debug
         if(this.game.debug.active)
         {
-            this.debugPanel.addBinding(this.helper, 'visible', { label: 'helperVisible' })
             this.debugPanel.addBinding(this, 'useDayCycles')
             this.debugPanel.addBinding(this, 'phi', { min: 0, max: Math.PI * 0.5 }).on('change', () => this.updateCoordinates())
             this.debugPanel.addBinding(this, 'theta', { min: - Math.PI, max: Math.PI }).on('change', () => this.updateCoordinates())
@@ -194,13 +200,14 @@ export class Lighting
         }
     }
 
-    setHelper()
+    setHelpers()
     {
-        this.helper = new THREE.Mesh(
+        // Direction helper
+        this.directionHelper = new THREE.Mesh(
             new THREE.IcosahedronGeometry(0.25, 1),
             new THREE.MeshBasicNodeMaterial({ wireframe: true })
         )
-        this.helper.visible = false
+        this.directionHelper.visible = false
 
         const points = [
             new THREE.Vector3(0, 0, 0),
@@ -209,9 +216,20 @@ export class Lighting
         const lineGeometry = new THREE.BufferGeometry().setFromPoints(points)
         const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff })
         const line = new THREE.Line(lineGeometry, lineMaterial)
-        this.helper.add(line)
+        this.directionHelper.add(line)
 
-        this.game.scene.add(this.helper)
+        this.game.scene.add(this.directionHelper)
+
+        // Shadow helper
+        this.shadowHelper = new THREE.CameraHelper(this.lights[0].shadow.camera)
+        this.shadowHelper.visible = false
+        this.game.scene.add(this.shadowHelper)
+
+        if(this.game.debug.active)
+        {
+            this.debugPanel.addBinding(this.directionHelper, 'visible', { label: 'directionHelper' })
+            this.debugPanel.addBinding(this.shadowHelper, 'visible', { label: 'shadowHelper' })
+        }
     }
 
     updateShadow()
@@ -244,18 +262,23 @@ export class Lighting
 
     update()
     {
+        // Spherical coordinates
         if(this.useDayCycles)
         {
-            this.spherical.theta = this.theta + Math.sin(- (this.game.dayCycles.progress + 9/16) * Math.PI * 2) * this.thetaAmplitude
-            this.spherical.phi = this.phi + (Math.cos(- (this.game.dayCycles.progress + 9/16) * Math.PI * 2) * 0.5) * this.phiAmplitude
+            const progressOffset = 9/16
+            this.spherical.theta = this.theta + Math.sin(- (this.game.dayCycles.progress + progressOffset) * Math.PI * 2) * this.thetaAmplitude
+            this.spherical.phi = this.phi + (Math.cos(- (this.game.dayCycles.progress + progressOffset) * Math.PI * 2) * 0.5) * this.phiAmplitude
         }
         else
         {
             this.spherical.theta = this.theta
             this.spherical.phi = this.phi
         }
+
+        // Direction (for shaders)
         this.direction.setFromSpherical(this.spherical).normalize()
         
+        // Actual lights transform
         for(const light of this.lights)
         {
             light.position.setFromSpherical(this.spherical).add(this.game.view.optimalArea.position)
@@ -263,8 +286,8 @@ export class Lighting
         }
 
         // Helper
-        this.helper.position.copy(this.direction).multiplyScalar(5).add(this.game.view.focusPoint.position)
-        this.helper.lookAt(this.game.view.focusPoint.position)
+        this.directionHelper.position.copy(this.direction).multiplyScalar(5).add(this.game.view.focusPoint.position)
+        this.directionHelper.lookAt(this.game.view.focusPoint.position)
 
         // Apply day cycles values
         this.colorUniform.value.copy(this.game.dayCycles.properties.lightColor.value)
