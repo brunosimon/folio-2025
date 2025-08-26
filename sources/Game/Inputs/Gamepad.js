@@ -235,12 +235,14 @@ export class Gamepad
                             {
                                 key.down = true
                                 this.events.trigger('down', [ key ])
+                                console.log('down', key)
                             }
                             else
                             {
                                 if(key.value !== oldValue)
                                 {
                                     this.events.trigger('change', [ key ])
+                                    console.log('change', key)
                                 }
                             }
                         }
@@ -250,6 +252,7 @@ export class Gamepad
                             {
                                 key.down = false
                                 this.events.trigger('up', [ key ])
+                                console.log('up', key)
                             }
                         }
                     }

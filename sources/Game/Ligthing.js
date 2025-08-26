@@ -24,7 +24,7 @@ export class Lighting
         this.mapSizeMin = 2048
         this.shadowAmplitude = this.game.view.optimalArea.radius
         this.depth = this.game.view.optimalArea.radius * 2
-        this.shadowBias = -0.0006
+        this.shadowBias = -0.001
         this.shadowNormalBias = 0
 
         if(this.game.debug.active)
