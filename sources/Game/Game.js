@@ -129,7 +129,7 @@ export class Game
         this.debug = new Debug()
         this.server = new Server()
         this.ticker = new Ticker()
-        this.inputs = new Inputs([], [])
+        this.inputs = new Inputs([], [ 'playing' ])
         this.rayCursor = new RayCursor()
         this.time = new Time()
         this.viewport = new Viewport(this.domElement)

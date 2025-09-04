@@ -981,10 +981,10 @@ export class Lab
 
         // Inputs
         this.game.inputs.addActions([
-            { name: 'scroll', categories: [ 'cinematic' ], keys: [ 'Wheel.roll' ] }
+            { name: 'labScroll', categories: [ 'cinematic' ], keys: [ 'Wheel.roll' ] }
         ])
 
-        this.game.inputs.events.on('scroll', (action) =>
+        this.game.inputs.events.on('labScroll', (action) =>
         {
             this.scroller.targetProgress -= action.value * this.scroller.wheelSensitivity
         })
