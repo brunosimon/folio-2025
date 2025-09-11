@@ -1510,3 +1510,6 @@ theoretical optimizations considered, practical ones deferred; thinking before l
 ## 2025-09-09T19:02:30
 considered containerization, docker-free day; isolation in thought only.
 
+## 2025-09-10T21:08:31
+considered logging strategies, log files unchanging; traceability in theory.
+
