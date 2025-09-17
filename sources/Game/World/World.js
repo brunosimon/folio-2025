@@ -53,17 +53,17 @@ export class World
         // this.setCollisionGroupsTest()
         // this.setNormalTest()
         // this.setTestMesh()
-        // this.setTestInstances()
+        // this.setTestShadow()
     }
 
-    setTestInstances()
+    setTestShadow()
     {
         // Geometry
         const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
 
         // Material
         const material = new THREE.MeshLambertNodeMaterial()
-        material.castShadowNode = vec4(0, 1, 1, 1)
+        material.castShadowNode = vec4(0, 0, 0, 1)
 
         // Mesh
         const mesh = new THREE.Mesh(geometry, material)
@@ -72,64 +72,18 @@ export class World
         mesh.castShadow = true
         this.game.scene.add(mesh)
 
-        // for(let i = 0; i < count; i++)
-        // {
-        //     const object = new THREE.Object3D()
-            
-        //     object.position.set(i * 2, 2, 0)
-        //     object.updateMatrix()
-
-        //     mesh.setMatrixAt(i, object.matrix)
-        // }
+        // // Receiver
+        // const receiver = new THREE.Mesh(
+        //     new THREE.PlaneGeometry(3, 3),
+        //     new THREE.MeshLambertNodeMaterial()
+        // )
+        // receiver.rotation.x = - Math.PI * 0.5
+        // receiver.position.y = 1
+        // receiver.receiveShadow = true
+        // receiver.castShadow = true
+        // this.game.scene.add(receiver)
     }
 
-    setTestShadow()
-    {
-        const floor = new THREE.Mesh(
-            new THREE.PlaneGeometry(20, 20),
-            new THREE.MeshLambertNodeMaterial(),
-        )
-        floor.receiveShadow = true
-        floor.position.set(0, 0.5, 0)
-        floor.rotation.x = - Math.PI * 0.5
-        this.game.scene.add(floor)
-
-        const material = new THREE.MeshLambertNodeMaterial({
-            alphaMap: this.game.resources.foliageTexture,
-            transparent: true
-        })
-        material.positionNode = Fn( ( { object } ) =>
-        {
-            instance(object.count, instanceMatrix).toStack()
-            return positionLocal
-        })()
-
-        const geometry = new THREE.BoxGeometry(1, 1, 1)
-
-        // const mesh = new THREE.Mesh(geometry, material)
-        // mesh.receiveShadow = true
-        // mesh.castShadow = true
-        // mesh.count = 1
-        // this.game.scene.add(mesh)
-
-        // const instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(mesh.count * 16), 16)
-        // instanceMatrix.setUsage(THREE.DynamicDrawUsage)
-        
-        // const matrix = new THREE.Matrix4().makeTranslation(new THREE.Vector3(0, 2, 0))
-        // matrix.toArray(instanceMatrix.array, 0)
-
-        const dummy = new THREE.Mesh(
-            geometry,
-            new THREE.MeshLambertNodeMaterial({
-                alphaMap: this.game.resources.foliageTexture,
-                transparent: true
-            }),
-        )
-        dummy.receiveShadow = true
-        dummy.castShadow = true
-        dummy.position.set(0, 2, 3)
-        this.game.scene.add(dummy)
-    }
 
     setTestMesh()
     {

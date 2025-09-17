@@ -317,7 +317,7 @@ export class WaterSurface
         {
             this.detailsMask().lessThan(0.5).discard()
 
-            return float(0)
+            return vec4(0, 1, 1, 1)
         })()
 
         // Already exist

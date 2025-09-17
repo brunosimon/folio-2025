@@ -36,13 +36,13 @@ export class MeshDefaultMaterial extends THREE.MeshLambertNodeMaterial
          * Shadow catcher
          * Catch shadow as a float and remove it from initial pipeline
          */
-        let catchedShadow = float(1).toVar()
+        const catchedShadow = float(1).toVar()
 
         if(this.hasDropShadows)
         {
             this.receivedShadowNode = Fn(([ shadow ]) => 
             {
-                catchedShadow.mulAssign(shadow)
+                catchedShadow.mulAssign(shadow.r)
                 return float(1)
             })
         }
