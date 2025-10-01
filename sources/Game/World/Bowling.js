@@ -23,6 +23,7 @@ export class Bowling
             })
         }
         this.won = false
+        this.wonTime = 0
 
         this.setPins()
         this.setBall()
@@ -203,7 +204,6 @@ export class Bowling
         this.screen.min = this.screen.max - (28.2 - 3.81)
         this.screen.discsMesh = this.references.get('discs')[0]
         this.screen.crossesMesh = this.references.get('crosses')[0]
-        this.screen.circlesMesh = this.references.get('circles')[0]
 
         const data = new Uint8Array(10)
         this.dataTexture = new THREE.DataTexture(
@@ -238,23 +238,30 @@ export class Bowling
         discsMaterial.positionNode = offsetPosition(float(0))
 
         // Crosses material
-        const crossesColor = uniform(color('#ff2b11'))
+        const crossesColor = uniform(color('#ff2b11')) // #b6ff11
         const crossesStrength = uniform(6)
         const crossesMaterial = new THREE.MeshBasicNodeMaterial()
         crossesMaterial.outputNode = vec4(crossesColor.mul(crossesStrength), 1)
         crossesMaterial.positionNode = offsetPosition(0.5)
 
-        // Circles
-        const circlesColor = uniform(color('#b6ff11'))
-        const circlesStrength = uniform(1.85)
-        const circlesMaterial = new THREE.MeshBasicNodeMaterial()
-        circlesMaterial.outputNode = vec4(circlesColor.mul(circlesStrength), 1)
-        circlesMaterial.positionNode = offsetPosition(1)
-
         // Update materials
         this.screen.discsMesh.material = discsMaterial
         this.screen.crossesMesh.material = crossesMaterial
-        this.screen.circlesMesh.material = circlesMaterial
+
+        // Strike label
+        this.screen.labelStrike = this.references.get('labelStrike')[0]
+
+        {
+            const material = new THREE.MeshBasicNodeMaterial()
+            const labelTexture = this.screen.labelStrike.material.map
+            material.outputNode = Fn(() =>
+            {
+                texture(labelTexture).r.lessThan(0.5).discard()
+                return vec4(vec3(2), 1)
+            })()
+            this.screen.labelStrike.material = material
+            this.screen.labelStrike.visible = false
+        }
 
         // Reset
         this.screen.reset = () =>
@@ -273,8 +280,6 @@ export class Bowling
             this.debugPanel.addBinding(discsStrength, 'value', { label: 'discsStrength', min: 0, max: 10, step: 0.001 })
             this.game.debug.addThreeColorBinding(this.debugPanel, crossesColor.value, 'crossesColor')
             this.debugPanel.addBinding(crossesStrength, 'value', { label: 'crossesStrength', min: 0, max: 10, step: 0.001 })
-            this.game.debug.addThreeColorBinding(this.debugPanel, circlesColor.value, 'circlesColor')
-            this.debugPanel.addBinding(circlesStrength, 'value', { label: 'circlesStrength', min: 0, max: 10, step: 0.001 })
         }
     }
 
@@ -384,6 +389,12 @@ export class Bowling
         })
         this.screen.object.needsUpdate = true
 
+        // Screen strike label
+        if(this.won)
+            this.screen.labelStrike.visible = (this.game.ticker.elapsedScaled - this.wonTime) % 3 < 1.5
+        else
+            this.screen.labelStrike.visible = false
+
         // Pins
         let pinStateChanged = false
         for(const pin of this.pins.items)
@@ -423,6 +434,7 @@ export class Bowling
                 if(allDown)
                 {
                     this.won = true
+                    this.wonTime = this.game.ticker.elapsedScaled
 
                     if(this.game.world.confetti)
                     {
