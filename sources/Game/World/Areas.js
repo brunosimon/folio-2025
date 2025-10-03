@@ -133,9 +133,7 @@ export class Areas
         const model = [...this.game.resources.areasModel.scene.children]
         for(const child of model)
         {
-            // References
-            this.references.parse(child)
-
+            // Add
             if(typeof child.userData.preventAutoAdd === 'undefined' || child.userData.preventAutoAdd === false)
             {
                 // Objects
@@ -157,6 +155,9 @@ export class Areas
                     }
                 )
             }
+
+            // Parse references
+            this.references.parse(child)
         }
     }
 }

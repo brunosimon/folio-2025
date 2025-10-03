@@ -8,6 +8,9 @@ export class Objects
         this.list = new Map()
         this.key = 0
 
+        this.physicalTypes = [ 'fixed', 'dynamic', 'kinematicPositionBased' ]
+        this.physicalTypesRegexp = 
+
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
@@ -107,58 +110,71 @@ export class Objects
 
     getFromModel(_model, _visualDescription = {}, _physicalDescription = {})
     {
-        // Extract physical from direct children and remove from scene
-        const physical = _model.children.find(_child => _child.name.startsWith('physical'))
+        let name = _model.name
+        
+        const physical = !!name.match(/physical/i)
+        const cleanUpRegexp = /physical|fixed|dynamic|kinematicPositionBased/gi
 
-        // Create collider from physical children names and scales
         const colliders = []
+
         if(physical)
         {
-            physical.removeFromParent()
-            
+            // Define type
             if(typeof _physicalDescription.type === 'undefined')
             {
                 _physicalDescription.type = 'fixed'
 
-                if(physical.name.match(/dynamic/i))
+                if(_model.name.match(/dynamic/i))
                     _physicalDescription.type = 'dynamic'
-                else if(physical.name.match(/kinematicPositionBased/i))
+                else if(_model.name.match(/kinematicPositionBased/i))
                     _physicalDescription.type = 'kinematicPositionBased'
             }
 
-            for(const _physical of physical.children)
+            _model.name = name.replaceAll(cleanUpRegexp, '')
+
+            // Colliders
+            const children = [..._model.children]
+            for(const _child of children)
             {
                 const collider = {
-                    position: _physical.position,
-                    quaternion: _physical.quaternion,
+                    position: _child.position,
+                    quaternion: _child.quaternion,
                 }
-                if(_physical.name.match(/^trimesh/i))
+                if(_child.name.match(/^trimesh/i))
                 {
                     collider.shape = 'trimesh'
-                    collider.parameters = [ _physical.geometry.attributes.position.array, _physical.geometry.index.array ]
+                    collider.parameters = [ _child.geometry.attributes.position.array, _child.geometry.index.array ]
                 }
-                else if(_physical.name.match(/^hull/i))
+                else if(_child.name.match(/^hull/i))
                 {
                     collider.shape = 'hull'
-                    collider.parameters = [ _physical.geometry.attributes.position.array, _physical.geometry.index.array ]
+                    collider.parameters = [ _child.geometry.attributes.position.array, _child.geometry.index.array ]
                 }
-                else if(_physical.name.match(/^cub/i))
+                else if(_child.name.match(/^cuboid/i))
                 {
                     collider.shape = 'cuboid'
-                    collider.parameters = [ _physical.scale.x * 0.5, _physical.scale.y * 0.5, _physical.scale.z * 0.5 ]
+                    collider.parameters = [ _child.scale.x * 0.5, _child.scale.y * 0.5, _child.scale.z * 0.5 ]
                 }
-                else if(_physical.name.match(/^cylinder/i))
+                else if(_child.name.match(/^tube/i))
                 {
                     collider.shape = 'cylinder'
-                    collider.parameters = [ _physical.scale.y * 0.5, _physical.scale.x * 0.5 ]
+                    collider.parameters = [ _child.scale.y * 0.5, _child.scale.x * 0.5 ]
                 }
-                else if(_physical.name.match(/^ball/i) || _physical.name.match(/^sphere/i))
+                else if(_child.name.match(/^ball/i))
                 {
                     collider.shape = 'ball'
-                    collider.parameters = [ _physical.scale.y * 0.5 ]
+                    collider.parameters = [ _child.scale.y * 0.5 ]
                 }
 
-                colliders.push(collider)
+                // Collider found
+                if(collider.shape)
+                {
+                    // Save
+                    colliders.push(collider)
+
+                    // Remove
+                    _child.removeFromParent()
+                }
             }
         }
         

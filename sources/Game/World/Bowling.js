@@ -50,7 +50,7 @@ export class Bowling
         const references = InstancedGroup.getReferencesFromChildren(this.references.get('pinPositions')[0].children)
 
         // Instances
-        const basePin = this.references.get('pin')[0]
+        const basePin = this.references.get('pinPhysicalDynamic')[0]
         const descriptions = this.game.objects.getFromModel(basePin, {}, {}) // To extract colliders
 
         let i = 0
