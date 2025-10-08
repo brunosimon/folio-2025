@@ -67,4 +67,12 @@ export class ExplosiveCrates
             }
         }
     }
+
+    reset()
+    {
+        for(const crate of this.list)
+        {
+            this.game.objects.resetObject(crate.object)
+        }
+    }
 }

@@ -648,6 +648,9 @@ export default class Circuit
             // Objects
             this.objects.reset()
 
+            // Crates (all crates in the world?)
+            this.game.world.explosiveCrates.reset()
+
             // Weather
             this.game.weather.override.start(
                 {
