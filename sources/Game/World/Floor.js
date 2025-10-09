@@ -100,7 +100,7 @@ export class Floor
             heights[index] = y
         }
 
-        this.game.objects.add(
+        const object = this.game.objects.add(
             null,
             {
                 type: 'fixed',
@@ -111,6 +111,7 @@ export class Floor
                 ]
             }
         )
+        this.physical = object.physical
     }
 
     update()

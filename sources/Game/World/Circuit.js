@@ -44,6 +44,7 @@ export default class Circuit
         this.setInteractivePoint()
         this.setStartAnimation()
         this.setRespawn()
+        this.setBounds()
 
         this.game.ticker.events.on('tick', () =>
         {
@@ -63,6 +64,8 @@ export default class Circuit
     setRoad()
     {
         this.road = {}
+
+        // Mesh and material
         const mesh = this.references.get('road')[0]
         
         this.road.color = uniform(color('#383039'))
@@ -94,6 +97,10 @@ export default class Circuit
             hasWater: false,
         })
         mesh.material = material
+
+        // Physics
+        this.road.body = mesh.userData.object.physical.body
+        this.road.body.setEnabled(false)
 
         // Debug
         if(this.game.debug.active)
@@ -632,44 +639,57 @@ export default class Circuit
         // Reset
         this.game.inputs.events.on('circuitRespawn', (action) =>
         {
-            if(action.active && this.state === Circuit.STATE_RUNNING)
-            {
-                // Player > Lock
-                this.game.player.state = Player.STATE_LOCKED
-
-                // Respawn position and rotation
-                const position = new THREE.Vector3()
-                let rotation = 0
-
-                if(this.checkpoints.last)
-                {
-                    position.copy(this.checkpoints.last.respawnPosition)
-                    rotation = this.checkpoints.last.rotation + Math.PI * 0.5
-                }
-                else
-                {
-                    position.copy(this.startPosition.position)
-                    rotation = this.startPosition.rotation
-                }
-            
-                this.game.overlay.show(() =>
-                {
-                    // Player > Unlock
-                    gsap.delayedCall(2, () =>
-                    {
-                        this.game.player.state = Player.STATE_DEFAULT
-                    })
-
-                    // Update physical vehicle
-                    this.game.physicalVehicle.moveTo(
-                        position,
-                        rotation
-                    )
-                    
-                    this.game.overlay.hide()
-                })
-            }
+            if(action.active)
+                this.respawn()
         })
+    }
+
+    respawn()
+    {
+        if(this.state !== Circuit.STATE_RUNNING)
+            return
+
+        // Player > Lock
+        this.game.player.state = Player.STATE_LOCKED
+
+        // Respawn position and rotation
+        const position = new THREE.Vector3()
+        let rotation = 0
+
+        if(this.checkpoints.last)
+        {
+            position.copy(this.checkpoints.last.respawnPosition)
+            rotation = this.checkpoints.last.rotation + Math.PI * 0.5
+        }
+        else
+        {
+            position.copy(this.startPosition.position)
+            rotation = this.startPosition.rotation
+        }
+    
+        this.game.overlay.show(() =>
+        {
+            // Player > Unlock
+            gsap.delayedCall(2, () =>
+            {
+                this.game.player.state = Player.STATE_DEFAULT
+            })
+
+            // Update physical vehicle
+            this.game.physicalVehicle.moveTo(
+                position,
+                rotation
+            )
+            
+            this.game.overlay.hide()
+        })
+    }
+
+    setBounds()
+    {
+        this.bounds = {}
+        this.bounds.threshold = 0
+        this.bounds.isOut = false
     }
 
     restart()
@@ -695,6 +715,13 @@ export default class Circuit
                 this.startPosition.position,
                 this.startPosition.rotation
             )
+
+            // Deactivate terrain physics
+            if(this.game.world.floor)
+                this.game.world.floor.physical.body.setEnabled(false)
+            
+            // Activate road physics (better collision)
+            this.road.body.setEnabled(true)
 
             // Starting lights
             this.startingLights.reset()
@@ -792,6 +819,13 @@ export default class Circuit
                 const respawn = this.game.respawns.getByName('circuit')
                 if(respawn)
                     this.game.physicalVehicle.moveTo(respawn.position, respawn.rotation)
+
+                // Activate terrain physics
+                if(this.game.world.floor)
+                    this.game.world.floor.physical.body.setEnabled(true)
+                
+                // Deactivate road physics
+                this.road.body.setEnabled(false)
         
                 // Weather and day cycles
                 this.game.weather.override.end(0)
@@ -819,32 +853,49 @@ export default class Circuit
 
     update()
     {
-        // Checkpoints
-        for(const checkpoint of this.checkpoints.items)
+        if(this.state === Circuit.STATE_RUNNING)
         {
-            const intersections = segmentCircleIntersection(
-                checkpoint.a.x,
-                checkpoint.a.y,
-                checkpoint.b.x,
-                checkpoint.b.y,
-                this.game.player.position2.x,
-                this.game.player.position2.y,
-                this.checkpoints.checkRadius
-            )
+            // Checkpoints
+            for(const checkpoint of this.checkpoints.items)
+            {
+                const intersections = segmentCircleIntersection(
+                    checkpoint.a.x,
+                    checkpoint.a.y,
+                    checkpoint.b.x,
+                    checkpoint.b.y,
+                    this.game.player.position2.x,
+                    this.game.player.position2.y,
+                    this.checkpoints.checkRadius
+                )
 
-            if(intersections.length)
-                checkpoint.reach()
-        }
+                if(intersections.length)
+                    checkpoint.reach()
+            }
 
-        // Obstacles
-        for(const obstacle of this.obstacles.items)
-        {
-            const newPosition = obstacle.basePosition.clone()
-            const osciliation = Math.sin(this.timer.elapsedTime * 1.25 + obstacle.osciliationOffset) * 5
-            newPosition.z += osciliation
-            
-            obstacle.object.physical.body.setNextKinematicTranslation(newPosition)
-            obstacle.object.needsUpdate = true
+            // Obstacles
+            for(const obstacle of this.obstacles.items)
+            {
+                const newPosition = obstacle.basePosition.clone()
+                const osciliation = Math.sin(this.timer.elapsedTime * 1.25 + obstacle.osciliationOffset) * 5
+                newPosition.z += osciliation
+                
+                obstacle.object.physical.body.setNextKinematicTranslation(newPosition)
+                obstacle.object.needsUpdate = true
+            }
+
+            // If out of bounds
+            if(this.game.player.position.y < this.bounds.threshold)
+            {
+                if(!this.bounds.isOut)
+                {
+                    this.bounds.isOut = true
+                    this.respawn()
+                }
+            }
+            else
+            {
+                this.bounds.isOut = false
+            }
         }
 
         // Timer

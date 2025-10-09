@@ -95,29 +95,36 @@ export class World
     {
         const testMesh = new THREE.Mesh(
             new THREE.SphereGeometry(1, 32, 32),
-            new MeshDefaultMaterial({
-                alphaNode: texture(this.game.resources.foliageTexture).r,
-                colorNode: color(0xff0000),
-                hasCoreShadows: true,
-                hasDropShadows: true,
-                transparent: true
-            })
+            new THREE.MeshBasicNodeMaterial()
         )
+        testMesh.material.outputNode = Fn(() =>
+        {
+            return vec4(1, 0, 0, 1)
+        })()
+        setTimeout(() =>
+        {
+
+            testMesh.material.outputNode = Fn(() =>
+            {
+                return vec4(1, 1, 0, 1)
+            })()
+            testMesh.material.needsUpdate = true
+        }, 2000)
         testMesh.receiveShadow = true
         testMesh.position.z = 3
         this.game.scene.add(testMesh)
 
-        const testMesh2 = new THREE.Mesh(
-            new THREE.SphereGeometry(1, 32, 32),
-            new MeshDefaultMaterial({
-                colorNode: color(0xffffff),
-                hasCoreShadows: true,
-                hasDropShadows: true,
-            })
-        )
-        testMesh2.receiveShadow = true
-        testMesh2.position.x = 3
-        this.game.scene.add(testMesh2)
+        // const testMesh2 = new THREE.Mesh(
+        //     new THREE.SphereGeometry(1, 32, 32),
+        //     new MeshDefaultMaterial({
+        //         colorNode: color(0xffffff),
+        //         hasCoreShadows: true,
+        //         hasDropShadows: true,
+        //     })
+        // )
+        // testMesh2.receiveShadow = true
+        // testMesh2.position.x = 3
+        // this.game.scene.add(testMesh2)
     }
 
     setAxesHelper()
