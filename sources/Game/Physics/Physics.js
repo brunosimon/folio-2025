@@ -124,7 +124,7 @@ export class Physics
 
         if(typeof _physicalDescription.enabled !== 'undefined')
             rigidBodyDesc.setEnabled(_physicalDescription.enabled)
-
+        
         physical.body = this.world.createRigidBody(rigidBodyDesc)
 
         // Colliders

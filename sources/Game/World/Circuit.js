@@ -5,7 +5,7 @@ import { InteractivePoints } from '../InteractivePoints.js'
 import gsap from 'gsap'
 import { Player } from '../Player.js'
 import { MeshDefaultMaterial } from '../Materials/MeshDefaultMaterial.js'
-import { add, color, float, Fn, max, normalGeometry, objectPosition, PI, positionGeometry, positionWorld, rotateUV, sin, texture, uniform, uv, vec2, vec3, vec4 } from 'three/tsl'
+import { add, color, float, Fn, max, mix, normalGeometry, objectPosition, PI, positionGeometry, positionWorld, rotateUV, sin, texture, uniform, uv, vec2, vec3, vec4 } from 'three/tsl'
 import { alea } from 'seedrandom'
 
 const rng = new alea('circuit')
@@ -46,6 +46,8 @@ export default class Circuit
         this.setRespawn()
         this.setBounds()
         this.setAirDancers()
+        this.setBanners()
+        this.setLeaderboard()
 
         this.game.materials.getFromName('circuitBrand').map.minFilter = THREE.LinearFilter
         this.game.materials.getFromName('circuitBrand').map.magFilter = THREE.LinearFilter
@@ -538,7 +540,7 @@ export default class Circuit
         {
             const obstacle = {}
             obstacle.object = baseObstacle.userData.object
-            obstacle.osciliationOffset = i
+            obstacle.osciliationOffset = - i * 1
             obstacle.basePosition = obstacle.object.visual.object3D.position.clone()
 
             this.obstacles.items.push(obstacle)
@@ -599,7 +601,7 @@ export default class Circuit
     {
         this.startAnimation = {}
         this.startAnimation.timeline = gsap.timeline({ paused: true })
-        this.startAnimation.interDuration = 0.5
+        this.startAnimation.interDuration = 2
         this.startAnimation.endCallback = null
 
         this.startAnimation.timeline.add(() =>
@@ -761,6 +763,112 @@ export default class Circuit
             
             // debugPanel.addBinding(doorIntensity, 'value', { label: 'intensity', min: 0, max: 5, step: 0.01 })
         }
+    }
+
+    setBanners()
+    {
+        this.banners = this.references.get('banners')
+    }
+
+    setLeaderboard()
+    {
+        this.leaderboard = {}
+        const resolution = 512
+
+        // Canvas
+        const font = `700 ${35}px "Nunito"`
+
+        const canvas = document.createElement('canvas')
+        canvas.style.position = 'fixed'
+        canvas.style.zIndex = 999
+        canvas.style.top = 0
+        canvas.style.left = 0
+        // document.body.append(canvas)
+
+        const context = canvas.getContext('2d')
+        context.font = font
+
+        canvas.width = resolution
+        canvas.height = resolution
+
+
+        // Texture
+        const textTexture = new THREE.Texture(canvas)
+        textTexture.minFilter = THREE.NearestFilter
+        textTexture.magFilter = THREE.NearestFilter
+        textTexture.generateMipmaps = false
+
+        // Digits
+        // const geometry = new THREE.PlaneGeometry(this.timer.digits.ratio, 1)
+
+        const material = new MeshDefaultMaterial({
+            colorNode: color('#463F35'),
+            hasWater: false,
+        })
+        
+        const baseOutput = material.outputNode
+        
+        material.outputNode = Fn(() =>
+        {
+            const text = texture(textTexture).r
+            return vec4(
+                mix(
+                    baseOutput.rgb,
+                    color('#ffffff').mul(1.3),
+                    text
+                ),
+                baseOutput.a
+            )
+        })()
+
+        const mesh = this.references.get('leaderboard')[0]
+        mesh.material = material
+
+        const columsSettings = [
+            { align: 'right', x: resolution * 0.125 },
+            { align: 'center', x: resolution * 0.375},
+            { align: 'left', x: resolution * 0.625 },
+        ]
+        const interline = resolution / 12
+        this.leaderboard.drawScores = (scores = []) =>
+        {
+            // Clear
+            context.fillStyle = '#000000'
+            context.fillRect(0, 0, canvas.width, canvas.height)
+
+            context.font = font
+            context.fillStyle = '#ffffff'
+            context.textBaseline = 'middle'
+
+            let rank = 1
+            for(const score of scores)
+            {
+                context.textAlign = columsSettings[0].align
+                context.fillText(rank, columsSettings[0].x, (rank + 1) * interline)
+
+                context.textAlign = columsSettings[1].align
+                context.fillText(score[0], columsSettings[1].x, (rank + 1) * interline)
+
+                context.textAlign = columsSettings[2].align
+                context.fillText(score[1], columsSettings[2].x, (rank + 1) * interline)
+
+                rank++
+            }
+            textTexture.needsUpdate = true
+        }
+
+        this.leaderboard.drawScores([
+            [ 'BRU', '00:25:150' ],
+            [ 'TTU', '00:27:153' ],
+            [ 'ORS', '00:27:002' ],
+            [ 'BAB', '00:29:193' ],
+            [ 'YOH', '00:30:159' ],
+            [ 'PUH', '00:37:103' ],
+            [ 'WWW', '00:40:253' ],
+            [ 'PWT', '00:41:315' ],
+            [ 'PRT', '00:45:035' ],
+            [ 'BOO', '00:49:531' ],
+        ])
     }
 
     restart()
@@ -967,6 +1075,17 @@ export default class Circuit
             {
                 this.bounds.isOut = false
             }
+        }
+
+        // Banners
+        let i = 0
+        for(const banner of this.banners)
+        {
+            const time = this.game.wind.localTime.value * 10 + i * 0.5
+            const rotation = Math.sin(time) + Math.sin(time * 2.34) * 0.5 + Math.sin(time * 3.45) * 0.25
+            banner.rotation.y = 0.5 + rotation * 0.5
+
+            i++
         }
 
         // Timer
