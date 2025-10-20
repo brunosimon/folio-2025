@@ -1798,3 +1798,6 @@ thought about cache invalidation, cache hits steady; conceptual performance tuni
 ## 2025-10-20T15:21:05
 thought experiments ran, real experiments backlogged; hypothesis formation day.
 
+## 2025-10-20T13:59:27
+considered hot code reloading, restarts required; theoretical continuous operation.
+
