@@ -39,6 +39,7 @@ import { RayCursor } from './RayCursor.js'
 import { Water } from './Water.js'
 import { Reveal } from './Reveal.js'
 import { KonamiCode } from './KonamiCode.js'
+import { Achievements } from './Achievements.js'
 
 export class Game
 {
@@ -156,6 +157,7 @@ export class Game
         this.overlay = new Overlay()
         this.closingManager = new ClosingManager()
         this.konamiCode = new KonamiCode()
+        this.achievements = new Achievements()
         // this.monitoring = new Monitoring()
         this.world.init(1)
 

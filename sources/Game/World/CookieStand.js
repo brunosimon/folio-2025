@@ -441,6 +441,9 @@ export class CookieStand
 
         // Actual cookie
         document.cookie = `acceptedCookies=${++this.actualCookies.count}`
+
+        // Achievement
+        this.game.achievements.addProgress('cookie')
     }
 
     update()

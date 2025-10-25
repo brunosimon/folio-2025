@@ -25,6 +25,89 @@
         &.is-displayed
             display block
 
+        &.achievements
+            width 600px
+
+            .title
+                text-align center
+
+            .global-progress
+                position relative
+                top -0.5em
+                text-align center
+                font-weight 700
+                color #ffceca
+
+                &.is-achieved
+                    color #d5ff95
+
+            .items
+                margin-bottom 2em
+            
+            .achievement
+                margin-bottom 1em
+
+                &.is-achieved
+                    .title
+                        color #d5ff95
+
+                    .description
+                        .progress
+                            color #d5ff95
+
+                            .check-icon
+                                display block
+
+                    .bar
+                        .fill
+                            background #d5ff95
+
+                .title
+                    text-align left
+                    color #ffceca
+                    font-size 32px
+                    margin-bottom 0
+
+                .description
+                    display flex
+                    justify-content space-between
+                    align-items flex-end
+                    margin-bottom 0.5em
+
+                    .text
+                        margin-bottom 0
+
+                    .progress
+                        display flex
+                        align-items center
+                        font-weight 700
+                        color #ffceca
+
+                        .check-icon
+                            display none
+                            width 17px
+                            height 13px
+                            margin-right 10px
+                            background url(../ui/achievements/check.svg)
+
+                .bar
+                    position relative
+                    height 18px
+                    border 1px solid #767676
+
+                    .fill
+                        position absolute
+                        top 4px
+                        right 4px
+                        bottom 4px
+                        left 4px
+                        background #ffceca
+                        transform-origin 0 0
+                        transform scaleX(0)
+
+            .button-reset
+                width 215px
+
         &.intro
             .content
                 .audio-toggle
@@ -42,7 +125,6 @@
 
                             &.audio-off
                                 display none
-
 
         &.whispers
             .preview
