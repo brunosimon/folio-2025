@@ -538,5 +538,6 @@ export class Achievements
         this.globalProgress.reset()
         this.rewards.update()
         this.storage.save()
+        this.globalProgress.update()
     }
 }
