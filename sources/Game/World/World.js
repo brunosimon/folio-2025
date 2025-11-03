@@ -25,6 +25,7 @@ import { RainLines } from './RainLines.js'
 import { Confetti } from './Confetti.js'
 import { IntroLoader } from './IntroLoader.js'
 import { PoleLights } from './PoleLights.js'
+import { Lanterns } from './Lanterns.js'
 
 export class World
 {
@@ -70,6 +71,7 @@ export class World
             this.bricks = new Bricks()
             this.explosiveCrates = new ExplosiveCrates()
             this.poleLights = new PoleLights()
+            this.lanterns = new Lanterns()
             this.areas = new Areas()
         }
         else if(step === 2)

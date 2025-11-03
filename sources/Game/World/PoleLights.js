@@ -19,24 +19,23 @@ export class PoleLights
             })
         }
 
-        const basePoleLight = this.game.resources.poleLightsModel.scene.children[0]
-
-        // Reset children's positions of the base element
-        for(const child of basePoleLight.children)
+        // Base and references
+        const [ base, references ] = InstancedGroup.getBaseAndReferencesFromInstances(this.game.resources.poleLightsModel.scene.children)
+        this.references = references
+        
+        // Setup base
+        for(const child of base.children)
         {
-            child.name = child.name.replace(/[0-9]+$/i, '')
-            child.position.sub(basePoleLight.position)
+            child.name = child.name.replace(/[0-9]+$/i, '') // Set clear name to retrieve it later as instances
             child.castShadow = true
             child.receiveShadow = true
         }
 
         // Update materials 
-        this.game.materials.updateObject(basePoleLight)
+        this.game.materials.updateObject(base)
 
         // Create instanced group
-        this.references = InstancedGroup.getReferencesFromChildren(this.game.resources.poleLightsModel.scene.children)
-        this.instancedGroup = new InstancedGroup(this.references, basePoleLight, false)
-        
+        this.instancedGroup = new InstancedGroup(this.references, base, false)
 
         this.glass = this.instancedGroup.meshes.find(mesh => mesh.instance.name === 'glass').instance
         

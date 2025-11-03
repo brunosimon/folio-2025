@@ -1,18 +1,23 @@
 import { Game } from '../Game.js'
 import { InstancedGroup } from '../InstancedGroup.js'
 
-export class Bricks
+export class Lanterns
 {
     constructor()
     {
         this.game = Game.getInstance()
 
         // Base and references
-        const [ base, references ] = InstancedGroup.getBaseAndReferencesFromInstances(this.game.resources.bricksModel.scene.children)
+        const [ base, references ] = InstancedGroup.getBaseAndReferencesFromInstances(this.game.resources.lanternsModel.scene.children)
 
-        base.castShadow = true
-        base.receiveShadow = true
-        base.frustumCulled = false
+        // Setup base
+        for(const child of base.children)
+        {
+            child.name = child.name.replace(/[0-9]+$/i, '') // Set clear name to retrieve it later as instances
+            child.castShadow = true
+            child.receiveShadow = true
+            child.frustumCulled = false
+        }
 
         // Update materials 
         this.game.materials.updateObject(base)
@@ -35,7 +40,7 @@ export class Bricks
                     friction: 0.7,
                     mass: 0.1,
                     sleeping: true,
-                    colliders: [ { shape: 'cuboid', parameters: [ 0.75 * 0.75, 0.5 * 0.75, 1 * 0.75 ], category: 'object' } ],
+                    colliders: [ { shape: 'cuboid', parameters: [ 0.7 * 0.5, 1 * 0.5, 0.7 * 0.5 ], category: 'object' } ],
                     waterGravityMultiplier: - 1
                 },
             )

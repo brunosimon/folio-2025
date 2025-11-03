@@ -1,5 +1,6 @@
 import gsap from 'gsap'
 import { Game } from '../Game.js'
+import { InstancedGroup } from '../InstancedGroup.js'
 
 export class ExplosiveCrates
 {
@@ -7,28 +8,40 @@ export class ExplosiveCrates
     {
         this.game = Game.getInstance()
 
-        const meshes = [ ...this.game.resources.cratesModel.scene.children ]
+        // Base and references
+        const [ base, references ] = InstancedGroup.getBaseAndReferencesFromInstances(this.game.resources.explosiveCratesModel.scene.children)
+        this.references = references
+        
+        // Setup base
+        for(const child of base.children)
+        {
+            child.castShadow = true
+            child.receiveShadow = true
+        }
+
+        // Update materials 
+        this.game.materials.updateObject(base)
+
+        // Create instanced group
+        this.instancedGroup = new InstancedGroup(this.references, base, true)
+
         this.list = []
         
         let i = 0
-        for(const mesh of meshes)
+        for(const reference of this.references)
         {
             const crate = {}
             crate.id = i
             crate.isSleeping = true
-            crate.position = mesh.position.clone()
+            crate.position = reference.clone()
             crate.object = this.game.objects.add(
                 {
-                    model: mesh,
-                    // updateMaterials: true,
-                    // castShadow: false,
-                    // receiveShadow: false,
-                    // parent: null,
+                    model: reference,
                 },
                 {
                     type: 'dynamic',
-                    position: mesh.position,
-                    rotation: mesh.quaternion,
+                    position: reference.position,
+                    rotation: reference.quaternion,
                     friction: 0.7,
                     mass: 0.02,
                     sleeping: true,
@@ -65,6 +78,7 @@ export class ExplosiveCrates
 
                         // Disable
                         this.game.objects.disable(crate.object)
+                        crate.object.visual.object3D.position.y += 100 // Hide the instance reference
 
                         // Achievements
                         this.game.achievements.setProgress('explosiveCrates', crate.id)
@@ -78,8 +92,6 @@ export class ExplosiveCrates
     reset()
     {
         for(const crate of this.list)
-        {
             this.game.objects.resetObject(crate.object)
-        }
     }
 }

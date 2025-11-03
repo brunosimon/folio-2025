@@ -50,7 +50,14 @@ export class BowlingArea extends Area
 
         // Instances
         const basePin = this.references.get('pinPhysicalDynamic')[0]
+        for(const child of basePin.children)
+            child.position.sub(basePin.position)
+
+
         const descriptions = this.game.objects.getFromModel(basePin, {}, {}) // To extract colliders
+
+        for(const collider of descriptions[1].colliders)
+            collider.position.add(basePin.position)
 
         let i = 0
         for(const reference of references)

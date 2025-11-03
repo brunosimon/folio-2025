@@ -273,7 +273,8 @@ export class Objects
                 (
                     _object.visual &&
                     _object.physical &&
-                    !_object.physical.body.isSleeping()
+                    !_object.physical.body.isSleeping() &&
+                    _object.physical.body.isEnabled()
                 )
             )
             {
