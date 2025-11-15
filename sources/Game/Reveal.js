@@ -100,7 +100,7 @@ export class Reveal
                     this.game.canvasElement.style.cursor = 'pointer'
 
                     this.game.inputs.addActions([
-                        { name: 'introStart', categories: [ 'intro' ], keys: [ 'Pointer.any', 'Gamepad.cross' ] },
+                        { name: 'introStart', categories: [ 'intro' ], keys: [ 'Pointer.any', 'Gamepad.cross', 'Keyboard.Enter' ] },
                     ])
 
                     const deltaCursor = { x: 0, y: 0 }
