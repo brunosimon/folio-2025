@@ -146,5 +146,29 @@ export class ExplosiveCrates
             this.game.objects.resetObject(crate.object)
             crate.exploded = false
         }
+
+        // Disable every other object to prevent explosion trigger
+        this.game.objects.list.forEach((object) =>
+        {
+            if(
+                object.physical &&
+                (object.physical.type === 'dynamic' || object.physical.type === 'kinematicPositionBased') &&
+                object.physical.body.isEnabled()
+            )
+            {
+                object.physical.body.setEnabled(false)
+
+                // Wait a second and reactivate
+                this.game.ticker.wait(1, () =>
+                {
+                    object.physical.body.setEnabled(true)
+
+                    // Sleep
+                    if(object.physical.initialState.sleeping)
+                        object.physical.body.sleep()
+                })
+            }
+        })
+
     }
 }

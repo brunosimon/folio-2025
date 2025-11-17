@@ -12,7 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@dimforge/rapier3d": "^0.19.3",
+    "@dimforge/rapier3d": "^0.17.3",
     "@gltf-transform/cli": "^4.1.0",
     "@gltf-transform/core": "^4.1.0",
     "@gltf-transform/extensions": "^4.1.0",

@@ -1596,6 +1596,9 @@ export class CircuitArea extends Area
 
                 // Rails
                 this.rails.deactivate()
+                
+                // Crates (all crates in the world?)
+                this.game.world.explosiveCrates.reset()
 
                 // Podium => Show
                 if(!forced)

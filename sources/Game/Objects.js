@@ -8,9 +8,6 @@ export class Objects
         this.list = new Map()
         this.key = 0
 
-        this.physicalTypes = [ 'fixed', 'dynamic', 'kinematicPositionBased' ]
-        this.physicalTypesRegexp = 
-
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
@@ -223,19 +220,25 @@ export class Objects
 
     resetObject(object)
     {
-        if(!object.physical || (object.physical.type !== 'dynamic' && object.physical.type !== 'kinematicPositionBased'))
+        if(
+            !object.physical ||
+            (object.physical.type !== 'dynamic' && object.physical.type !== 'kinematicPositionBased')
+        )
             return
 
+        const isEnabled = object.physical.body.isEnabled()
         object.physical.body.setEnabled(false)
         object.physical.body.setTranslation(object.physical.initialState.position, false)
         object.physical.body.setRotation(object.physical.initialState.rotation, false)
         object.physical.body.setLinvel({ x: 0, y: 0, z: 0 }, false)
         object.physical.body.setAngvel({ x: 0, y: 0, z: 0 }, false)
+        object.physical.body.resetForces()
+        object.physical.body.resetTorques()
 
         // Wait a second and reactivate
         this.game.ticker.wait(1, () =>
         {
-            object.physical.body.setEnabled(true)
+            object.physical.body.setEnabled(isEnabled)
 
             // Sleep
             if(object.physical.initialState.sleeping)
@@ -261,16 +264,26 @@ export class Objects
 
     disable(object)
     {
-        // this.game.physics.world.removeRigidBody(object.physical.body)
-        object.physical.body.setEnabled(false)
-        object.visual.object3D.removeFromParent()
+        if(object.physical)
+        {
+            object.physical.body.setLinvel({ x: 0, y: 0, z: 0 }, false)
+            object.physical.body.setAngvel({ x: 0, y: 0, z: 0 }, false)
+            object.physical.body.resetForces()
+            object.physical.body.resetTorques()
+            object.physical.body.setEnabled(false)
+        }
+
+        if(object.visual)
+            object.visual.object3D.removeFromParent()
     }
 
     enable(object)
     {
-        // this.game.physics.world.removeRigidBody(object.physical.body)
-        object.physical.body.setEnabled(true)
-        object.visual.parent.add(object.visual.object3D)
+        if(object.physical)
+            object.physical.body.setEnabled(true)
+
+        if(object.visual)
+            object.visual.parent.add(object.visual.object3D)
     }
 
     update()
