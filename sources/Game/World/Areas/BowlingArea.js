@@ -230,11 +230,13 @@ export class BowlingArea extends Area
 
     setRestart()
     {
+        console.log('setRestart')
+        console.log(this.game.interactivePoints.temporaryHidden)
         this.restartInteractivePoint = this.game.interactivePoints.create(
             this.references.get('restartInteractivePoint')[0].position,
             'Restart',
             InteractivePoints.ALIGN_RIGHT,
-            InteractivePoints.STATE_CONCEALED,
+            InteractivePoints.STATE_HIDDEN,
             () =>
             {
                 this.restart()

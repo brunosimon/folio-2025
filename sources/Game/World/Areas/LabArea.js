@@ -1332,8 +1332,8 @@ export class LabArea extends Area
         // View cinematic
         this.game.view.cinematic.start(this.cinematic.position, this.cinematic.target)
 
-        // Interactive area
-        this.interactivePoint.hide()
+        // Interactive point
+        this.game.interactivePoints.temporaryHide()
 
         // Shade mix
         gsap.to(this.shadeMix.images.mixUniform, { value: this.shadeMix.images.max, duration: 2, ease: 'power2.inOut', overwrite: true })
@@ -1390,10 +1390,10 @@ export class LabArea extends Area
         gsap.to(this.shadeMix.images.mixUniform, { value: this.shadeMix.images.min, duration: 1.5, ease: 'power2.inOut', overwrite: true })
         gsap.to(this.shadeMix.texts.mixUniform, { value: this.shadeMix.texts.min, duration: 1.5, ease: 'power2.inOut', overwrite: true })
 
-        // Interactive area
+        // Interactive point
         gsap.delayedCall(1, () =>
         {
-            this.interactivePoint.reveal()
+            this.game.interactivePoints.recover()
         })
 
         // Cursor

@@ -29,6 +29,7 @@ export class InteractivePoints
         this.items = []
         this.activeItem = null
         this.revealed = false
+        this.temporaryHidden = true
 
         this.setSounds()
         this.setGeometries()
@@ -340,7 +341,8 @@ export class InteractivePoints
         item.concealCallback = concealCallback
         item.hideCallback = hideCallback
         item.isIn = false
-        item.state = InteractivePoints.STATE_HIDDEN
+        item.state = this.temporaryHidden ? InteractivePoints.STATE_HIDDEN : state
+        item.recoveryState = state
         item.materials = materials
         this.items.push(item)
 
@@ -378,6 +380,9 @@ export class InteractivePoints
         // Hide
         item.hide = () =>
         {
+            if(item.state === InteractivePoints.STATE_HIDDEN)
+                return
+
             item.state = InteractivePoints.STATE_HIDDEN
 
             item.intersect.active = false
@@ -407,6 +412,9 @@ export class InteractivePoints
         // Open
         item.reveal = () =>
         {
+            if(item.state === InteractivePoints.STATE_OPEN)
+                return
+                
             item.state = InteractivePoints.STATE_OPEN
 
             item.intersect.active = true
@@ -441,6 +449,9 @@ export class InteractivePoints
         // Close
         item.conceal = () =>
         {
+            if(item.state === InteractivePoints.STATE_CONCEALED)
+                return
+                
             const previousState = item.state
             item.state = InteractivePoints.STATE_CONCEALED
 
@@ -593,16 +604,25 @@ export class InteractivePoints
         }
     }
 
-    reveal()
+    temporaryHide()
     {
-        this.revealed = true
+        this.temporaryHidden = true
         
         for(const item of this.items)
         {
-            if(item.showAfterReveal)
-            {
+            item.recoveryState = item.state
+            item.hide()
+        }
+    }
+
+    recover()
+    {
+        this.temporaryHidden = false
+
+        for(const item of this.items)
+        {
+            if(item.recoveryState !== InteractivePoints.STATE_HIDDEN)
                 item.show()
-            }
         }
     }
 }

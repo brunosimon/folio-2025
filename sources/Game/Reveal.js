@@ -190,7 +190,7 @@ export class Reveal
                     overwrite: true,
                     onComplete: () =>
                     {
-                        this.game.interactivePoints.reveal()
+                        this.game.interactivePoints.recover()
                         this.game.world.init(2)
                         this.game.world.grid.hide()
                     }
