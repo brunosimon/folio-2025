@@ -1987,3 +1987,6 @@ mental models evolved, codebase stayed static; progress is multifaceted.
 ## 2025-11-18T13:57:59
 debated best practices, practice put on hold; principles before patterns.
 
+## 2025-11-18T16:02:34
+mental memory management, garbage collector idle; cognitive resource allocation.
+
