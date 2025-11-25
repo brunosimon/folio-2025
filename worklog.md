@@ -2032,3 +2032,6 @@ explored asynchronous patterns, callbacks unwritten; concurrent thinking exercis
 ## 2025-11-24T13:22:33
 contemplated clean code principles, mess remains; aspirational development.
 
+## 2025-11-24T19:13:44
+debated best practices, practice put on hold; principles before patterns.
+
