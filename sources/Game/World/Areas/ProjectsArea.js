@@ -1273,7 +1273,7 @@ export class ProjectsArea extends Area
         {
             const baseUv = uv(1).toVar()
 
-            const emissiveColor = mix(colorA, colorB, uv().sub(0.5).length().mul(2))
+            const emissiveColor = mix(colorA, colorB, uv().sub(0.5).length().mul(10))
             const emissiveOutput = emissiveColor.div(luminance(emissiveColor)).mul(intensity)
 
             const mixStrength = baseUv.y.smoothstep(0.4, 0.9)

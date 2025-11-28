@@ -37,7 +37,7 @@ export class Rendering
 
     async setRenderer()
     {
-        this.renderer = new THREE.WebGPURenderer({ canvas: this.game.canvasElement, forceWebGL: true, antialias: true })
+        this.renderer = new THREE.WebGPURenderer({ canvas: this.game.canvasElement, forceWebGL: false, antialias: true })
         this.renderer.setSize(this.game.viewport.width, this.game.viewport.height)
         this.renderer.setPixelRatio(this.game.viewport.pixelRatio)
         this.renderer.sortObjects = true

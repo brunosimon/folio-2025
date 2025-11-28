@@ -96,15 +96,15 @@ export class InteractivePoints
         // Material
         const material = new THREE.MeshLambertNodeMaterial({ transparent: true, depthTest: true })
 
-        const iconOutput = Fn(([iconTexture]) =>
+        const iconOutput = Fn(([iconAlpha]) =>
         {
             // Discard
-            iconTexture.r.lessThan(0.5).discard()
+            iconAlpha.lessThan(0.5).discard()
 
             return vec4(vec3(this.frontColor), 1)
         })
 
-        material.outputNode = iconOutput(texture(this.game.resources.interactivePointsKeyIconEnterTexture, vec2(uv().x, uv().y.oneMinus())))
+        material.outputNode = iconOutput(texture(this.game.resources.interactivePointsKeyIconEnterTexture, vec2(uv().x, uv().y.oneMinus())).r)
 
         // Mesh
         const mesh = new THREE.Mesh(
@@ -125,7 +125,7 @@ export class InteractivePoints
                 if(this.game.inputs.gamepad.type === 'xbox')
                      iconTexture = this.game.resources.interactivePointsKeyIconATexture
 
-                material.outputNode = iconOutput(texture(iconTexture, vec2(uv().x, uv().y.oneMinus())))
+                material.outputNode = iconOutput(texture(iconTexture, vec2(uv().x, uv().y.oneMinus())).r)
                 material.needsUpdate = true
             }
         })
@@ -139,12 +139,12 @@ export class InteractivePoints
                 if(this.game.inputs.gamepad.type === 'xbox')
                      iconTexture = this.game.resources.interactivePointsKeyIconATexture
 
-                material.outputNode = iconOutput(texture(iconTexture, vec2(uv().x, uv().y.oneMinus())))
+                material.outputNode = iconOutput(texture(iconTexture, vec2(uv().x, uv().y.oneMinus())).r)
                 material.needsUpdate = true
             }
             else if(this.game.inputs.mode === Inputs.MODE_MOUSEKEYBOARD)
             {
-                material.outputNode = iconOutput(texture(this.game.resources.interactivePointsKeyIconEnterTexture, vec2(uv().x, uv().y.oneMinus())))
+                material.outputNode = iconOutput(texture(this.game.resources.interactivePointsKeyIconEnterTexture, vec2(uv().x, uv().y.oneMinus())).r)
                 material.needsUpdate = true
             }
             else if(this.game.inputs.mode === Inputs.MODE_TOUCH)

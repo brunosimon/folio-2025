@@ -111,7 +111,7 @@ export class CareerArea extends Area
 
                     const textureColor = texture(line.texture, baseUv)
 
-                    const alpha = step(0.1, max(textureColor.r, textureColor.b))
+                    const alpha = step(0.1, max(textureColor.r, textureColor.g))
 
                     const emissiveColor = baseColor.div(luminance(baseColor)).mul(1.7)
 

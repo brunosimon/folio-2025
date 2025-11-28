@@ -73,16 +73,26 @@ import sharp from 'sharp'
     const files = await glob(
         `${directory}/**/*.{png,jpg}`,
         {
-            ignore: '**/{ui,favicons}/**'
+            ignore: '**/{ui,favicons,social}/**'
         }
     )
 
-    const defaultPreset = '--2d --t2 --encode etc1s --qlevel 255 --assign_oetf srgb'
+    const defaultPreset = '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf srgb --target_type RGB --swizzle r001'
     const presets = [
-        [ /palette.png$/, '--2d --t2 --encode uastc --genmipmap --assign_oetf srgb' ],
-        [ /terrain\/terrain.png$/, '--2d --t2 --encode uastc --genmipmap --assign_oetf linear' ],
-        [ /foliage\/foliageSDF.png$/, '--2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear' ],
-        [ /career\/.+png$/, '--2d --t2 --encode uastc --assign_oetf srgb' ],
+        [ /test.png$/,                            '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R --swizzle r001' ],
+
+        [ /achievements\/glyphs.png$/,            '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R --swizzle r001' ],
+        [ /areas\/satanStar.png$/,                '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R --swizzle r001' ],
+        [ /floor\/slabs.png$/,                    '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R --swizzle r001' ],
+        [ /foliage\/foliageSDF.png$/,             '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R --swizzle r001' ],
+        [ /interactivePoints\/.+.png$/,           '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R --swizzle r001' ],
+        [ /intro\/.+.png$/,                       '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R --swizzle r001' ],
+        [ /jukebox\/jukeboxMusicNotes.png$/,      '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R --swizzle r001' ],
+        [ /overlay\/overlayPatternOriginal.png$/, '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R --swizzle r001' ],
+        [ /palette.png$/,                         '--nowarn --2d --t2 --encode uastc --genmipmap --assign_oetf srgb --target_type RGB' ],
+        [ /terrain\/terrain.png$/,                '--nowarn --2d --t2 --encode uastc --genmipmap --assign_oetf linear --target_type RGB' ],
+        [ /career\/.+png$/,                       '--nowarn --2d --t2 --encode uastc --assign_oetf srgb --target_type RG' ],
+        [ /whispers\/whisperFlame.png$/,          '--nowarn --2d --t2 --encode etc1s --qlevel 255 --assign_oetf linear --target_type R' ],
     ]
 
     for(const inputFile of files)
@@ -105,10 +115,11 @@ import sharp from 'sharp'
             ]
         )
 
-        ktx2Command.stdout.on('data', data => { console.log(`stdout: ${data}`) })
-        ktx2Command.stderr.on('data', data => { console.error(`stderr: ${data}`) })
+        ktx2Command.stdout.on('data', data => { console.log(inputFile); console.log(`stdout: ${data}`) })
+        ktx2Command.stderr.on('data', data => { console.log(inputFile); console.error(`stderr: ${data}`) })
         ktx2Command.on('close', code =>
         {
+            // console.log('finished:', ktx2File);
         })
     }
 }

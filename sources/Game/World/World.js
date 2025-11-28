@@ -85,11 +85,15 @@ export class World
         }
     }
 
-    setPalette()
+    setTestKtx()
     {
         const mesh = new THREE.Mesh(
-            new THREE.BoxGeometry(8, 1, 1),
-            new THREE.MeshBasicNodeMaterial({ map: this.game.resources.paletteTexture }),
+            new THREE.BoxGeometry(4, 4, 4),
+            new THREE.MeshBasicNodeMaterial(),
+        )
+        mesh.material.outputNode = vec4(
+            texture(this.game.resources.testTexture).rgb,
+            1
         )
         mesh.position.copy(this.game.player.position)
         mesh.position.y += 2
