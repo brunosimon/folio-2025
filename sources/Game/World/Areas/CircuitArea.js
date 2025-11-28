@@ -40,6 +40,7 @@ export class CircuitArea extends Area
         this.setCheckpoints()
         this.setResetObjects()
         this.setObstacles()
+        this.setRoad()
         this.setRails()
         this.setInteractivePoint()
         this.setStartAnimation()
@@ -543,7 +544,12 @@ export class CircuitArea extends Area
             i++
         }
     }
-
+ 
+    setRoad()
+    {
+        this.roadBody = this.references.items.get('road')[0].userData.object.physical.body
+    }
+    
     setRails()
     {
         this.rails = {}
@@ -1326,6 +1332,9 @@ export class CircuitArea extends Area
         if(this.state === CircuitArea.STATE_STARTING)
             return
 
+        // Area frustum
+        this.frustum.alwaysVisible = true
+
         // Timer
         this.timer.end()
             
@@ -1359,7 +1368,7 @@ export class CircuitArea extends Area
                 this.game.world.floor.physical.body.setEnabled(false)
             
             // Activate road physics (better collision)
-            this.road.body.setEnabled(true)
+            this.roadBody.setEnabled(true)
 
             // Starting lights
             this.startingLights.reset()
@@ -1505,6 +1514,9 @@ export class CircuitArea extends Area
                 // State
                 this.state = CircuitArea.STATE_PENDING
 
+                // Area frustum
+                this.frustum.alwaysVisible = false
+
                 // Menu buttons
                 this.menu.racingButtons.classList.remove('is-active')
 
@@ -1529,7 +1541,7 @@ export class CircuitArea extends Area
                     this.game.world.floor.physical.body.setEnabled(true)
                 
                 // Deactivate road physics
-                this.road.body.setEnabled(false)
+                this.roadBody.setEnabled(false)
         
                 // Weather and day cycles
                 this.game.weather.override.end(0)

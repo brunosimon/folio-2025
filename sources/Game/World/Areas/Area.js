@@ -114,6 +114,7 @@ export class Area
         )
         this.frustum.radius = zoneReference[0].scale.x
         this.frustum.isIn = null
+        this.frustum.alwaysVisible = false
         
         this.frustum.test = () =>
         {
@@ -122,7 +123,10 @@ export class Area
                 this.game.view.focusPoint.position.z - this.frustum.position.y
             )
 
-            if(distance < this.frustum.radius + this.game.view.optimalArea.radius)
+            if(
+                this.frustum.alwaysVisible ||
+                distance < this.frustum.radius + this.game.view.optimalArea.radius
+            )
             {
                 if(this.frustum.isIn === false || this.frustum.isIn === null)
                 {
