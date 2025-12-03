@@ -56,6 +56,8 @@ export class LabArea extends Area
         this.changeProject(0, null, true)
         this.scroller.progress = this.scroller.targetProgress
 
+        this.scroller.animate()
+
         // Debug
         if(this.game.debug.active)
         {
@@ -748,6 +750,7 @@ export class LabArea extends Area
         this.scroller.gearB = this.references.items.get('gearB')[0]
         this.scroller.gearC = this.references.items.get('gearC')[0]
         this.scroller.progress = 0
+        this.scroller.offset = 0
         this.scroller.targetProgress = 0
         this.scroller.wheelSensitivity = 0.1
         this.scroller.easing = 3
@@ -965,6 +968,12 @@ export class LabArea extends Area
 
         this.scroller.animate = () =>
         {
+            const delta = (this.scroller.targetProgress - this.scroller.progress) * this.game.ticker.deltaScaled * this.scroller.easing
+            this.scroller.progress += delta
+            this.scroller.offset = this.scroller.progress * this.scroller.minis.inter
+
+            this.scroller.speed = delta / this.game.ticker.delta
+
             this.scroller.chainLeft.position.y = - this.scroller.repeatAmplitude * 0.5 - this.scroller.offset % this.scroller.repeatAmplitude
             this.scroller.chainRight.position.y = - this.scroller.repeatAmplitude * 0.5 + (this.scroller.offset % this.scroller.repeatAmplitude)
             this.scroller.chainPulley.rotation.z = this.scroller.offset * 1.4
@@ -972,7 +981,6 @@ export class LabArea extends Area
             this.scroller.gearA.rotation.x = - this.scroller.offset * 1.4
             this.scroller.gearB.rotation.x = - this.scroller.gearA.rotation.x * (6 / 12)
             this.scroller.gearC.rotation.x = - this.scroller.gearB.rotation.x * (6 / 12)
-
 
             for(const mini of this.scroller.minis.items)
             {
@@ -1006,17 +1014,6 @@ export class LabArea extends Area
             mini.textMixStrength.value = 1
             this.scroller.minis.current = mini
         }
-
-        this.game.ticker.events.on('tick', () =>
-        {
-            const delta = (this.scroller.targetProgress - this.scroller.progress) * this.game.ticker.deltaScaled * this.scroller.easing
-            this.scroller.progress += delta
-            this.scroller.offset = this.scroller.progress * this.scroller.minis.inter
-
-            this.scroller.speed = delta / this.game.ticker.delta
-
-            this.scroller.animate()
-        })
 
         // Inputs
         this.game.inputs.addActions([
@@ -1443,5 +1440,13 @@ export class LabArea extends Area
         // Achievements
         if(this.state === LabArea.STATE_OPEN)
             this.game.achievements.setProgress('lab', this.navigation.current.title)
+    }
+
+    update()
+    {
+        if(this.state !== LabArea.STATE_CLOSED)
+        {
+            this.scroller.animate()
+        }
     }
 }

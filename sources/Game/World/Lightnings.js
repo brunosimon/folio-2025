@@ -55,7 +55,7 @@ export class Lightnings
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        })
+        }, 10)
     }
 
     setSounds()
@@ -472,7 +472,5 @@ export class Lightnings
                 }
             }
         }
-
-        
     }
 }

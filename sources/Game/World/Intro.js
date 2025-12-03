@@ -17,7 +17,7 @@ export class Intro
         this.setLabel()
 
         this.update = this.update.bind(this)
-        this.game.ticker.events.on('tick', this.update)
+        this.game.ticker.events.on('tick', this.update, 8)
     }
 
     setLabel()

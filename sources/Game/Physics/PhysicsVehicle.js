@@ -79,7 +79,7 @@ export class PhysicsVehicle
         this.game.ticker.events.on('tick', () =>
         {
             this.updatePrePhysics()
-        }, 1)
+        }, 2)
         this.game.ticker.events.on('tick', () =>
         {
             this.updatePostPhysics()

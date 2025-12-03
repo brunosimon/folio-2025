@@ -40,7 +40,7 @@ export class Reveal
         }
 
         this.update = this.update.bind(this)
-        this.game.ticker.events.on('tick', this.update, 9)
+        this.game.ticker.events.on('tick', this.update, 10)
     }
 
     updateStep(step)

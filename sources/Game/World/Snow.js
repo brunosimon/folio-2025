@@ -37,7 +37,7 @@ export class Snow
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 9)
+        }, 10)
     }
 
     setNodes()

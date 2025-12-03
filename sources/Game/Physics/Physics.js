@@ -46,7 +46,7 @@ export class Physics
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 2)
+        }, 3)
 
         if(this.game.debug.active)
         {

@@ -26,7 +26,7 @@ export class Area
                 
             if(typeof this.update === 'function' && (!this.frustum || this.frustum.isIn))
                 this.update()
-        }, 5)
+        }, 10)
     }
 
     setObjects()

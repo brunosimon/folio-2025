@@ -22,7 +22,7 @@ export class PhysicsWireframe
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 6)
+        }, 4)
 
         if(this.game.debug.active)
         {

@@ -11,7 +11,7 @@ export class Objects
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 3)
+        }, 4)
     }
 
     add(_visualDescription = null, _physicalDescription = null)

@@ -25,7 +25,7 @@ export class Whispers
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 3)
+        }, 10)
     }
 
     setSounds()

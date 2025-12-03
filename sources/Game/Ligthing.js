@@ -43,7 +43,7 @@ export class Lighting
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 7)
+        }, 9)
 
         this.game.viewport.events.on('throttleChange', () =>
         {

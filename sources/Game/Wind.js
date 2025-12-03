@@ -45,7 +45,7 @@ export class Wind
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 2)
+        }, 9)
 
         // Debug
         this.strengthBinding = this.game.debug.addManualBinding(

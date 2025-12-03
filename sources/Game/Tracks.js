@@ -38,7 +38,7 @@ export class Tracks
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 8)
+        }, 9)
     }
 
     setDebugPlane()

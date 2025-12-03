@@ -45,12 +45,12 @@ export class Player
         this.game.ticker.events.on('tick', () =>
         {
             this.updatePrePhysics()
-        }, 0)
+        }, 1)
 
         this.game.ticker.events.on('tick', () =>
         {
             this.updatePostPhysics()
-        }, 5)
+        }, 6)
     }
 
     setSounds()

@@ -64,7 +64,7 @@ export class View
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 4)
+        }, 7)
 
         this.update()
 
@@ -728,7 +728,11 @@ export class View
         // Optimal area
         if(this.optimalArea.needsUpdate)
             this.optimalArea.update()
-        this.optimalArea.position.copy(this.optimalArea.basePosition).add(new THREE.Vector3(this.focusPoint.position.x, 0, this.focusPoint.position.z))
+        
+        this.optimalArea.position
+            .copy(this.optimalArea.basePosition)
+            .add(new THREE.Vector3(this.focusPoint.position.x, 0, this.focusPoint.position.z))
+
         for(const point of this.optimalArea.quad2)
         {
             point.offseted.x = point.base.x + this.focusPoint.position.x

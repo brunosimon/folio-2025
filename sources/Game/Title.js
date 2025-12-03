@@ -18,7 +18,7 @@ export class Title
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 6)
+        }, 14)
     }
 
     update()

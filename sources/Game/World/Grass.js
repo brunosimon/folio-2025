@@ -26,7 +26,7 @@ export class Grass
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 9)
+        }, 10)
 
         // Resize
         this.game.viewport.events.on('throttleChange', () =>

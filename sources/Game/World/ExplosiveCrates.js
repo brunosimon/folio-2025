@@ -63,7 +63,11 @@ export class ExplosiveCrates
         // Tick update
         this.game.ticker.events.on('tick', () =>
         {
-            this.update()
+            for(const crate of this.items)
+            {
+                if(!crate.object.physical.body.isSleeping() && crate.object.physical.body.isEnabled())
+                    crate.object.visual.object3D.needsUpdate = true
+            }
         }, 10)
     }
 
@@ -182,14 +186,5 @@ export class ExplosiveCrates
                 })
             }
         })
-    }
-
-    update()
-    {
-        for(const crate of this.items)
-        {
-            if(!crate.object.physical.body.isSleeping() && crate.object.physical.body.isEnabled())
-                crate.object.visual.object3D.needsUpdate = true
-        }
     }
 }

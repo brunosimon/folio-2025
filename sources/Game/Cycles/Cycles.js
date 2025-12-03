@@ -59,7 +59,7 @@ export class Cycles
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        })
+        }, 8)
         this.update(true)
     }
 

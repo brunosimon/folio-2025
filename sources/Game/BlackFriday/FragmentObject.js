@@ -49,7 +49,7 @@ export class FragmentObject
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 9)
+        }, 10)
     }
 
     catch()

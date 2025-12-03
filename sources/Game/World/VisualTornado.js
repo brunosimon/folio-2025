@@ -30,7 +30,7 @@ const twistedCylinder = Fn(([ position, parabolStrength, parabolOffset, parabolA
     return twistedPosition
 })
 
-export class Tornado
+export class VisualTornado
 {
     constructor()
     {
@@ -48,7 +48,7 @@ export class Tornado
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        })
+        }, 10)
     }
 
     setMesh()

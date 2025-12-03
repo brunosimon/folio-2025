@@ -12,7 +12,7 @@ import { Lightnings } from './Lightnings.js'
 import { Snow } from './Snow.js'
 import { Whispers } from './Whispers.js'
 import { VisualVehicle } from './VisualVehicle.js'
-import { Tornado } from './Tornado.js'
+import { VisualTornado } from './VisualTornado.js'
 import { Flowers } from './Flowers.js'
 import { Bricks } from './Bricks.js'
 import { Trees } from './Trees.js'
@@ -64,7 +64,7 @@ export class World
             this.lightnings = new Lightnings()
             this.fireballs = new Fireballs()
             this.snow = new Snow()
-            this.tornado = new Tornado()
+            this.visualTornado = new VisualTornado()
             this.bushes = new Bushes()
             this.birchTrees = new Trees('Birch Tree', this.game.resources.birchTreesVisualModel.scene, this.game.resources.birchTreesReferencesModel.scene.children, '#ff782b')
             this.oakTrees = new Trees('Oak Tree', this.game.resources.oakTreesVisualModel.scene, this.game.resources.oakTreesReferencesModel.scene.children, '#c4c557')

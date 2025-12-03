@@ -26,7 +26,7 @@ export class Floor
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 9)
+        }, 10)
     }
 
     setVisual()
@@ -153,7 +153,7 @@ export class Floor
 
     update()
     {
-        this.mesh.position.x = Math.round(this.game.view.optimalArea.position.x / this.cellSize) * this.cellSize
-        this.mesh.position.z = Math.round(this.game.view.optimalArea.position.z / this.cellSize) * this.cellSize
+        this.mesh.position.x = Math.round(this.game.view.focusPoint.position.x / this.cellSize) * this.cellSize
+        this.mesh.position.z = Math.round(this.game.view.focusPoint.position.z / this.cellSize) * this.cellSize
     }
 }

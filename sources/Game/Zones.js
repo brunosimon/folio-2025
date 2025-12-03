@@ -13,7 +13,7 @@ export class Zones
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        })
+        }, 8)
 
         this.previewGroup = new THREE.Group()
         this.previewGroup.visible = false

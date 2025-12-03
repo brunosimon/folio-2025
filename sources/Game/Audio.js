@@ -18,7 +18,7 @@ export class Audio
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 12)
+        }, 14)
     }
 
     init()

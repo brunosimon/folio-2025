@@ -39,7 +39,7 @@ export class InteractivePoints
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        })
+        }, 9)
     }
 
     setSounds()

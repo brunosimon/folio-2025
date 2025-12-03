@@ -25,7 +25,7 @@ export class Fog
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 9)
+        }, 10)
 
         // Debug
         if(this.game.debug.active)

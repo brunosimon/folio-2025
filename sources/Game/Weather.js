@@ -128,7 +128,7 @@ export class Weather
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        })
+        }, 8)
     }
 
     noise(x)

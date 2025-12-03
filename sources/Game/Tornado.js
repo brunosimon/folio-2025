@@ -34,7 +34,7 @@ export class Tornado
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        })
+        }, 9)
 
         // Debug
         if(this.game.debug.active)

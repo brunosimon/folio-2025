@@ -17,25 +17,99 @@ npm run dev
 npm run build
 ```
 
-## Tick order
+## Game loop
 
-| Order | Components |
-|---|---|
-| 0 | Inputs |
-| 1 | Vehicle (pre Physics) |
-| 2 | Physics |
-| 3 | Entities |
-| 4 | View |
-| 5 | Vehicle (post Physics) |
-| 6 | PhysicsWireframe |
-| 7 | Lighting |
-| 8 | GroundData |
-| 9 | Grass |
-| 10 | BlackFriday |
-| 11 | BricksWalls |
-| 12 | Sounds |
-| 998 | Rendering |
-| 999 | Monitoring |
+#### 0
+
+- Time
+- Inputs
+
+#### 1
+
+- Player:pre-physics (Inputs)
+
+#### 2
+
+- PhysicalVehicle:pre-physics (Player:pre-physics)
+
+#### 3
+
+- Physics
+
+#### 4
+
+- PhysicsWireframe (Physics)
+- Objects (Physics)
+
+#### 5
+
+- PhysicalVehicle:post-physics (Player:pre-physics)
+
+#### 6
+
+- Player:post-physics (Physics, PhysicalVehicle:post-physics)
+
+#### 7
+
+- View (Inputs, Player:post-physics)
+
+#### 8
+
+- Intro
+- DayCycles
+- YearCycles
+- Weather (DayCycles, YearCycles)
+- Zones (Player:post-physics)
+- VisualVehicle (PhysicalVehicle:post-physics, Inputs, Player:post-physics, View)
+
+#### 9
+
+- Wind (Weather)
+- Lighting (DayCycles, View)
+- Tornado (DayCycles, PhysicalVehicle)
+- InteractivePoints (Player:post-physics)
+- Tracks (VisualVehicle)
+
+#### 10
+
+- Area++ (View, PhysicalVehicle:post-physics, Player:post-physics, Wind)
+- Foliage (VisualVehicle, View)
+- Fog (View)
+- Reveal (DayCycles)
+- Terrain (Tracks)
+- Trails (PhysicalVehicle)
+- Floor (View)
+- Grass (View, Wind)
+- Leaves (View, PhysicalVehicle)
+- Lightnings (View, Weather)
+- RainLines (View, Weather, Reveal)
+- Snow (View, Weather, Reveal, Tracks)
+- VisualTornado (Tornado)
+- WaterSurface (Weather, View)
+- Benches (Objects)
+- Bricks (Objects)
+- ExplosiveCrates (Objects)
+- Fences (Objects)
+- Lanterns (Objects)
+- Whispers (Player)
+
+#### 13
+
+- InstancedGroup (Objects, [SpecificObjects])
+
+#### 14
+
+- Audio (View, Objects)
+- Notifications
+- Title (PhysicalVehicle:post-physics)
+
+#### 998
+
+- Rendering
+
+#### 999
+
+- Monitoring
 
 ## Blender
 

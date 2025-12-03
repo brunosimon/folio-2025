@@ -22,7 +22,7 @@ export class Notifications
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        })
+        }, 14)
 
         // // Fake notifications
         // for(let i = 0; i < 10; i++)

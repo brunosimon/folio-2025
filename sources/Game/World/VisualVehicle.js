@@ -30,7 +30,7 @@ export class VisualVehicle
         {
             this.update()
         }
-        this.game.ticker.events.on('tick', this.tickCallback, 6)
+        this.game.ticker.events.on('tick', this.tickCallback, 8)
     }
 
     destroy()

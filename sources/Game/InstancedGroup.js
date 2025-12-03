@@ -19,7 +19,7 @@ export class InstancedGroup
             this.game.ticker.events.on('tick', () =>
             {
                 this.update()
-            }, 11)
+            }, 13)
         }
         
         this.update()

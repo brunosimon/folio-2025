@@ -48,7 +48,7 @@ export class Trails
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 9)
+        }, 10)
 
         if(this.game.debug.active)
         {

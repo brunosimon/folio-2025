@@ -27,7 +27,7 @@ export class Foliage
         this.game.ticker.events.on('tick', () =>
         {
             this.update()
-        }, 7)
+        }, 10)
     }
 
     setGeometry()
