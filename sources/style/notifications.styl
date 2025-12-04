@@ -105,6 +105,9 @@
                     opacity 0
                     transition opacity 0.1s
 
+            .time-bar
+                background #d5ff95
+
 
         &.is-song
             .top
@@ -127,3 +130,30 @@
                     width 16px
                     height 18px
                     background url(../ui/music-note.svg)
+
+            .time-bar
+                background #ffc67b
+
+        &.is-server-connected
+            .top
+                .title
+                    text-align left
+                    color #d5ff95
+                    font-size 1.7rem
+                    margin-bottom 0
+                    line-height 1em
+
+            .time-bar
+                background #d5ff95
+
+        &.is-server-disconnected
+            .top
+                .title
+                    text-align left
+                    color #ff6a7c
+                    font-size 1.7rem
+                    margin-bottom 0
+                    line-height 1em
+
+            .time-bar
+                background #ff6a7c
