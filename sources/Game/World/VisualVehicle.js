@@ -473,7 +473,8 @@ export class VisualVehicle
         }
 
         // Stop lights
-        if(this.game.player.braking)
+        const isPlayerReverseBraking = (this.game.physicalVehicle.speed * Number(this.game.physicalVehicle.goingForward) > 0.  && this.game.inputs.actions.get('backward').active)
+        if(this.game.player.braking || isPlayerReverseBraking)
             this.parts.stopLights.visible = true
         else
             this.parts.stopLights.visible = false
