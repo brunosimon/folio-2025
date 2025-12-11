@@ -176,6 +176,7 @@ export class Reveal
 
             // View
             this.game.view.focusPoint.isTracking = true
+            this.game.view.focusPoint.magnet.active = false
 
             // View
             gsap.to(

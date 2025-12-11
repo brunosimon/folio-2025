@@ -89,11 +89,26 @@ export class Achievements
         this.globalProgress.totalCount = 0
         this.globalProgress.ratioUniform = uniform()
 
-        const localTimeStart = localStorage.getItem('achievementsTimeStart')
-        const localTimeEnd = localStorage.getItem('achievementsTimeEnd')
+        this.globalProgress.timeStart = 0
+        this.globalProgress.timeEnd = 0
 
-        this.globalProgress.timeStart = localTimeStart ? parseFloat(localTimeStart) : 0
-        this.globalProgress.timeEnd = localTimeEnd ? parseFloat(localTimeEnd) : 0
+        let localTimeStart = localStorage.getItem('achievementsTimeStart')
+        if(localTimeStart)
+        {
+            localTimeStart = parseFloat(localTimeStart)
+
+            if(!isNaN(localTimeStart))
+                this.globalProgress.timeStart = localTimeStart
+        }
+
+        let localTimeEnd = localStorage.getItem('achievementsTimeEnd')
+        if(localTimeEnd)
+        {
+            localTimeEnd = parseFloat(localTimeEnd)
+
+            if(!isNaN(localTimeEnd))
+                this.globalProgress.timeEnd = localTimeEnd
+        }
 
         this.globalProgress.update = () =>
         {
@@ -121,7 +136,7 @@ export class Achievements
                     // Not already ended
                     if(!localStorage.getItem('achievementsTimeEnd'))
                     {
-                        this.globalProgress.timeEnd = this.game.player.timePlayed
+                        this.globalProgress.timeEnd = this.game.player.timePlayed.all
                         localStorage.setItem('achievementsTimeEnd', this.globalProgress.timeEnd)
                     }
 
@@ -140,7 +155,7 @@ export class Achievements
 
             this.globalProgress.currentElement.textContent = 0
 
-            this.globalProgress.timeStart = this.game.player.timePlayed
+            this.globalProgress.timeStart = this.game.player.timePlayed.all
             this.globalProgress.timeEnd = 0
             localStorage.setItem('achievementsTimeStart', this.globalProgress.timeStart)
             localStorage.removeItem('achievementsTimeEnd')

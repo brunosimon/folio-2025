@@ -66,7 +66,9 @@ export class Server
                 this.game.notifications.show(
                     html,
                     'server-connected',
-                    8
+                    8,
+                    null,
+                    'server-connected'
                 )
             }
 
@@ -87,7 +89,9 @@ export class Server
                 this.game.notifications.show(
                     html,
                     'server-disconnected',
-                    8
+                    8,
+                    null,
+                    'server-disconnected'
                 )
                 
                 this.events.trigger('disconnected')

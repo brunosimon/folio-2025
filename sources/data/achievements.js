@@ -13,7 +13,7 @@ export default
         'areas',
         'Traveler',
         'Vist every area.',
-        12,
+        13,
         true // Unique
     ],
     [

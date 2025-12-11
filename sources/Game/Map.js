@@ -1,3 +1,4 @@
+import { clamp } from 'three/src/math/MathUtils.js'
 import { Game } from './Game.js'
 
 export class Map
@@ -51,6 +52,7 @@ export class Map
             { name: 'Landing', respawnName: 'landing', offset: { x: 0.02, y: 0 } },
             { name: 'Projects', respawnName: 'projects', offset: { x: 0, y: -0.02 } },
             { name: 'Social', respawnName: 'social', offset: { x: -0.01, y: -0.04 } },
+            { name: 'Time Machine', respawnName: 'timeMachine', offset: { x: 0, y: 0 } },
         ]
 
         for(const item of this.locations.items)
@@ -135,7 +137,7 @@ export class Map
     {
         // Inputs keyboard
         this.game.inputs.addActions([
-            { name: 'map', categories: [ 'intro', 'modal', 'menu', 'racing', 'cinematic', 'wandering' ], keys: [ 'Keyboard.m', 'Keyboard.KeyM' ] },
+            { name: 'map', categories: [ 'modal', 'menu', 'racing', 'cinematic', 'wandering' ], keys: [ 'Keyboard.m', 'Keyboard.KeyM' ] },
         ])
         this.game.inputs.events.on('map', (action) =>
         {
@@ -159,6 +161,9 @@ export class Map
 
         x += 0.5
         y += 0.5
+
+        x = clamp(x, 0, 1)
+        y = clamp(y, 0, 1)
 
         return { x, y }
     }

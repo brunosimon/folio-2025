@@ -122,6 +122,9 @@ export class View
         this.focusPoint.smoothedPosition = this.focusPoint.trackedPosition.clone()
         this.focusPoint.isEased = true
         this.focusPoint.easing = 1
+        this.focusPoint.magnet = {}
+        this.focusPoint.magnet.active = true
+        this.focusPoint.magnet.multiplier = 0.25
 
         const focusActionsNames = [
             'forward',
@@ -153,6 +156,15 @@ export class View
         this.focusPoint.helper.visible = false
         this.focusPoint.helper.userData.preventPreRender = true
         this.game.scene.add(this.focusPoint.helper)
+
+        if(this.game.debug.active)
+        {
+            const zoomDebugPanel = this.debugPanel.addFolder({
+                title: 'Magnet',
+                expanded: true,
+            })
+            zoomDebugPanel.addBinding(this.focusPoint.magnet, 'multiplier', { min: 0, max: 1, step: 0.0001 })
+        }
     }
 
     setOptimalArea()
@@ -634,6 +646,22 @@ export class View
         {
             this.focusPoint.position.x = this.focusPoint.trackedPosition.x
             this.focusPoint.position.z = this.focusPoint.trackedPosition.z
+        }
+
+        if(this.focusPoint.magnet.active)
+        {
+            const magnetDelta = { x: this.focusPoint.trackedPosition.x - this.focusPoint.position.x, z: this.focusPoint.trackedPosition.z - this.focusPoint.position.z }
+            const distanceToMagnet = Math.hypot(magnetDelta.x, magnetDelta.z)
+            const magnetStrength = distanceToMagnet * this.focusPoint.magnet.multiplier
+            this.focusPoint.position.x += magnetStrength * magnetDelta.x * this.game.ticker.delta
+            this.focusPoint.position.z += magnetStrength * magnetDelta.z * this.game.ticker.delta
+            // console.log(magnetStrength)
+            
+
+            // console.log('---')
+            // console.log(distanceToMagnet)
+            // console.log(magnetStrength)
+
         }
 
         const easing = remap(this.focusPoint.easing, 0, 1, 1, this.game.ticker.delta * 10)

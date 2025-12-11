@@ -112,7 +112,7 @@ export class InteractivePoints
             this.geometries.plane,
             material
         )
-        mesh.renderOrder = 5
+        mesh.renderOrder = 8
         mesh.scale.setScalar(0)
         mesh.position.z = 0.01
         mesh.visible = false
@@ -241,7 +241,7 @@ export class InteractivePoints
             this.geometries.plane,
             diamondMaterial
         )
-        diamond.renderOrder = 4
+        diamond.renderOrder = 7
         diamond.rotation.z = Math.PI * 0.25
         diamond.visible = false
         group.add(diamond)
@@ -319,7 +319,7 @@ export class InteractivePoints
             this.geometries.label,
             labelMaterial
         )
-        label.renderOrder = 3
+        label.renderOrder = 6
         label.scale.x = 0.75 * width / height
         label.scale.y = 0.75
         label.position.z = -0.01

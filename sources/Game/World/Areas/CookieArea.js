@@ -184,6 +184,9 @@ export class CookieArea extends Area
     setCookies()
     {
         const baseCookie = this.references.items.get('cookie')[0]
+        baseCookie.castShadow = true
+        baseCookie.receiveShadow = true
+        baseCookie.frustumCulled = true
         baseCookie.position.set(0, 0, 0)
 
         // Update materials 

@@ -45,21 +45,34 @@ export class Notifications
 
         //     this.show(
         //         html,
+        //         'test',
         //         4,
         //         () => {
         //             this.game.inputs.interactiveButtons.clearItems()
         //             this.game.menu.open('achievements')
-        //         }
+        //         },
+        //         'test1'
         //     )
         // }
     }
 
-    show(html = '', type = '', duration = 3, clickCallback = null)
+    show(html = '', type = '', duration = 3, clickCallback = null, id = null)
     {
         // Pending
         if(this.current)
         {
-            this.pendings.push([ html, type, duration, clickCallback ])
+            // Test if last has same ID to avoid spam
+            if(id !== null && this.pendings.length)
+            {
+                const withSameId = this.pendings.find(([a, b, c, d, lastId]) => lastId === id)
+                
+                if(withSameId || id === this.current.id)
+                {
+                    return false
+                }
+            }
+
+            this.pendings.push([ html, type, duration, clickCallback, id ])
             return false
         }
 
@@ -67,6 +80,7 @@ export class Notifications
 
         const item = {}
 
+        item.id = id
         item.element = document.createElement('div')
         item.element.classList.add('notification')
 

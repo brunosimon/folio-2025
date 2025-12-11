@@ -83,7 +83,7 @@ export class Bubble
         
         this.message = new THREE.Mesh(geometry, material)
         this.message.scale.set(0.01, 0.01, 0.01)
-        this.message.renderOrder = 2
+        this.message.renderOrder = 4
         this.group.add(this.message)
     }
 
@@ -131,7 +131,7 @@ export class Bubble
         this.image.position.y = 0.25
         this.image.position.z = 0.2
         this.image.rotation.z = -0.15
-        this.image.renderOrder = 3
+        this.image.renderOrder = 5
         this.group.add(this.image)
     }
 
