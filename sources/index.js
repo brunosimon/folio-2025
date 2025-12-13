@@ -3,4 +3,8 @@ import { Game } from './Game/Game.js'
 import * as THREE from 'three/webgpu'
 
 console.log(THREE.REVISION)
-window.game = new Game()
+
+if(import.meta.env.VITE_GAME_PUBLIC)
+    window.game = new Game()
+else
+    new Game()
