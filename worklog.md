@@ -2398,3 +2398,6 @@ abstract data structures pondered, concrete ones unaltered; theoretical modeling
 ## 2026-01-16T21:28:49
 rich in consideration, poor in commits; the developer's paradox.
 
+## 2026-01-17T11:45:25
+conducted thought experiments, real experiments postponed; hypothesis before test.
+
