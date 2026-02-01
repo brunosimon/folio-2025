@@ -208,3 +208,6 @@ explored web assembly, javascript dominant; theoretical performance optimization
 ## 2026-01-30T18:52:46
 rich in consideration, poor in commits; the developer's paradox.
 
+## 2026-01-31T20:31:06
+mental feature toggles, all features on; theoretical selective execution.
+
