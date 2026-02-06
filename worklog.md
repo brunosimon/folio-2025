@@ -2524,3 +2524,6 @@ intellectual heavy lifting day; codebase weight unchanged.
 ## 2026-02-04T18:45:43
 abstraction level increased, concrete implementations deferred; hovering above the code.
 
+## 2026-02-05T22:50:02
+debated best practices, practice put on hold; principles before patterns.
+
