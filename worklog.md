@@ -295,3 +295,6 @@ debated best practices, practice put on hold; principles before patterns.
 ## 2026-02-11T14:52:52
 explored possibilities, deferred decisions; progress measured in thoughts.
 
+## 2026-02-11T11:13:49
+considered database sharding, monolithic db humming; theoretical data distribution.
+
