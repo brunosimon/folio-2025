@@ -133,7 +133,7 @@ export class Confetti
 
             confetti.mesh.position.y = 3
 
-            this.game.scene.add(confetti.mesh)
+            this.game.worldContainer.add(confetti.mesh)
 
             if(this.game.debug.active)
             {

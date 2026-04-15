@@ -148,7 +148,7 @@ export class VisualTornado
         this.mesh.position.y = 0.5
         this.mesh.position.z = -13
         this.mesh.scale.set(8, 8, 8)
-        this.game.scene.add(this.mesh)
+        this.game.worldContainer.add(this.mesh)
 
         // Debug
         if(this.game.debug.active)

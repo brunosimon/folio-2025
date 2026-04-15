@@ -139,7 +139,7 @@ export class CookieArea extends Area
         mesh.position.copy(this.references.items.get('chimney')[0].position)
         mesh.count = count
 
-        this.game.scene.add(mesh)
+        this.game.worldContainer.add(mesh)
 
         let frustumNeedsUpdate = true
         this.events.on('frustumIn', () =>

@@ -157,7 +157,7 @@ export class View
         this.focusPoint.helper = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshBasicNodeMaterial({ color: new THREE.Color('orange').multiplyScalar(4), wireframe: false }))
         this.focusPoint.helper.visible = false
         this.focusPoint.helper.userData.preventPreRender = true
-        this.game.scene.add(this.focusPoint.helper)
+        this.game.worldContainer.add(this.focusPoint.helper)
 
         if(this.game.debug.active)
         {
@@ -551,7 +551,7 @@ export class View
         this.speedLines.mesh = new THREE.Mesh(this.speedLines.geometry, this.speedLines.material)
         this.speedLines.mesh.frustumCulled = false
         this.speedLines.mesh.renderOrder = 10
-        this.game.scene.add(this.speedLines.mesh)
+        this.game.worldContainer.add(this.speedLines.mesh)
 
         // Debug
         if(this.game.debug.active)
@@ -705,17 +705,16 @@ export class View
             this.zoom.smoothedRatio = lerp(this.zoom.smoothedRatio, this.zoom.ratio, this.game.ticker.delta * 10)
         }
 
-        // Update theta to follow vehicle direction when tracking
-        if(this.focusPoint.isTracking && this.game.physicalVehicle)
-        {
-            const forward = this.game.physicalVehicle.forward
-            const vehicleYaw = Math.atan2(forward.z, forward.x)
-            this.spherical.targetTheta = vehicleYaw + Math.PI * 0.25
-        }
-
-        // Smoothly update theta towards target
-        const thetaDelta = smallestAngle(this.spherical.theta, this.spherical.targetTheta)
-        this.spherical.theta += thetaDelta * this.game.ticker.delta * this.spherical.thetaSmoothing
+        // Update world angle based on player input
+        // Theta is now fixed to keep camera direction consistent
+        // World rotation is handled by worldContainer.rotation.y
+        
+        // Smoothly update worldAngle towards targetWorldAngle
+        const worldAngleDelta = smallestAngle(this.game.worldAngle, this.game.targetWorldAngle)
+        this.game.worldAngle += worldAngleDelta * this.game.ticker.delta * this.game.worldAngleSmoothing
+        
+        // Apply world rotation to worldContainer
+        this.game.worldContainer.rotation.y = -this.game.worldAngle
 
         // Radius
         const radiusMax = this.spherical.radius.edges.max + this.ratioOverflow * this.spherical.radius.nonIdealRatioOffset

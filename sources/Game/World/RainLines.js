@@ -219,7 +219,7 @@ export class RainLines
         this.mesh.position.y = - 0.3
         this.mesh.frustumCulled = false
         this.mesh.renderOrder = 1
-        this.game.scene.add(this.mesh)
+        this.game.worldContainer.add(this.mesh)
     }
 
     update()

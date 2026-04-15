@@ -103,7 +103,7 @@ export class BehindTheSceneArea extends Area
         this.slabs = new THREE.Mesh(geometry, material)
         this.slabs.position.copy(this.center)
         this.slabs.position.y += 0.01
-        this.game.scene.add(this.slabs)
+        this.game.worldContainer.add(this.slabs)
         this.objects.hideable.push(this.slabs)
 
         // Debug
