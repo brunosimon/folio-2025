@@ -230,9 +230,27 @@ export default
         1
     ],
     [
+        'drift',
+        'Drifting 101',
+        'Complete your first drift.',
+        1
+    ],
+    [
+        'driftDuration',
+        'Drift Master',
+        'Maintain a drift for 3 seconds.',
+        1
+    ],
+    [
+        'driftCount',
+        'Drift Addict',
+        'Complete 10 drifts.',
+        1
+    ],
+    [
         'hacker',
         'Hacker',
-        'This one can’t be achieved.',
+        'This one can\'t be achieved.',
         1
     ],
 ]

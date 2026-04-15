@@ -23,6 +23,7 @@ export class VisualVehicle
         this.setBackLights()
         this.setAntenna()
         this.setBoostTrails()
+        this.setDriftTrails()
         this.setBoostAnimation()
         this.setScreenPosition()
         this.setPaints()
@@ -390,6 +391,26 @@ export class VisualVehicle
         this.boostTrails.rightReference.getWorldPosition(this.boostTrails.right.position)
     }
 
+    setDriftTrails()
+    {
+        this.driftTrails = {}
+        this.driftTrails.instance = new Trails()
+
+        this.driftTrails.rearLeftReference = new THREE.Object3D()
+        this.driftTrails.rearLeftReference.position.set(-0.8, 0.05, -0.7)
+        this.parts.chassis.add(this.driftTrails.rearLeftReference)
+
+        this.driftTrails.rearLeft = this.driftTrails.instance.create()
+        this.driftTrails.rearLeftReference.getWorldPosition(this.driftTrails.rearLeft.position)
+
+        this.driftTrails.rearRightReference = new THREE.Object3D()
+        this.driftTrails.rearRightReference.position.set(-0.8, 0.05, 0.7)
+        this.parts.chassis.add(this.driftTrails.rearRightReference)
+
+        this.driftTrails.rearRight = this.driftTrails.instance.create()
+        this.driftTrails.rearRightReference.getWorldPosition(this.driftTrails.rearRight.position)
+    }
+
     setBoostAnimation()
     {
         this.boostAnimation = {}
@@ -523,6 +544,13 @@ export class VisualVehicle
         this.boostTrails.left.alpha = trailAlpha
         this.boostTrails.rightReference.getWorldPosition(this.boostTrails.right.position)
         this.boostTrails.right.alpha = trailAlpha
+
+        // Drift trails
+        const driftTrailAlpha = physicalVehicle.drift.active ? physicalVehicle.drift.intensity : 0
+        this.driftTrails.rearLeftReference.getWorldPosition(this.driftTrails.rearLeft.position)
+        this.driftTrails.rearLeft.alpha = driftTrailAlpha
+        this.driftTrails.rearRightReference.getWorldPosition(this.driftTrails.rearRight.position)
+        this.driftTrails.rearRight.alpha = driftTrailAlpha
 
         // Boost animation
         this.boostAnimation.mix += (this.game.player.boosting ? 1 : - 1) * this.game.ticker.deltaScaled * this.boostAnimation.speed

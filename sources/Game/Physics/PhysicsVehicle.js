@@ -39,6 +39,11 @@ export class PhysicsVehicle
             high: 40
         }
 
+        this.driftMinSpeed = 3.0
+        this.driftSideSlipThreshold = 0.7
+        this.driftFrictionSlip = 0.15
+        this.driftSteeringMultiplier = 1.5
+
         // Debug
         if(this.game.debug.active)
         {
@@ -63,6 +68,12 @@ export class PhysicsVehicle
             this.debugPanel.addBinding(this.suspensionsStiffness, 'low', { min: 0, max: 100, step: 0.1 })
             this.debugPanel.addBinding(this.suspensionsStiffness, 'mid', { min: 0, max: 100, step: 0.1 })
             this.debugPanel.addBinding(this.suspensionsStiffness, 'high', { min: 0, max: 100, step: 0.1 })
+
+            this.debugPanel.addBlade({ view: 'separator' })
+            this.debugPanel.addBinding(this, 'driftMinSpeed', { label: 'driftMinSpeed', min: 0, max: 20, step: 0.1 })
+            this.debugPanel.addBinding(this, 'driftSideSlipThreshold', { label: 'driftSideSlipThreshold', min: 0, max: 1, step: 0.01 })
+            this.debugPanel.addBinding(this, 'driftFrictionSlip', { label: 'driftFrictionSlip', min: 0, max: 1, step: 0.01 })
+            this.debugPanel.addBinding(this, 'driftSteeringMultiplier', { label: 'driftSteeringMultiplier', min: 0.5, max: 3, step: 0.01 })
         }
 
         this.setChassis()
@@ -73,6 +84,7 @@ export class PhysicsVehicle
         this.setStuck()
         // this.setBackWheel()
         this.setFlip()
+        this.setDrift()
 
         this.game.ticker.events.on('tick', () =>
         {
@@ -443,6 +455,64 @@ export class PhysicsVehicle
         }
     }
 
+    setDrift()
+    {
+        this.drift = {}
+        this.drift.active = false
+        this.drift.intensity = 0
+        this.drift.startTime = 0
+        this.drift.duration = 0
+        this.drift.maxDuration = 0
+        this.drift.totalCount = 0
+
+        this.drift.enter = () =>
+        {
+            if(!this.drift.active)
+            {
+                this.drift.active = true
+                this.drift.startTime = this.game.ticker.elapsed
+                this.drift.duration = 0
+                this.drift.totalCount++
+                this.events.trigger('driftStart')
+            }
+        }
+
+        this.drift.exit = () =>
+        {
+            if(this.drift.active)
+            {
+                this.drift.active = false
+                if(this.drift.duration > this.drift.maxDuration)
+                {
+                    this.drift.maxDuration = this.drift.duration
+                }
+                this.events.trigger('driftEnd', [ this.drift.duration, this.drift.intensity ])
+            }
+        }
+
+        this.drift.test = () =>
+        {
+            const hasEnoughSpeed = this.xzSpeed >= this.driftMinSpeed
+            const isSideSlipping = Math.abs(this.forwardRatio) < this.driftSideSlipThreshold
+            const isSteering = Math.abs(this.game.player.steering) > 0.1
+            const hasWheelsOnGround = this.wheels.inContactCount >= 2
+
+            const shouldDrift = hasEnoughSpeed && isSideSlipping && isSteering && hasWheelsOnGround
+
+            if(shouldDrift)
+            {
+                this.drift.enter()
+                this.drift.intensity = remapClamp(Math.abs(this.forwardRatio), this.driftSideSlipThreshold, 0, 0, 1)
+                this.drift.duration = this.game.ticker.elapsed - this.drift.startTime
+            }
+            else
+            {
+                this.drift.exit()
+                this.drift.intensity = Math.max(0, this.drift.intensity - this.game.ticker.deltaScaled * 2)
+            }
+        }
+    }
+
     moveTo(position, rotation = 0)
     {
         const quaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), rotation)
@@ -482,7 +552,8 @@ export class PhysicsVehicle
         brake *= this.brakeAmplitude * this.game.ticker.deltaScaled
 
         // Steer
-        const steer = this.game.player.steering * this.steeringAmplitude
+        const driftSteerMultiplier = this.drift.active ? this.driftSteeringMultiplier : 1
+        const steer = this.game.player.steering * this.steeringAmplitude * driftSteerMultiplier
 
         // Update wheels
         this.controller.setWheelSteering(0, steer)
@@ -498,13 +569,31 @@ export class PhysicsVehicle
             // Ice slip
             const groundObject = this.controller.wheelGroundObject(i)
 
+            let isOnIce = false
+            let targetFriction = this.wheels.settings.frictionSlip
+
             if(groundObject && this.game.world.waterSurface)
             {
                 const onIce = groundObject.parent() === this.game.world.waterSurface.ice.physical.body
                 const iceFriction = lerp(this.wheels.settings.frictionSlip, 0.04, this.game.world.waterSurface.iceRatio.value)
 
-                this.controller.setWheelFrictionSlip(i, onIce ? iceFriction : this.wheels.settings.frictionSlip)
+                if(onIce)
+                {
+                    isOnIce = true
+                    targetFriction = iceFriction
+                }
             }
+
+            if(!isOnIce && this.drift.active)
+            {
+                const isRearWheel = i >= 2
+                if(isRearWheel)
+                {
+                    targetFriction = lerp(this.wheels.settings.frictionSlip, this.driftFrictionSlip, this.drift.intensity)
+                }
+            }
+
+            this.controller.setWheelFrictionSlip(i, targetFriction)
         }
 
         // Update controller
@@ -575,6 +664,7 @@ export class PhysicsVehicle
         this.stuck.test()
         // this.backWheel.test()
         this.flip.test()
+        this.drift.test()
     }
 
     activate()

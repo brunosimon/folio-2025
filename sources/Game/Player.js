@@ -34,6 +34,7 @@ export class Player
         this.setUnstuck()
         // this.setBackWheel()
         this.setFlip()
+        this.setDrift()
         this.setTimePlayed()
 
         this.game.physicalVehicle.chassis.physical.initialState.position.x = respawn.position.x
@@ -136,7 +137,8 @@ export class Player
                     let brakeEffect = Math.max(directionRatio, this.game.player.braking) * this.game.physicalVehicle.xzSpeed * 0.15 * this.game.physicalVehicle.wheels.inContactCount / 4
                     brakeEffect = clamp(brakeEffect, 0, 1)
 
-                    const volume = brakeEffect * 0.4
+                    const driftMultiplier = this.game.physicalVehicle.drift.active ? (1.5 + this.game.physicalVehicle.drift.intensity) : 1
+                    const volume = brakeEffect * 0.4 * driftMultiplier
                     const delta = volume - item.volume
 
                     if(delta > 0)
@@ -144,7 +146,8 @@ export class Player
                     else
                         item.volume += delta * this.game.ticker.deltaScaled * 5
                     
-                    item.rate = 0.8
+                    const driftRateMultiplier = this.game.physicalVehicle.drift.active ? (1 + this.game.physicalVehicle.drift.intensity * 0.3) : 1
+                    item.rate = 0.8 * driftRateMultiplier
                 }
             })
         }
@@ -449,6 +452,36 @@ export class Player
                 this.game.achievements.setProgress('frontFlip', 1)
             else
                 this.game.achievements.setProgress('backFlip', 1)
+        })
+    }
+
+    setDrift()
+    {
+        this.drift = {}
+        this.drift.longestDuration = 0
+
+        this.game.physicalVehicle.events.on('driftStart', () =>
+        {
+            this.game.achievements.addProgress('drift')
+        })
+
+        this.game.physicalVehicle.events.on('driftEnd', (duration, intensity) =>
+        {
+            if(duration > this.drift.longestDuration)
+            {
+                this.drift.longestDuration = duration
+            }
+
+            if(duration >= 3)
+            {
+                this.game.achievements.setProgress('driftDuration', 1)
+            }
+
+            const count = this.game.physicalVehicle.drift.totalCount
+            if(count >= 10)
+            {
+                this.game.achievements.setProgress('driftCount', 1)
+            }
         })
     }
 
