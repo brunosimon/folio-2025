@@ -493,30 +493,27 @@ export class PhysicsVehicle
         this.drift.test = () =>
         {
             const isHandbraking = this.game.player.handbraking === 1
-            const effectiveMinSpeed = isHandbraking ? this.driftMinSpeed * 0.5 : this.driftMinSpeed
-            const effectiveSideSlipThreshold = isHandbraking ? 0.85 : this.driftSideSlipThreshold
-
-            const hasEnoughSpeed = this.xzSpeed >= effectiveMinSpeed
-            const isSideSlipping = Math.abs(this.forwardRatio) < effectiveSideSlipThreshold
-            const isSteering = Math.abs(this.game.player.steering) > 0.1 || (isHandbraking && Math.abs(this.game.player.steering) > 0.01)
+            const hasEnoughSpeed = this.xzSpeed >= 1.0
+            const isSteering = Math.abs(this.game.player.steering) > 0.05
+            const isAccelerating = Math.abs(this.game.player.accelerating) > 0.05
             const hasWheelsOnGround = this.wheels.inContactCount >= 2
 
-            const shouldDrift = hasEnoughSpeed && isSideSlipping && isSteering && hasWheelsOnGround
+            const shouldDrift = hasEnoughSpeed && isSteering && (isAccelerating || isHandbraking) && hasWheelsOnGround
 
             if(shouldDrift)
             {
                 this.drift.enter()
-                this.drift.intensity = remapClamp(Math.abs(this.forwardRatio), effectiveSideSlipThreshold, 0, 0, 1)
-                if(isHandbraking)
-                {
-                    this.drift.intensity = Math.max(this.drift.intensity, 0.5)
-                }
+                
+                const driftAmount = Math.abs(this.game.player.steering)
+                const handbrakeBoost = isHandbraking ? 0.5 : 0
+                this.drift.intensity = Math.min(1, driftAmount * 2 + handbrakeBoost)
+                
                 this.drift.duration = this.game.ticker.elapsed - this.drift.startTime
             }
             else
             {
                 this.drift.exit()
-                this.drift.intensity = Math.max(0, this.drift.intensity - this.game.ticker.deltaScaled * 2)
+                this.drift.intensity = Math.max(0, this.drift.intensity - this.game.ticker.deltaScaled * 3)
             }
         }
     }
