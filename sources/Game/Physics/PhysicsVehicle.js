@@ -534,7 +534,15 @@ export class PhysicsVehicle
         // Engine force
         const topSpeed = lerp(this.topSpeed, this.topSpeedBoost, this.game.player.boosting)
         const overflowSpeed = Math.max(0, this.speed - topSpeed)
-        let engineForce = (this.game.player.accelerating * (1 + this.game.player.boosting * this.boostMultiplier)) * this.engineForceAmplitude / (1 + overflowSpeed) * this.game.ticker.deltaScaled
+        
+        // Drift: reduce engine force to slow down slightly
+        let engineForceMultiplier = 1.0
+        if(this.drift.active)
+        {
+            engineForceMultiplier = 0.3
+        }
+        
+        let engineForce = (this.game.player.accelerating * (1 + this.game.player.boosting * this.boostMultiplier)) * this.engineForceAmplitude / (1 + overflowSpeed) * this.game.ticker.deltaScaled * engineForceMultiplier
 
         // Brake
         let brake = this.game.player.braking
@@ -557,7 +565,8 @@ export class PhysicsVehicle
         brake *= this.brakeAmplitude * this.game.ticker.deltaScaled
 
         // Steer
-        const driftSteerMultiplier = this.drift.active ? this.driftSteeringMultiplier : 1
+        // Drift: make steering LESS sensitive (opposite of before)
+        const driftSteerMultiplier = this.drift.active ? 0.3 : 1
         const steer = this.game.player.steering * this.steeringAmplitude * driftSteerMultiplier
 
         // Update wheels
@@ -594,10 +603,20 @@ export class PhysicsVehicle
             if(!isOnIce && (this.drift.active || isHandbraking))
             {
                 const isRearWheel = i >= 2
+                const isFrontWheel = i < 2
+                
                 if(isRearWheel)
                 {
+                    // Rear wheels: very low friction for side slip (drift)
                     const intensity = this.drift.active ? this.drift.intensity : (isHandbraking ? 0.7 : 0)
                     targetFriction = lerp(this.wheels.settings.frictionSlip, this.driftFrictionSlip, intensity)
+                }
+                else if(isFrontWheel)
+                {
+                    // Front wheels: keep normal or slightly reduced friction
+                    // This allows the car to maintain some steering while rear slides
+                    const frontFrictionReduction = this.drift.active ? 0.2 : 0
+                    targetFriction = lerp(this.wheels.settings.frictionSlip, this.wheels.settings.frictionSlip * 0.6, frontFrictionReduction)
                 }
             }
 
