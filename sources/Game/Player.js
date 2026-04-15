@@ -554,20 +554,17 @@ export class Player
         }
 
         /**
-         * Steering - Update worldAngle instead of direct vehicle steering
-         * Players press left/right to rotate the world around the vehicle
+         * Steering
          */
-        let worldSteering = 0
-        
         // Left / right actions
         if(this.game.inputs.actions.get('right').active)
-            worldSteering -= 1
+            this.steering -= 1
         if(this.game.inputs.actions.get('left').active)
-            worldSteering += 1
+            this.steering += 1
 
         // Gamepad joystick
-        if(worldSteering === 0 && this.game.inputs.gamepad.joysticks.left.active)
-            worldSteering = - this.game.inputs.gamepad.joysticks.left.safeX
+        if(this.steering === 0 && this.game.inputs.gamepad.joysticks.left.active)
+            this.steering = - this.game.inputs.gamepad.joysticks.left.safeX
 
         /**
          * Nipple (touch controls)
@@ -591,21 +588,14 @@ export class Player
             const angleDeltaSign = Math.sign(this.game.inputs.nipple.smallestAngle)
             const steering = - Math.min(angleDeltaAbsNormalized, 1) * angleDeltaSign
 
-            worldSteering = steering
+            this.steering = steering
 
             if(!this.game.inputs.nipple.forward)
             {
                 this.accelerating *= -1
-                worldSteering *= -1
+                this.steering *= -1
             }
         }
-        
-        // Update targetWorldAngle based on player input
-        const steeringSpeed = 2.0 // Adjust this value to control rotation speed
-        this.game.targetWorldAngle += worldSteering * steeringSpeed * this.game.ticker.delta
-        
-        // Keep vehicle steering for physical movement (small amount for drift effect)
-        this.steering = worldSteering * 0.1 // Reduced steering for physical vehicle
     }
 
     updatePostPhysics()

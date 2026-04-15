@@ -705,9 +705,21 @@ export class View
             this.zoom.smoothedRatio = lerp(this.zoom.smoothedRatio, this.zoom.ratio, this.game.ticker.delta * 10)
         }
 
-        // Update world angle based on player input
-        // Theta is now fixed to keep camera direction consistent
-        // World rotation is handled by worldContainer.rotation.y
+        // Update world angle to follow vehicle's physical direction
+        // This keeps the vehicle visually facing a fixed direction while the world rotates around it
+        if(this.game.physicalVehicle)
+        {
+            // Calculate vehicle's yaw (direction) from forward vector
+            const forward = this.game.physicalVehicle.forward
+            const vehicleYaw = Math.atan2(forward.z, forward.x)
+            
+            // Target world angle is fixed direction minus vehicle's yaw
+            // This keeps the vehicle visually facing top-right (Math.PI * 0.25)
+            // Visual direction = vehicleYaw + worldAngle - fixedDirection = 0
+            // So worldAngle = fixedDirection - vehicleYaw
+            const fixedDirection = Math.PI * 0.25
+            this.game.targetWorldAngle = fixedDirection - vehicleYaw
+        }
         
         // Smoothly update worldAngle towards targetWorldAngle
         const worldAngleDelta = smallestAngle(this.game.worldAngle, this.game.targetWorldAngle)

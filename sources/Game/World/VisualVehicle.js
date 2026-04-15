@@ -421,17 +421,7 @@ export class VisualVehicle
         
         // Chassis
         this.parts.chassis.position.copy(physicalVehicle.position)
-        
-        // Adjust visual rotation to keep vehicle facing fixed direction (screen top-right)
-        // Visual rotation = physical rotation - worldAngle + fixed direction (Math.PI * 0.25)
-        const fixedDirection = Math.PI * 0.25 // Top-right direction
-        const visualYaw = Math.atan2(physicalVehicle.forward.z, physicalVehicle.forward.x) - this.game.worldAngle + fixedDirection
-        
-        // Create a new quaternion with adjusted yaw
-        // We need to extract the current rotation, adjust yaw, and recreate the quaternion
-        const euler = new THREE.Euler().setFromQuaternion(physicalVehicle.quaternion, 'YXZ')
-        euler.y = visualYaw
-        this.parts.chassis.quaternion.setFromEuler(euler)
+        this.parts.chassis.quaternion.copy(physicalVehicle.quaternion)
         
         // Wheels
         this.wheels.steering += ((this.game.player.steering * physicalVehicle.steeringAmplitude) - this.wheels.steering) * this.game.ticker.deltaScaled * 16
