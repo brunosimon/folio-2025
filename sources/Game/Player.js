@@ -19,6 +19,7 @@ export class Player
         this.steering = 0
         this.boosting = 0
         this.braking = 0
+        this.handbraking = 0
         this.suspensions = ['low', 'low', 'low', 'low']
 
         const respawn = this.game.respawns.getDefault()
@@ -227,6 +228,7 @@ export class Player
             { name: 'left',                  categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.ArrowLeft', 'Keyboard.KeyA', 'Gamepad.left' ] },
             { name: 'boost',                 categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.ShiftLeft', 'Keyboard.ShiftRight', 'Gamepad.circle' ] },
             { name: 'brake',                 categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.KeyB', 'Keyboard.ControlLeft', 'Gamepad.square' ] },
+            { name: 'handbrake',             categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.KeyX', 'Keyboard.KeyZ' ] },
             { name: 'respawn',               categories: [ 'wandering',                       ], keys: [ 'Keyboard.KeyR', 'Gamepad.select' ] },
             { name: 'suspensions',           categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.Numpad5', 'Keyboard.Space', 'Gamepad.triangle' ] },
             { name: 'suspensionsFront',      categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.Numpad8' ] },
@@ -584,6 +586,18 @@ export class Player
         {
             this.accelerating = 0
             this.braking = 1
+        }
+
+        /**
+         * Handbrake
+         */
+        if(this.game.inputs.actions.get('handbrake').active)
+        {
+            this.handbraking = 1
+        }
+        else
+        {
+            this.handbraking = 0
         }
 
         /**

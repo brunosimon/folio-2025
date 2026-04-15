@@ -395,16 +395,17 @@ export class VisualVehicle
     {
         this.driftTrails = {}
         this.driftTrails.instance = new Trails()
+        this.driftTrails.instance.decay = 0.1
 
         this.driftTrails.rearLeftReference = new THREE.Object3D()
-        this.driftTrails.rearLeftReference.position.set(-0.8, 0.05, -0.7)
+        this.driftTrails.rearLeftReference.position.set(-0.7, 0.02, -0.75)
         this.parts.chassis.add(this.driftTrails.rearLeftReference)
 
         this.driftTrails.rearLeft = this.driftTrails.instance.create()
         this.driftTrails.rearLeftReference.getWorldPosition(this.driftTrails.rearLeft.position)
 
         this.driftTrails.rearRightReference = new THREE.Object3D()
-        this.driftTrails.rearRightReference.position.set(-0.8, 0.05, 0.7)
+        this.driftTrails.rearRightReference.position.set(-0.7, 0.02, 0.75)
         this.parts.chassis.add(this.driftTrails.rearRightReference)
 
         this.driftTrails.rearRight = this.driftTrails.instance.create()

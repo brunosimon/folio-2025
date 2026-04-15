@@ -492,9 +492,13 @@ export class PhysicsVehicle
 
         this.drift.test = () =>
         {
-            const hasEnoughSpeed = this.xzSpeed >= this.driftMinSpeed
-            const isSideSlipping = Math.abs(this.forwardRatio) < this.driftSideSlipThreshold
-            const isSteering = Math.abs(this.game.player.steering) > 0.1
+            const isHandbraking = this.game.player.handbraking === 1
+            const effectiveMinSpeed = isHandbraking ? this.driftMinSpeed * 0.5 : this.driftMinSpeed
+            const effectiveSideSlipThreshold = isHandbraking ? 0.85 : this.driftSideSlipThreshold
+
+            const hasEnoughSpeed = this.xzSpeed >= effectiveMinSpeed
+            const isSideSlipping = Math.abs(this.forwardRatio) < effectiveSideSlipThreshold
+            const isSteering = Math.abs(this.game.player.steering) > 0.1 || (isHandbraking && Math.abs(this.game.player.steering) > 0.01)
             const hasWheelsOnGround = this.wheels.inContactCount >= 2
 
             const shouldDrift = hasEnoughSpeed && isSideSlipping && isSteering && hasWheelsOnGround
@@ -502,7 +506,11 @@ export class PhysicsVehicle
             if(shouldDrift)
             {
                 this.drift.enter()
-                this.drift.intensity = remapClamp(Math.abs(this.forwardRatio), this.driftSideSlipThreshold, 0, 0, 1)
+                this.drift.intensity = remapClamp(Math.abs(this.forwardRatio), effectiveSideSlipThreshold, 0, 0, 1)
+                if(isHandbraking)
+                {
+                    this.drift.intensity = Math.max(this.drift.intensity, 0.5)
+                }
                 this.drift.duration = this.game.ticker.elapsed - this.drift.startTime
             }
             else
@@ -584,12 +592,15 @@ export class PhysicsVehicle
                 }
             }
 
-            if(!isOnIce && this.drift.active)
+            const isHandbraking = this.game.player.handbraking === 1
+
+            if(!isOnIce && (this.drift.active || isHandbraking))
             {
                 const isRearWheel = i >= 2
                 if(isRearWheel)
                 {
-                    targetFriction = lerp(this.wheels.settings.frictionSlip, this.driftFrictionSlip, this.drift.intensity)
+                    const intensity = this.drift.active ? this.drift.intensity : (isHandbraking ? 0.7 : 0)
+                    targetFriction = lerp(this.wheels.settings.frictionSlip, this.driftFrictionSlip, intensity)
                 }
             }
 
