@@ -1,7 +1,7 @@
 import * as THREE from 'three/webgpu'
 import CameraControls from 'camera-controls'
 import { Game } from './Game.js'
-import { clamp, lerp, remap, smoothstep } from './utilities/maths.js'
+import { clamp, lerp, remap, smoothstep, smallestAngle } from './utilities/maths.js'
 import { mix, uniform, vec4, Fn, positionGeometry, attribute } from 'three/tsl'
 import gsap from 'gsap'
 import { Pointer } from './Inputs/Pointer.js'
@@ -157,7 +157,7 @@ export class View
         this.focusPoint.helper = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshBasicNodeMaterial({ color: new THREE.Color('orange').multiplyScalar(4), wireframe: false }))
         this.focusPoint.helper.visible = false
         this.focusPoint.helper.userData.preventPreRender = true
-        this.game.scene.add(this.focusPoint.helper)
+        this.game.worldContainer.add(this.focusPoint.helper)
 
         if(this.game.debug.active)
         {
@@ -334,6 +334,8 @@ export class View
         this.spherical = {}
         this.spherical.phi = Math.PI * (this.game.quality.level === 0 ? 0.31 : 0.27)
         this.spherical.theta = Math.PI * 0.25
+        this.spherical.targetTheta = Math.PI * 0.25
+        this.spherical.thetaSmoothing = 8
 
         this.spherical.radius = {}
         this.spherical.radius.edges = { min: 15, max: 30 }
@@ -351,6 +353,7 @@ export class View
             })
             sphericalDebugPanel.addBinding(this.spherical, 'phi', { min: 0, max: Math.PI * 0.5, step: 0.001 })
             sphericalDebugPanel.addBinding(this.spherical, 'theta', { min: - Math.PI, max: Math.PI, step: 0.001 })
+            sphericalDebugPanel.addBinding(this.spherical, 'thetaSmoothing', { min: 0, max: 20, step: 0.001 })
             sphericalDebugPanel.addBinding(this.spherical.radius, 'edges', { min: 0, max: 100, step: 0.001 })
         }
     }
@@ -548,7 +551,7 @@ export class View
         this.speedLines.mesh = new THREE.Mesh(this.speedLines.geometry, this.speedLines.material)
         this.speedLines.mesh.frustumCulled = false
         this.speedLines.mesh.renderOrder = 10
-        this.game.scene.add(this.speedLines.mesh)
+        this.game.worldContainer.add(this.speedLines.mesh)
 
         // Debug
         if(this.game.debug.active)
@@ -701,6 +704,29 @@ export class View
 
             this.zoom.smoothedRatio = lerp(this.zoom.smoothedRatio, this.zoom.ratio, this.game.ticker.delta * 10)
         }
+
+        // Update world angle to follow vehicle's physical direction
+        // This keeps the vehicle visually facing a fixed direction while the world rotates around it
+        if(this.game.physicalVehicle)
+        {
+            // Calculate vehicle's yaw (direction) from forward vector
+            const forward = this.game.physicalVehicle.forward
+            const vehicleYaw = Math.atan2(forward.z, forward.x)
+            
+            // Target world angle is fixed direction minus vehicle's yaw
+            // This keeps the vehicle visually facing top-right (Math.PI * 0.25)
+            // Visual direction = vehicleYaw + worldAngle - fixedDirection = 0
+            // So worldAngle = fixedDirection - vehicleYaw
+            const fixedDirection = Math.PI * 0.25
+            this.game.targetWorldAngle = fixedDirection - vehicleYaw
+        }
+        
+        // Smoothly update worldAngle towards targetWorldAngle
+        const worldAngleDelta = smallestAngle(this.game.worldAngle, this.game.targetWorldAngle)
+        this.game.worldAngle += worldAngleDelta * this.game.ticker.delta * this.game.worldAngleSmoothing
+        
+        // Apply world rotation to worldContainer
+        this.game.worldContainer.rotation.y = -this.game.worldAngle
 
         // Radius
         const radiusMax = this.spherical.radius.edges.max + this.ratioOverflow * this.spherical.radius.nonIdealRatioOffset

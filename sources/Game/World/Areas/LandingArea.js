@@ -179,7 +179,7 @@ export class LandingArea extends Area
             particles.visible = false
             particles.position.copy(position)
             particles.count = count
-            this.game.scene.add(particles)
+            this.game.worldContainer.add(particles)
         }
 
         // Hashes

@@ -473,7 +473,7 @@ export class CircuitArea extends Area
             mesh.receiveShadow = false
             mesh.material = material
             mesh.visible = false
-            this.game.scene.add(mesh)
+            this.game.worldContainer.add(mesh)
 
             this.checkpoints.doorTarget.mesh = mesh
         }
@@ -492,7 +492,7 @@ export class CircuitArea extends Area
             mesh.receiveShadow = false
             mesh.material = material
             mesh.visible = false
-            this.game.scene.add(mesh)
+            this.game.worldContainer.add(mesh)
 
             this.checkpoints.doorReached.mesh = mesh
         }

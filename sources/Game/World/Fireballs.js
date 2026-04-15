@@ -87,7 +87,7 @@ export class Fireballs
         mesh.rotation.reorder('XYZ')
         mesh.rotation.x = Math.random() * Math.PI * 2
         mesh.rotation.y = Math.random() * Math.PI * 2
-        this.game.scene.add(mesh)
+        this.game.worldContainer.add(mesh)
 
         // Animate
         const scale = { value: 0 }

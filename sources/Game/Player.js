@@ -567,7 +567,7 @@ export class Player
             this.steering = - this.game.inputs.gamepad.joysticks.left.safeX
 
         /**
-         * Nipple
+         * Nipple (touch controls)
          */
         if(this.game.inputs.nipple.active && this.game.inputs.nipple.progress > 0)
         {

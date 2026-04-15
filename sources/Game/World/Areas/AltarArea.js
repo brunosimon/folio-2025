@@ -119,7 +119,7 @@ export class AltarArea extends Area
 
         const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial)
         cylinder.position.copy(this.position)
-        this.game.scene.add(cylinder)
+        this.game.worldContainer.add(cylinder)
         this.objects.hideable.push(cylinder)
 
         // Bottom
@@ -149,7 +149,7 @@ export class AltarArea extends Area
         const bottom = new THREE.Mesh(bottomGeometry, bottomMaterial)
         bottom.position.copy(this.position)
         bottom.rotation.x = - Math.PI * 0.5
-        this.game.scene.add(bottom)
+        this.game.worldContainer.add(bottom)
         this.objects.hideable.push(bottom)
 
         this.animateBeam = () =>
@@ -237,7 +237,7 @@ export class AltarArea extends Area
         particles.count = count
         particles.position.copy(this.position)
         particles.position.y -= 0.1
-        this.game.scene.add(particles)
+        this.game.worldContainer.add(particles)
         this.objects.hideable.push(particles)
 
         this.animateBeamParticles = () =>
@@ -325,7 +325,7 @@ export class AltarArea extends Area
         mesh.position.y = 0
         mesh.position.z = this.position.z
         mesh.count = count
-        this.game.scene.add(mesh)
+        this.game.worldContainer.add(mesh)
         this.objects.hideable.push(mesh)
 
         let frustumNeedsUpdate = true

@@ -201,7 +201,7 @@ export class Grass
         this.mesh.frustumCulled = false
         this.mesh.receiveShadow = true
         // this.mesh.visible = false
-        this.game.scene.add(this.mesh)
+        this.game.worldContainer.add(this.mesh)
     }
 
     update()

@@ -112,7 +112,7 @@ export class World
         )
         mesh.position.copy(this.game.player.position)
         mesh.position.y += 2
-        this.game.scene.add(mesh)
+        this.game.worldContainer.add(mesh)
     }
 
     setTestShadow()
@@ -129,7 +129,7 @@ export class World
         mesh.position.y = 2
         mesh.receiveShadow = true
         mesh.castShadow = true
-        this.game.scene.add(mesh)
+        this.game.worldContainer.add(mesh)
 
         // // Receiver
         // const receiver = new THREE.Mesh(
@@ -167,7 +167,7 @@ export class World
         // }, 2000)
         // testMesh.receiveShadow = true
         testMesh.position.z = 3
-        this.game.scene.add(testMesh)
+        this.game.worldContainer.add(testMesh)
 
         // const testMesh2 = new THREE.Mesh(
         //     new THREE.SphereGeometry(1, 32, 32),
@@ -186,7 +186,7 @@ export class World
     {
         const axesHelper = new THREE.AxesHelper()
         axesHelper.position.y = 0.1
-        this.game.scene.add(axesHelper)
+        this.game.worldContainer.add(axesHelper)
     }
 
     setCollisionGroupsTest()
