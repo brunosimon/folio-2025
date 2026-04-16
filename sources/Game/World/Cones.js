@@ -37,14 +37,9 @@ export class Cones
             {
                 const t = j / segmentsCount
 
-                const aPos = new THREE.Vector2(
-                    current.a.x + (next.a.x - current.a.x) * t,
-                    current.a.y + (next.a.y - current.a.y) * t
-                )
-
-                const bPos = new THREE.Vector2(
-                    current.b.x + (next.b.x - current.b.x) * t,
-                    current.b.y + (next.b.y - current.b.y) * t
+                const center = new THREE.Vector2(
+                    current.center.x + (next.center.x - current.center.x) * t,
+                    current.center.y + (next.center.y - current.center.y) * t
                 )
 
                 let rotationDiff = next.rotation - current.rotation
@@ -52,10 +47,20 @@ export class Cones
                     rotationDiff -= 2 * Math.PI
                 else if(rotationDiff < -Math.PI)
                     rotationDiff += 2 * Math.PI
-                const currentRotation = current.rotation + rotationDiff * t
+                const rotation = current.rotation + rotationDiff * t
 
-                this.addCone(aPos, currentRotation)
-                this.addCone(bPos, currentRotation)
+                const scale = current.scale + (next.scale - current.scale) * t
+
+                const a = new THREE.Vector2(center.x - scale, center.y)
+                const b = new THREE.Vector2(center.x + scale, center.y)
+
+                a.rotateAround(center, -rotation)
+                b.rotateAround(center, -rotation)
+
+                const coneRotation = rotation + Math.PI * 0.5
+
+                this.addCone(a, coneRotation)
+                this.addCone(b, coneRotation)
             }
         }
 

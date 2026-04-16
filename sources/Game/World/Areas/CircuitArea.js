@@ -521,11 +521,22 @@ export class CircuitArea extends Area
             {
                 this.cones.show()
                 this.hideLocalObstacles()
+                if(this.rails && this.rails.deactivate)
+                {
+                    this.rails.deactivate()
+                }
             }
             else
             {
                 this.cones.hide()
                 this.showLocalObstacles()
+                if(this.rails && this.rails.activate)
+                {
+                    if(this.state === CircuitArea.STATE_RUNNING || this.state === CircuitArea.STATE_STARTING)
+                    {
+                        this.rails.activate()
+                    }
+                }
             }
         }
 
@@ -618,11 +629,11 @@ export class CircuitArea extends Area
     {
         this.rails = {}
         
-        const railsMesh = this.references.items.get('rails')[0]
-        railsMesh.material = railsMesh.material.clone()
-        railsMesh.material.side = THREE.DoubleSide
+        this.rails.mesh = this.references.items.get('rails')[0]
+        this.rails.mesh.material = this.rails.mesh.material.clone()
+        this.rails.mesh.material.side = THREE.DoubleSide
 
-        this.rails.object = railsMesh.userData.object
+        this.rails.object = this.rails.mesh.userData.object
         
         this.rails.activate = () =>
         {
