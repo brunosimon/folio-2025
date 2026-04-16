@@ -162,14 +162,54 @@ export class World
 
         if(this.areas)
         {
-            if(this.areas.bowling && this.areas.bowling.pins && this.areas.bowling.pins.items)
+            if(this.areas.bowling && this.areas.bowling.pins)
             {
-                for(const pin of this.areas.bowling.pins.items)
+                this.hideInstancedGroup(this.areas.bowling.pins.instancedGroup)
+                if(this.areas.bowling.pins.items)
                 {
-                    if(pin.object)
+                    for(const pin of this.areas.bowling.pins.items)
                     {
-                        this.game.objects.disable(pin.object)
+                        if(pin.object)
+                        {
+                            this.game.objects.disable(pin.object)
+                        }
                     }
+                }
+            }
+
+            if(this.areas.cookie && this.areas.cookie.cookies)
+            {
+                this.hideInstancedGroup(this.areas.cookie.cookies.instancedGroup)
+                this.disableObjects(this.areas.cookie.cookies.objects)
+            }
+
+            if(this.areas.social && this.areas.social.fans)
+            {
+                this.hideInstancedGroup(this.areas.social.fans.instancedGroup)
+                this.disableObjects(this.areas.social.fans.objects)
+            }
+
+            const areaList = [
+                this.areas.achievements,
+                this.areas.altar,
+                this.areas.behindTheScene,
+                this.areas.bowling,
+                this.areas.career,
+                this.areas.circuit,
+                this.areas.cookie,
+                this.areas.lab,
+                this.areas.landing,
+                this.areas.projects,
+                this.areas.social,
+                this.areas.toilet,
+                this.areas.timeMachine,
+            ]
+
+            for(const area of areaList)
+            {
+                if(area && area.objects && area.objects.items)
+                {
+                    this.disableObjects(area.objects.items)
                 }
             }
         }
@@ -221,14 +261,54 @@ export class World
 
         if(this.areas)
         {
-            if(this.areas.bowling && this.areas.bowling.pins && this.areas.bowling.pins.items)
+            if(this.areas.bowling && this.areas.bowling.pins)
             {
-                for(const pin of this.areas.bowling.pins.items)
+                this.showInstancedGroup(this.areas.bowling.pins.instancedGroup)
+                if(this.areas.bowling.pins.items)
                 {
-                    if(pin.object)
+                    for(const pin of this.areas.bowling.pins.items)
                     {
-                        this.game.objects.enable(pin.object)
+                        if(pin.object)
+                        {
+                            this.game.objects.enable(pin.object)
+                        }
                     }
+                }
+            }
+
+            if(this.areas.cookie && this.areas.cookie.cookies)
+            {
+                this.showInstancedGroup(this.areas.cookie.cookies.instancedGroup)
+                this.enableObjects(this.areas.cookie.cookies.objects)
+            }
+
+            if(this.areas.social && this.areas.social.fans)
+            {
+                this.showInstancedGroup(this.areas.social.fans.instancedGroup)
+                this.enableObjects(this.areas.social.fans.objects)
+            }
+
+            const areaList = [
+                this.areas.achievements,
+                this.areas.altar,
+                this.areas.behindTheScene,
+                this.areas.bowling,
+                this.areas.career,
+                this.areas.circuit,
+                this.areas.cookie,
+                this.areas.lab,
+                this.areas.landing,
+                this.areas.projects,
+                this.areas.social,
+                this.areas.toilet,
+                this.areas.timeMachine,
+            ]
+
+            for(const area of areaList)
+            {
+                if(area && area.objects && area.objects.items)
+                {
+                    this.enableObjects(area.objects.items)
                 }
             }
         }
