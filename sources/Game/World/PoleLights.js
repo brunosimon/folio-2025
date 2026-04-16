@@ -10,6 +10,8 @@ export class PoleLights
     {
         this.game = Game.getInstance()
 
+        this.showing = true
+
         // Debug
         if(this.game.debug.active)
         {
@@ -47,9 +49,10 @@ export class PoleLights
 
     setPhysics()
     {
+        this.physicalObjects = []
         for(const reference of this.references)
         {
-            this.game.objects.add(
+            const object = this.game.objects.add(
                 null,
                 {
                     type: 'fixed',
@@ -62,6 +65,7 @@ export class PoleLights
                     }
                 },
             )
+            this.physicalObjects.push(object)
         }
     }
 
@@ -115,13 +119,17 @@ export class PoleLights
         mesh.count = count
         mesh.frustumCulled = false
         this.game.scene.add(mesh)
+
+        this.firefliesMesh = mesh
     }
 
     setSwitchInterval()
     {
-
         const intervalChange = (inInterval) =>
         {
+            if(!this.showing)
+                return
+
             if(inInterval)
             {
                 this.glass.visible = true
@@ -138,5 +146,37 @@ export class PoleLights
 
         this.game.dayCycles.events.on('night', intervalChange)
         intervalChange(this.game.dayCycles.intervalEvents.get('night').inInterval)
+    }
+
+    setShowing(showing)
+    {
+        this.showing = showing
+
+        if(!showing)
+        {
+            if(this.glass)
+                this.glass.visible = false
+            
+            if(this.firefliesScale)
+                gsap.to(this.firefliesScale, { value: 0, duration: 1, overwrite: true })
+            
+            if(this.firefliesMesh)
+                this.firefliesMesh.visible = false
+        }
+        else
+        {
+            if(this.firefliesMesh)
+                this.firefliesMesh.visible = true
+
+            const isNight = this.game.dayCycles.intervalEvents.get('night').inInterval
+            if(isNight)
+            {
+                if(this.glass)
+                    this.glass.visible = true
+                
+                if(this.firefliesScale)
+                    gsap.to(this.firefliesScale, { value: 1, duration: 1, overwrite: true })
+            }
+        }
     }
 }
