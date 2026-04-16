@@ -30,55 +30,54 @@ export class Cones
             const current = checkpoints[i]
             const next = checkpoints[(i + 1) % count]
 
-            const startCenter = current.center
-            const endCenter = next.center
+            const startLeft = current.a
+            const startRight = current.b
+            const endLeft = next.a
+            const endRight = next.b
 
-            const startRotation = current.rotation
-            const endRotation = next.rotation
+            const leftSegmentLength = startLeft.distanceTo(endLeft)
+            const rightSegmentLength = startRight.distanceTo(endRight)
+            
+            const leftSegmentsCount = Math.max(1, Math.ceil(leftSegmentLength / coneSpacing))
+            const rightSegmentsCount = Math.max(1, Math.ceil(rightSegmentLength / coneSpacing))
 
-            const startScale = current.scale
-            const endScale = next.scale
-
-            const segmentLength = startCenter.distanceTo(endCenter)
-            const segmentsCount = Math.max(1, Math.ceil(segmentLength / coneSpacing))
-
-            for(let j = 0; j <= segmentsCount; j++)
+            for(let j = 0; j <= leftSegmentsCount; j++)
             {
-                const t = j / segmentsCount
+                const t = j / leftSegmentsCount
 
-                const currentCenter = new THREE.Vector2(
-                    startCenter.x + (endCenter.x - startCenter.x) * t,
-                    startCenter.y + (endCenter.y - startCenter.y) * t
+                const leftPos = new THREE.Vector2(
+                    startLeft.x + (endLeft.x - startLeft.x) * t,
+                    startLeft.y + (endLeft.y - startLeft.y) * t
                 )
 
                 let currentRotation = 0
-                let rotationDiff = endRotation - startRotation
+                let rotationDiff = next.rotation - current.rotation
                 if(rotationDiff > Math.PI)
                     rotationDiff -= 2 * Math.PI
                 else if(rotationDiff < -Math.PI)
                     rotationDiff += 2 * Math.PI
-                currentRotation = startRotation + rotationDiff * t
-
-                const currentScale = startScale + (endScale - startScale) * t
-
-                const forward = new THREE.Vector2(
-                    Math.sin(currentRotation),
-                    Math.cos(currentRotation)
-                )
-
-                const left = new THREE.Vector2(-forward.y, forward.x)
-                const right = new THREE.Vector2(forward.y, -forward.x)
-
-                const leftPos = new THREE.Vector2(
-                    currentCenter.x + left.x * currentScale,
-                    currentCenter.y + left.y * currentScale
-                )
-                const rightPos = new THREE.Vector2(
-                    currentCenter.x + right.x * currentScale,
-                    currentCenter.y + right.y * currentScale
-                )
+                currentRotation = current.rotation + rotationDiff * t
 
                 this.addCone(leftPos, currentRotation)
+            }
+
+            for(let j = 0; j <= rightSegmentsCount; j++)
+            {
+                const t = j / rightSegmentsCount
+
+                const rightPos = new THREE.Vector2(
+                    startRight.x + (endRight.x - startRight.x) * t,
+                    startRight.y + (endRight.y - startRight.y) * t
+                )
+
+                let currentRotation = 0
+                let rotationDiff = next.rotation - current.rotation
+                if(rotationDiff > Math.PI)
+                    rotationDiff -= 2 * Math.PI
+                else if(rotationDiff < -Math.PI)
+                    rotationDiff += 2 * Math.PI
+                currentRotation = current.rotation + rotationDiff * t
+
                 this.addCone(rightPos, currentRotation)
             }
         }

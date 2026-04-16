@@ -550,6 +550,36 @@ export class CircuitArea extends Area
                 obstacle.object.physical.body.setEnabled(false)
             }
         }
+
+        if(this.game.world.fences)
+        {
+            for(const mesh of this.game.world.fences.instancedGroup.meshes)
+            {
+                mesh.instance.visible = false
+            }
+            for(const object of this.game.world.fences.objects)
+            {
+                if(object.physical)
+                {
+                    object.physical.body.setEnabled(false)
+                }
+            }
+        }
+
+        if(this.game.world.explosiveCrates)
+        {
+            for(const mesh of this.game.world.explosiveCrates.instancedGroup.meshes)
+            {
+                mesh.instance.visible = false
+            }
+            for(const crate of this.game.world.explosiveCrates.items)
+            {
+                if(crate.object && crate.object.physical)
+                {
+                    crate.object.physical.body.setEnabled(false)
+                }
+            }
+        }
     }
 
     showObstacles()
@@ -563,6 +593,36 @@ export class CircuitArea extends Area
             if(obstacle.object && obstacle.object.physical)
             {
                 obstacle.object.physical.body.setEnabled(true)
+            }
+        }
+
+        if(this.game.world.fences)
+        {
+            for(const mesh of this.game.world.fences.instancedGroup.meshes)
+            {
+                mesh.instance.visible = true
+            }
+            for(const object of this.game.world.fences.objects)
+            {
+                if(object.physical)
+                {
+                    object.physical.body.setEnabled(true)
+                }
+            }
+        }
+
+        if(this.game.world.explosiveCrates)
+        {
+            for(const mesh of this.game.world.explosiveCrates.instancedGroup.meshes)
+            {
+                mesh.instance.visible = true
+            }
+            for(const crate of this.game.world.explosiveCrates.items)
+            {
+                if(crate.object && crate.object.physical)
+                {
+                    crate.object.physical.body.setEnabled(true)
+                }
             }
         }
     }
