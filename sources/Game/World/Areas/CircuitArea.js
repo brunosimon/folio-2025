@@ -9,6 +9,7 @@ import { add, color, float, Fn, max, mix, normalGeometry, objectPosition, PI, po
 import { alea } from 'seedrandom'
 import { InputFlag } from '../../InputFlag.js'
 import { Area } from './Area.js'
+import { Cones } from '../Cones.js'
 import { timeToRaceString, timeToReadableString } from '../../utilities/time.js'
 
 export class CircuitArea extends Area
@@ -40,6 +41,7 @@ export class CircuitArea extends Area
         this.setCheckpoints()
         this.setResetObjects()
         this.setObstacles()
+        this.setCones()
         this.setRoad()
         this.setRails()
         this.setInteractivePoint()
@@ -505,6 +507,63 @@ export class CircuitArea extends Area
             this.game.debug.addThreeColorBinding(debugPanel, this.checkpoints.doorReached.color.value, 'reachedColor')
             
             debugPanel.addBinding(doorIntensity, 'value', { label: 'intensity', min: 0, max: 5, step: 0.01 })
+        }
+    }
+
+    setCones()
+    {
+        this.cones = new Cones()
+        this.cones.createFromCheckpoints(this.checkpoints.items)
+
+        const updateTrackMode = (enabled) =>
+        {
+            if(enabled)
+            {
+                this.cones.show()
+                this.hideObstacles()
+            }
+            else
+            {
+                this.cones.hide()
+                this.showObstacles()
+            }
+        }
+
+        this.game.trackMode.events.on('change', updateTrackMode)
+
+        if(this.game.trackMode.enabled)
+        {
+            updateTrackMode(true)
+        }
+    }
+
+    hideObstacles()
+    {
+        for(const obstacle of this.obstacles.items)
+        {
+            if(obstacle.object && obstacle.object.visual)
+            {
+                obstacle.object.visual.object3D.visible = false
+            }
+            if(obstacle.object && obstacle.object.physical)
+            {
+                obstacle.object.physical.body.setEnabled(false)
+            }
+        }
+    }
+
+    showObstacles()
+    {
+        for(const obstacle of this.obstacles.items)
+        {
+            if(obstacle.object && obstacle.object.visual)
+            {
+                obstacle.object.visual.object3D.visible = true
+            }
+            if(obstacle.object && obstacle.object.physical)
+            {
+                obstacle.object.physical.body.setEnabled(true)
+            }
         }
     }
 

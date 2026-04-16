@@ -9,6 +9,7 @@ export class Options
 
         this.setSound()
         this.setQuality()
+        this.setTrackMode()
         this.setRespawn()
         this.setReset()
         this.setRenderer()
@@ -36,6 +37,23 @@ export class Options
         this.game.quality.events.on('change', () =>
         {
             text.textContent = this.game.quality.level === 0 ? 'High' : 'Low'
+        })
+    }
+
+    setTrackMode()
+    {
+        const element = this.element.querySelector('.js-track-mode-toggle')
+        const text = element.querySelector('span')
+        text.textContent = this.game.trackMode.enabled ? 'ON' : 'OFF'
+
+        element.addEventListener('click', () =>
+        {
+            this.game.trackMode.toggle()
+        })
+
+        this.game.trackMode.events.on('change', (enabled) =>
+        {
+            text.textContent = enabled ? 'ON' : 'OFF'
         })
     }
 
