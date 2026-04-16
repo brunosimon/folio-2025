@@ -20,7 +20,6 @@ export class Cones
         this.clear()
 
         const coneSpacing = 2.5
-        const coneOffset = 0.3
 
         this.references = []
 
@@ -31,53 +30,56 @@ export class Cones
             const current = checkpoints[i]
             const next = checkpoints[(i + 1) % count]
 
-            const startLeft = current.a
-            const startRight = current.b
-            const endLeft = next.a
-            const endRight = next.b
+            const startCenter = current.center
+            const endCenter = next.center
 
-            const segmentLength = startLeft.distanceTo(endLeft)
+            const startRotation = current.rotation
+            const endRotation = next.rotation
+
+            const startScale = current.scale
+            const endScale = next.scale
+
+            const segmentLength = startCenter.distanceTo(endCenter)
             const segmentsCount = Math.max(1, Math.ceil(segmentLength / coneSpacing))
 
             for(let j = 0; j <= segmentsCount; j++)
             {
                 const t = j / segmentsCount
 
+                const currentCenter = new THREE.Vector2(
+                    startCenter.x + (endCenter.x - startCenter.x) * t,
+                    startCenter.y + (endCenter.y - startCenter.y) * t
+                )
+
+                let currentRotation = 0
+                let rotationDiff = endRotation - startRotation
+                if(rotationDiff > Math.PI)
+                    rotationDiff -= 2 * Math.PI
+                else if(rotationDiff < -Math.PI)
+                    rotationDiff += 2 * Math.PI
+                currentRotation = startRotation + rotationDiff * t
+
+                const currentScale = startScale + (endScale - startScale) * t
+
+                const forward = new THREE.Vector2(
+                    Math.sin(currentRotation),
+                    Math.cos(currentRotation)
+                )
+
+                const left = new THREE.Vector2(-forward.y, forward.x)
+                const right = new THREE.Vector2(forward.y, -forward.x)
+
                 const leftPos = new THREE.Vector2(
-                    startLeft.x + (endLeft.x - startLeft.x) * t,
-                    startLeft.y + (endLeft.y - startLeft.y) * t
+                    currentCenter.x + left.x * currentScale,
+                    currentCenter.y + left.y * currentScale
                 )
                 const rightPos = new THREE.Vector2(
-                    startRight.x + (endRight.x - startRight.x) * t,
-                    startRight.y + (endRight.y - startRight.y) * t
+                    currentCenter.x + right.x * currentScale,
+                    currentCenter.y + right.y * currentScale
                 )
 
-                const nextIdx = (j + 1) % (segmentsCount + 1)
-                const nextT = nextIdx / segmentsCount
-                const nextLeftPos = new THREE.Vector2(
-                    startLeft.x + (endLeft.x - startLeft.x) * nextT,
-                    startLeft.y + (endLeft.y - startLeft.y) * nextT
-                )
-
-                const direction = new THREE.Vector2(
-                    nextLeftPos.x - leftPos.x,
-                    nextLeftPos.y - leftPos.y
-                ).normalize()
-
-                const leftNormal = new THREE.Vector2(-direction.y, direction.x)
-                const rightNormal = new THREE.Vector2(direction.y, -direction.x)
-
-                const finalLeftPos = new THREE.Vector2(
-                    leftPos.x + leftNormal.x * coneOffset,
-                    leftPos.y + leftNormal.y * coneOffset
-                )
-                const finalRightPos = new THREE.Vector2(
-                    rightPos.x + rightNormal.x * coneOffset,
-                    rightPos.y + rightNormal.y * coneOffset
-                )
-
-                this.addCone(finalLeftPos, current.rotation)
-                this.addCone(finalRightPos, current.rotation)
+                this.addCone(leftPos, currentRotation)
+                this.addCone(rightPos, currentRotation)
             }
         }
 
