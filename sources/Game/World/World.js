@@ -66,34 +66,91 @@ export class World
         }
     }
 
+    hideInstancedGroup(instancedGroup)
+    {
+        if(instancedGroup && instancedGroup.meshes)
+        {
+            for(const mesh of instancedGroup.meshes)
+            {
+                if(mesh.instance)
+                {
+                    mesh.instance.visible = false
+                }
+            }
+        }
+    }
+
+    showInstancedGroup(instancedGroup)
+    {
+        if(instancedGroup && instancedGroup.meshes)
+        {
+            for(const mesh of instancedGroup.meshes)
+            {
+                if(mesh.instance)
+                {
+                    mesh.instance.visible = true
+                }
+            }
+        }
+    }
+
+    disableObjects(objects)
+    {
+        if(objects)
+        {
+            for(const object of objects)
+            {
+                this.game.objects.disable(object)
+            }
+        }
+    }
+
+    enableObjects(objects)
+    {
+        if(objects)
+        {
+            for(const object of objects)
+            {
+                this.game.objects.enable(object)
+            }
+        }
+    }
+
     disableObstacles()
     {
-        if(this.bricks && this.bricks.objects)
+        if(this.bricks)
         {
-            for(const object of this.bricks.objects)
-            {
-                this.game.objects.disable(object)
-            }
+            this.hideInstancedGroup(this.bricks.instancedGroup)
+            this.disableObjects(this.bricks.objects)
         }
 
-        if(this.fences && this.fences.objects)
+        if(this.fences)
         {
-            for(const object of this.fences.objects)
-            {
-                this.game.objects.disable(object)
-            }
+            this.hideInstancedGroup(this.fences.instancedGroup)
+            this.disableObjects(this.fences.objects)
         }
 
-        if(this.benches && this.benches.objects)
+        if(this.benches)
         {
-            for(const object of this.benches.objects)
-            {
-                this.game.objects.disable(object)
-            }
+            this.hideInstancedGroup(this.benches.instancedGroup)
+            this.disableObjects(this.benches.objects)
+        }
+
+        if(this.lanterns)
+        {
+            this.hideInstancedGroup(this.lanterns.instancedGroup)
+            this.disableObjects(this.lanterns.objects)
+        }
+
+        if(this.poleLights)
+        {
+            this.hideInstancedGroup(this.poleLights.instancedGroup)
+            this.disableObjects(this.poleLights.physicalObjects)
         }
 
         if(this.explosiveCrates && this.explosiveCrates.items)
         {
+            this.hideInstancedGroup(this.explosiveCrates.instancedGroup)
             for(const crate of this.explosiveCrates.items)
             {
                 if(crate.object)
@@ -102,41 +159,76 @@ export class World
                 }
             }
         }
+
+        if(this.areas)
+        {
+            if(this.areas.bowling && this.areas.bowling.pins && this.areas.bowling.pins.items)
+            {
+                for(const pin of this.areas.bowling.pins.items)
+                {
+                    if(pin.object)
+                    {
+                        this.game.objects.disable(pin.object)
+                    }
+                }
+            }
+        }
     }
 
     enableObstacles()
     {
-        if(this.bricks && this.bricks.objects)
+        if(this.bricks)
         {
-            for(const object of this.bricks.objects)
-            {
-                this.game.objects.enable(object)
-            }
+            this.showInstancedGroup(this.bricks.instancedGroup)
+            this.enableObjects(this.bricks.objects)
         }
 
-        if(this.fences && this.fences.objects)
+        if(this.fences)
         {
-            for(const object of this.fences.objects)
-            {
-                this.game.objects.enable(object)
-            }
+            this.showInstancedGroup(this.fences.instancedGroup)
+            this.enableObjects(this.fences.objects)
         }
 
-        if(this.benches && this.benches.objects)
+        if(this.benches)
         {
-            for(const object of this.benches.objects)
-            {
-                this.game.objects.enable(object)
-            }
+            this.showInstancedGroup(this.benches.instancedGroup)
+            this.enableObjects(this.benches.objects)
+        }
+
+        if(this.lanterns)
+        {
+            this.showInstancedGroup(this.lanterns.instancedGroup)
+            this.enableObjects(this.lanterns.objects)
+        }
+
+        if(this.poleLights)
+        {
+            this.showInstancedGroup(this.poleLights.instancedGroup)
+            this.enableObjects(this.poleLights.physicalObjects)
         }
 
         if(this.explosiveCrates && this.explosiveCrates.items)
         {
+            this.showInstancedGroup(this.explosiveCrates.instancedGroup)
             for(const crate of this.explosiveCrates.items)
             {
                 if(crate.object && !crate.exploded)
                 {
                     this.game.objects.enable(crate.object)
+                }
+            }
+        }
+
+        if(this.areas)
+        {
+            if(this.areas.bowling && this.areas.bowling.pins && this.areas.bowling.pins.items)
+            {
+                for(const pin of this.areas.bowling.pins.items)
+                {
+                    if(pin.object)
+                    {
+                        this.game.objects.enable(pin.object)
+                    }
                 }
             }
         }
