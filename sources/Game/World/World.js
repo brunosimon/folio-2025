@@ -37,11 +37,109 @@ export class World
 
         this.step(0)
 
+        this.setSceneModeListener()
+
         // this.setAxesHelper()
         // this.setCollisionGroupsTest()
         // this.setNormalTest()
         // this.setTestMesh()
         // this.setTestShadow()
+    }
+
+    setSceneModeListener()
+    {
+        this.game.sceneMode.events.on('change', (mode) =>
+        {
+            this.applySceneMode(mode)
+        })
+    }
+
+    applySceneMode(mode)
+    {
+        if(mode === 'obstacleFree')
+        {
+            this.disableObstacles()
+        }
+        else
+        {
+            this.enableObstacles()
+        }
+    }
+
+    disableObstacles()
+    {
+        if(this.bricks && this.bricks.objects)
+        {
+            for(const object of this.bricks.objects)
+            {
+                this.game.objects.disable(object)
+            }
+        }
+
+        if(this.fences && this.fences.objects)
+        {
+            for(const object of this.fences.objects)
+            {
+                this.game.objects.disable(object)
+            }
+        }
+
+        if(this.benches && this.benches.objects)
+        {
+            for(const object of this.benches.objects)
+            {
+                this.game.objects.disable(object)
+            }
+        }
+
+        if(this.explosiveCrates && this.explosiveCrates.items)
+        {
+            for(const crate of this.explosiveCrates.items)
+            {
+                if(crate.object)
+                {
+                    this.game.objects.disable(crate.object)
+                }
+            }
+        }
+    }
+
+    enableObstacles()
+    {
+        if(this.bricks && this.bricks.objects)
+        {
+            for(const object of this.bricks.objects)
+            {
+                this.game.objects.enable(object)
+            }
+        }
+
+        if(this.fences && this.fences.objects)
+        {
+            for(const object of this.fences.objects)
+            {
+                this.game.objects.enable(object)
+            }
+        }
+
+        if(this.benches && this.benches.objects)
+        {
+            for(const object of this.benches.objects)
+            {
+                this.game.objects.enable(object)
+            }
+        }
+
+        if(this.explosiveCrates && this.explosiveCrates.items)
+        {
+            for(const crate of this.explosiveCrates.items)
+            {
+                if(crate.object && !crate.exploded)
+                {
+                    this.game.objects.enable(crate.object)
+                }
+            }
+        }
     }
 
     step(step)
@@ -78,6 +176,11 @@ export class World
             this.lanterns = new Lanterns()
             this.scenery = new Scenery()
             this.areas = new Areas()
+
+            if(this.game.sceneMode.mode === 'obstacleFree')
+            {
+                this.disableObstacles()
+            }
         }
         else if(step === 2)
         {
