@@ -87705,7 +87705,7 @@ https://github.com/browserify/crypto-browserify`);
   }
   const projectsData = [
     {
-      title: "ICE \u2014 Social Media",
+      title: "ICE \u2014 Social Media Management System",
       titleSmall: [
         "ICE",
         "Social"
@@ -87717,8 +87717,13 @@ https://github.com/browserify/crypto-browserify`);
       },
       distinctions: [],
       images: [
-        "threejs-journey-1.ktx",
-        "threejs-journey-2.ktx"
+        "ICE.ktx",
+        "ICE_Dashboard.ktx",
+        "DisputeRealTimeChat.ktx",
+        "ManageSubmission.ktx",
+        "ManageReport.ktx",
+        "RaiseReport.ktx",
+        "SubmissionFormWithHistory.ktx"
       ]
     },
     {
@@ -87764,7 +87769,7 @@ https://github.com/browserify/crypto-browserify`);
       url: "https://github.com/yan04s",
       attributes: {
         role: "Intern",
-        with: "SQL Accounting, C++"
+        with: "SQL Accounting& Payroll, C++"
       },
       distinctions: [],
       images: [
@@ -87978,11 +87983,11 @@ https://github.com/browserify/crypto-browserify`);
       this.images = {}, this.images.initiated = false, this.images.width = 1920 * 0.5, this.images.height = 1080 * 0.5, this.images.index = 0, this.images.direction = _ProjectsArea.DIRECTION_NEXT, this.images.resources = /* @__PURE__ */ new Map(), this.images.loadProgress = uniform$1(0), this.images.animationProgress = uniform$1(0), this.images.animationDirection = uniform$1(0), this.images.mesh = this.references.items.get("images")[0], this.images.mesh.receiveShadow = true, this.images.mesh.castShadow = false, this.images.mesh.visible = false, this.images.init = (e) => {
         this.images.initiated = true, this.images.mesh.visible = true;
         const r = this.images.resources.get(e);
-        this.images.textureOld = r.texture.clone(), this.images.textureNew = r.texture.clone();
+        this.images.textureOld = r.texture.clone(), this.images.textureNew = r.texture;
         const s = Fn$1(() => {
           const a = uv$2().toVar(), h = uv$2().toVar();
-          h.x.addAssign(this.images.animationProgress.oneMinus().mul(-0.25).mul(this.images.animationDirection)), a.x.addAssign(this.images.animationProgress.mul(0.25).mul(this.images.animationDirection));
-          const c = texture$1(this.images.textureOld, a).rgb, d = texture$1(this.images.textureNew, h).rgb;
+          h.x.addAssign(this.images.animationProgress.oneMinus().mul(-0.25).mul(this.images.animationDirection)), a.x.addAssign(this.images.animationProgress.mul(0.25).mul(this.images.animationDirection)), this.images.textureNodeOld = texture$1(this.images.textureOld, a), this.images.textureNodeNew = texture$1(this.images.textureNew, h);
+          const c = this.images.textureNodeOld.rgb.toVar(), d = this.images.textureNodeNew.rgb.toVar();
           d.assign(mix$1(color$1("#333333"), d, this.images.loadProgress));
           const f = uv$2().x.toVar();
           If$1(this.images.animationDirection.greaterThan(0), () => {
@@ -88000,7 +88005,7 @@ https://github.com/browserify/crypto-browserify`);
       }, this.images.loadEnded = (e) => {
         if (this.images.initiated || this.images.init(e), this.navigation.current.images[this.images.index] === e) {
           const r = this.images.getResourceAndLoad(e);
-          this.images.textureNew.copy(r.texture), this.images.textureNew.needsUpdate = true, gsapWithCSS.to(this.images.loadProgress, {
+          this.images.textureNew = r.texture, this.images.textureNodeNew.value = this.images.textureNew, gsapWithCSS.to(this.images.loadProgress, {
             value: 1,
             duration: 1,
             overwrite: true
@@ -88020,7 +88025,7 @@ https://github.com/browserify/crypto-browserify`);
       }, this.images.update = (e) => {
         this.images.direction = e;
         const r = this.navigation.current.images[this.images.index], s = this.images.getResourceAndLoad(r);
-        s.loaded ? (this.images.loadSibling(), this.images.loadProgress.value = 1) : this.images.loadProgress.value = 0, this.images.initiated && (this.images.textureOld.copy(this.images.textureNew), this.images.textureOld.needsUpdate = true, s.loaded && (this.images.textureNew.copy(s.texture), this.images.textureNew.needsUpdate = true)), gsapWithCSS.fromTo(this.images.animationProgress, {
+        s.loaded ? (this.images.loadSibling(), this.images.loadProgress.value = 1) : this.images.loadProgress.value = 0, this.images.initiated && (this.images.textureOld = this.images.textureNew, this.images.textureNodeOld.value = this.images.textureOld, s.loaded && (this.images.textureNew = s.texture, this.images.textureNodeNew.value = this.images.textureNew)), gsapWithCSS.fromTo(this.images.animationProgress, {
           value: 0
         }, {
           value: 1,
@@ -88031,66 +88036,78 @@ https://github.com/browserify/crypto-browserify`);
       };
     }
     setPagination() {
-      this.pagination = {}, this.pagination.inter = 0.2, this.pagination.group = this.references.items.get("pagination")[0].children[0], this.pagination.items = [];
-      let e = 0;
-      const r = this.references.items.get("intersectPagination");
-      for (const f of this.pagination.group.children) if (f instanceof Mesh$1) {
-        const p = {};
-        p.index = e, p.visible = false, p.mesh = f, p.mesh.position.x = this.pagination.inter * e, p.mesh.visible = false, p.mesh.material = this.hover.inactiveMaterial, p.intersectReference = r[e], p.intersect = this.game.rayCursor.addIntersect({
+      this.pagination = {};
+      const e = Math.max(...projectsData.map((w) => w.images.length));
+      this.pagination.inter = Math.min(0.2, 0.8 / Math.max(1, e - 1)), this.pagination.group = this.references.items.get("pagination")[0].children[0], this.pagination.items = [];
+      const r = this.references.items.get("intersectPagination"), s = this.pagination.group.children.find((w) => w instanceof Mesh$1), o = r[0];
+      let a = this.pagination.group.children.filter((w) => w instanceof Mesh$1).length;
+      for (; a < e; ) {
+        const w = s.clone();
+        this.pagination.group.add(w), a++;
+      }
+      for (; r.length < e; ) {
+        const w = o.clone();
+        o.parent && o.parent.add(w), r.push(w);
+      }
+      let h = 0;
+      for (const w of this.pagination.group.children) if (w instanceof Mesh$1) {
+        if (h >= e) break;
+        const M = {};
+        M.index = h, M.visible = false, M.mesh = w, M.mesh.position.x = this.pagination.inter * h, M.mesh.visible = false, M.mesh.material = this.hover.inactiveMaterial, M.intersectReference = r[h], M.intersect = this.game.rayCursor.addIntersect({
           active: false,
-          shape: new Sphere$1(new Vector3$1(), p.intersectReference.scale.x),
+          shape: new Sphere$1(new Vector3$1(), M.intersectReference.scale.x),
           onClick: () => {
-            this.changeImage(p.index);
+            this.changeImage(M.index);
           },
           onEnter: () => {
-            p.mesh.material = this.hover.activeMaterial;
+            M.mesh.material = this.hover.activeMaterial;
           },
           onLeave: () => {
-            p.mesh.material = this.hover.inactiveMaterial;
+            M.mesh.material = this.hover.inactiveMaterial;
           }
-        }), p.intersectReference.getWorldPosition(p.intersect.shape.center), this.pagination.items.push(p), e++;
+        }), M.intersectReference.getWorldPosition(M.intersect.shape.center), this.pagination.items.push(M), h++;
       }
-      const s = this.references.items.get("intersectPreviousImage")[0], o = new Vector3$1();
-      s.getWorldPosition(o);
-      const a = this.references.items.get("arrowPreviousImage")[0];
-      a.material = this.hover.inactiveMaterial, this.pagination.previousIntersect = this.game.rayCursor.addIntersect({
+      const c = this.references.items.get("intersectPreviousImage")[0], d = new Vector3$1();
+      c.getWorldPosition(d);
+      const f = this.references.items.get("arrowPreviousImage")[0];
+      f.material = this.hover.inactiveMaterial, this.pagination.previousIntersect = this.game.rayCursor.addIntersect({
         active: false,
-        shape: new Sphere$1(o, s.scale.x),
+        shape: new Sphere$1(d, c.scale.x),
         onClick: () => {
           this.previous();
         },
         onEnter: () => {
-          a.material = this.hover.activeMaterial;
+          f.material = this.hover.activeMaterial;
         },
         onLeave: () => {
-          a.material = this.hover.inactiveMaterial;
+          f.material = this.hover.inactiveMaterial;
         }
       });
-      const h = this.references.items.get("intersectNextImage")[0], c = new Vector3$1();
-      h.getWorldPosition(c);
-      const d = this.references.items.get("arrowNextImage")[0];
-      d.material = this.hover.inactiveMaterial, this.pagination.nextIntersect = this.game.rayCursor.addIntersect({
+      const p = this.references.items.get("intersectNextImage")[0], m = new Vector3$1();
+      p.getWorldPosition(m);
+      const b = this.references.items.get("arrowNextImage")[0];
+      b.material = this.hover.inactiveMaterial, this.pagination.nextIntersect = this.game.rayCursor.addIntersect({
         active: false,
-        shape: new Sphere$1(c, h.scale.x),
+        shape: new Sphere$1(m, p.scale.x),
         onClick: () => {
           this.next();
         },
         onEnter: () => {
-          d.material = this.hover.activeMaterial;
+          b.material = this.hover.activeMaterial;
         },
         onLeave: () => {
-          d.material = this.hover.inactiveMaterial;
+          b.material = this.hover.inactiveMaterial;
         }
       }), this.pagination.update = () => {
-        let f = 0;
-        for (const m of this.pagination.items) f <= this.navigation.current.images.length - 1 ? m.visible || (gsapWithCSS.to(m.mesh.scale, {
+        let w = 0;
+        for (const R of this.pagination.items) w <= this.navigation.current.images.length - 1 ? R.visible || (gsapWithCSS.to(R.mesh.scale, {
           x: 1,
           y: 1,
           z: 1,
           duration: 0.5,
           ease: "power1.inOut",
           overwrite: true
-        }), m.mesh.visible = true, m.visible = true, m.intersect.active = this.state === _ProjectsArea.STATE_OPENING || this.state === _ProjectsArea.STATE_OPEN) : m.visible && (gsapWithCSS.to(m.mesh.scale, {
+        }), R.mesh.visible = true, R.visible = true, R.intersect.active = this.state === _ProjectsArea.STATE_OPENING || this.state === _ProjectsArea.STATE_OPEN) : R.visible && (gsapWithCSS.to(R.mesh.scale, {
           x: 0.01,
           y: 0.01,
           z: 0.01,
@@ -88098,17 +88115,17 @@ https://github.com/browserify/crypto-browserify`);
           ease: "power1.inOut",
           overwrite: true,
           onComplete: () => {
-            m.mesh.visible = false;
+            R.mesh.visible = false;
           }
-        }), m.visible = false, m.intersect.active = false), m.mesh.rotation.z = this.images.index === f ? 0 : Math.PI, f++;
-        const p = -(this.navigation.current.images.length - 1) * this.pagination.inter / 2;
+        }), R.visible = false, R.intersect.active = false), R.mesh.rotation.z = this.images.index === w ? 0 : Math.PI, w++;
+        const M = -(this.navigation.current.images.length - 1) * this.pagination.inter / 2;
         gsapWithCSS.to(this.pagination.group.position, {
-          x: p,
+          x: M,
           duration: 0.5,
           ease: "power1.inOut",
           overwrite: true,
           onComplete: () => {
-            for (const m of this.pagination.items) m.intersectReference.getWorldPosition(m.intersect.shape.center);
+            for (const R of this.pagination.items) R.intersectReference.getWorldPosition(R.intersect.shape.center);
           }
         });
       };
@@ -88526,8 +88543,8 @@ https://github.com/browserify/crypto-browserify`);
     changeProject(e = 0, r = _ProjectsArea.DIRECTION_NEXT, s = false, o = false) {
       let a = e;
       a > projectsData.length - 1 ? a = 0 : a < 0 && (a = projectsData.length - 1), this.navigation.index = a, this.navigation.current = projectsData[this.navigation.index], this.navigation.previous = projectsData[this.navigation.index - 1 < 0 ? projectsData.length - 1 : this.navigation.index - 1], this.navigation.next = projectsData[(this.navigation.index + 1) % projectsData.length], this.attributes.update(), this.adjacents.update(), this.title.update(r), this.url.update(r), this.distinctions.update();
-      let h = null;
-      s ? h = 0 : h = r === _ProjectsArea.DIRECTION_NEXT ? 0 : this.navigation.current.images.length - 1, o || (this.game.audio.groups.get("click").play(), this.game.audio.groups.get("assemble").play()), this.changeImage(h, r, o), this.state === _ProjectsArea.STATE_OPEN && this.game.achievements.setProgress("projects", this.navigation.current.title);
+      let h = 0;
+      o || (this.game.audio.groups.get("click").play(), this.game.audio.groups.get("assemble").play()), this.changeImage(h, r, o), this.state === _ProjectsArea.STATE_OPEN && this.game.achievements.setProgress("projects", this.navigation.current.title);
     }
     changeImage(e = 0, r = null, s = false) {
       r === null && (r = e > this.images.index ? _ProjectsArea.DIRECTION_NEXT : _ProjectsArea.DIRECTION_PREVIOUS), this.images.index = e, this.images.update(r), this.pagination.update(), s || (this.game.audio.groups.get("click").play(), this.game.audio.groups.get("slide").play());
@@ -88755,11 +88772,11 @@ https://github.com/browserify/crypto-browserify`);
       this.images = {}, this.images.initiated = false, this.images.width = 1920 * 0.5, this.images.height = 1080 * 0.5, this.images.resources = /* @__PURE__ */ new Map(), this.images.loadProgress = uniform$1(0), this.images.animationProgress = uniform$1(0), this.images.animationDirection = uniform$1(0), this.images.mesh = this.references.items.get("images")[0], this.images.mesh.receiveShadow = true, this.images.mesh.castShadow = false, this.images.mesh.visible = false, this.images.init = (e) => {
         this.images.initiated = true, this.images.mesh.visible = true;
         const r = this.images.resources.get(e);
-        this.images.textureOld = r.texture.clone(), this.images.textureNew = r.texture.clone();
+        this.images.textureOld = r.texture.clone(), this.images.textureNew = r.texture;
         const s = Fn$1(() => {
           const a = uv$2().toVar(), h = uv$2().toVar();
-          h.x.addAssign(this.images.animationProgress.oneMinus().mul(-0.25).mul(this.images.animationDirection)), a.x.addAssign(this.images.animationProgress.mul(0.25).mul(this.images.animationDirection));
-          const c = texture$1(this.images.textureOld, a).rgb, d = texture$1(this.images.textureNew, h).rgb;
+          h.x.addAssign(this.images.animationProgress.oneMinus().mul(-0.25).mul(this.images.animationDirection)), a.x.addAssign(this.images.animationProgress.mul(0.25).mul(this.images.animationDirection)), this.images.textureNodeOld = texture$1(this.images.textureOld, a), this.images.textureNodeNew = texture$1(this.images.textureNew, h);
+          const c = this.images.textureNodeOld.rgb.toVar(), d = this.images.textureNodeNew.rgb.toVar();
           d.assign(mix$1(color$1("#333333"), d, this.images.loadProgress));
           const f = uv$2().x.toVar();
           If$1(this.images.animationDirection.greaterThan(0), () => {
@@ -88777,7 +88794,7 @@ https://github.com/browserify/crypto-browserify`);
       }, this.images.loadEnded = (e) => {
         if (this.images.initiated || this.images.init(e), this.navigation.current.image === e) {
           const r = this.images.getResourceAndLoad(e);
-          this.images.textureNew.copy(r.texture), this.images.textureNew.needsUpdate = true, gsapWithCSS.to(this.images.loadProgress, {
+          this.images.textureNew = r.texture, this.images.textureNodeNew.value = this.images.textureNew, gsapWithCSS.to(this.images.loadProgress, {
             value: 1,
             duration: 1,
             overwrite: true
@@ -88796,7 +88813,7 @@ https://github.com/browserify/crypto-browserify`);
         }), this.images.resources.set(e, s)), s;
       }, this.images.update = () => {
         const e = this.navigation.current.image, r = this.images.getResourceAndLoad(e);
-        r.loaded ? (this.images.loadSibling(), this.images.loadProgress.value = 1) : this.images.loadProgress.value = 0, this.images.initiated && (this.images.textureOld.copy(this.images.textureNew), this.images.textureOld.needsUpdate = true, r.loaded && (this.images.textureNew.copy(r.texture), this.images.textureNew.needsUpdate = true)), gsapWithCSS.fromTo(this.images.animationProgress, {
+        r.loaded ? (this.images.loadSibling(), this.images.loadProgress.value = 1) : this.images.loadProgress.value = 0, this.images.initiated && (this.images.textureOld = this.images.textureNew, this.images.textureNodeOld.value = this.images.textureOld, r.loaded && (this.images.textureNew = r.texture, this.images.textureNodeNew.value = this.images.textureNew)), gsapWithCSS.fromTo(this.images.animationProgress, {
           value: 0
         }, {
           value: 1,
@@ -108255,7 +108272,7 @@ ${e.tab}if ( ${m} ) {
           }
         ]
       ]), this.options = new Options(), this.respawns = new Respawns("landing"), this.view = new View(), this.rendering.setPostprocessing(), this.rendering.start(), this.reveal = new Reveal(), this.noises = new Noises(), this.weather = new Weather(), this.wind = new Wind(), this.tracks = new Tracks(), this.lighting = new Lighting(), this.fog = new Fog(), this.water = new Water(), this.materials = new Materials(), this.objects = new Objects(), this.explosions = new Explosions(), this.world = new World();
-      const a = __vitePreload(() => import("./rapier--bdS95J7.js").then(async (m) => {
+      const a = __vitePreload(() => import("./rapier-BZs9LWCe.js").then(async (m) => {
         await m.__tla;
         return m;
       }), [], import.meta.url), h = this.resourcesLoader.load([

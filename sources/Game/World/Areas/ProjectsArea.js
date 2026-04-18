@@ -549,18 +549,39 @@ export class ProjectsArea extends Area
     setPagination()
     {
         this.pagination = {}
-        this.pagination.inter = 0.2
+        const maxImages = Math.max(...projectsData.map(p => p.images.length))
+        this.pagination.inter = Math.min(0.2, 0.8 / Math.max(1, maxImages - 1)) // Dynamic spacing to prevent bar overflow
         this.pagination.group = this.references.items.get('pagination')[0].children[0]
         this.pagination.items = []
 
+        const intersectPagination = this.references.items.get('intersectPagination')
+        
+        // Find a base mesh to clone if needed
+        const baseMesh = this.pagination.group.children.find(c => c instanceof THREE.Mesh)
+        const baseIntersect = intersectPagination[0]
+        
+        let meshCount = this.pagination.group.children.filter(c => c instanceof THREE.Mesh).length
+        while(meshCount < maxImages) {
+            const clone = baseMesh.clone()
+            this.pagination.group.add(clone)
+            meshCount++
+        }
+        
+        while(intersectPagination.length < maxImages) {
+            const clone = baseIntersect.clone()
+            if(baseIntersect.parent) baseIntersect.parent.add(clone)
+            intersectPagination.push(clone)
+        }
+
         // List
         let i = 0
-        const intersectPagination = this.references.items.get('intersectPagination')
-
+        
         for(const child of this.pagination.group.children)
         {
             if(child instanceof THREE.Mesh)
             {
+                if(i >= maxImages) break; // Only create up to maxImages items to prevent undefined intersectReferences
+
                 const item = {}
                 
                 item.index = i
@@ -1495,11 +1516,7 @@ export class ProjectsArea extends Area
         this.distinctions.update()
 
         // Change image
-        let imageIndex = null
-        if(firstImage)
-            imageIndex = 0
-        else
-            imageIndex = direction === ProjectsArea.DIRECTION_NEXT ? 0 : this.navigation.current.images.length - 1
+        let imageIndex = 0
 
         // Sound
         if(!silent)
