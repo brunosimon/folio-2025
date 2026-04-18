@@ -87983,7 +87983,7 @@ https://github.com/browserify/crypto-browserify`);
       this.images = {}, this.images.initiated = false, this.images.width = 1920 * 0.5, this.images.height = 1080 * 0.5, this.images.index = 0, this.images.direction = _ProjectsArea.DIRECTION_NEXT, this.images.resources = /* @__PURE__ */ new Map(), this.images.loadProgress = uniform$1(0), this.images.animationProgress = uniform$1(0), this.images.animationDirection = uniform$1(0), this.images.mesh = this.references.items.get("images")[0], this.images.mesh.receiveShadow = true, this.images.mesh.castShadow = false, this.images.mesh.visible = false, this.images.init = (e) => {
         this.images.initiated = true, this.images.mesh.visible = true;
         const r = this.images.resources.get(e);
-        this.images.textureOld = r.texture, this.images.textureNew = r.texture;
+        this.images.textureOld = r.texture.clone(), this.images.textureNew = r.texture;
         const s = Fn$1(() => {
           const a = uv$2().toVar(), h = uv$2().toVar();
           h.x.addAssign(this.images.animationProgress.oneMinus().mul(-0.25).mul(this.images.animationDirection)), a.x.addAssign(this.images.animationProgress.mul(0.25).mul(this.images.animationDirection)), this.images.textureNodeOld = texture$1(this.images.textureOld, a), this.images.textureNodeNew = texture$1(this.images.textureNew, h);
@@ -108272,7 +108272,7 @@ ${e.tab}if ( ${m} ) {
           }
         ]
       ]), this.options = new Options(), this.respawns = new Respawns("landing"), this.view = new View(), this.rendering.setPostprocessing(), this.rendering.start(), this.reveal = new Reveal(), this.noises = new Noises(), this.weather = new Weather(), this.wind = new Wind(), this.tracks = new Tracks(), this.lighting = new Lighting(), this.fog = new Fog(), this.water = new Water(), this.materials = new Materials(), this.objects = new Objects(), this.explosions = new Explosions(), this.world = new World();
-      const a = __vitePreload(() => import("./rapier-ysFtlLAE.js").then(async (m) => {
+      const a = __vitePreload(() => import("./rapier-BZs9LWCe.js").then(async (m) => {
         await m.__tla;
         return m;
       }), [], import.meta.url), h = this.resourcesLoader.load([
