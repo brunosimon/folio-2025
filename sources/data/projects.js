@@ -1,6 +1,6 @@
 export default [
     {
-        title: 'ICE — Social Media',
+        title: 'ICE — Social Media Management System',
         titleSmall: [ 'ICE', 'Social' ],
         url: 'https://github.com/yan04s',
         attributes:
@@ -54,7 +54,7 @@ export default [
         attributes:
         {
             role: 'Intern',
-            with: 'SQL Accounting, C++'
+            with: 'SQL Accounting& Payroll, C++'
         },
         distinctions: [ ],
         images:
