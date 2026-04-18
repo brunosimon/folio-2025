@@ -356,7 +356,7 @@ export class LabArea extends Area
             this.images.mesh.visible = true
             const resource = this.images.resources.get(key)
 
-            this.images.textureOld = resource.texture
+            this.images.textureOld = resource.texture.clone()
             this.images.textureNew = resource.texture
 
             // Color node
@@ -373,8 +373,8 @@ export class LabArea extends Area
                 this.images.textureNodeOld = texture(this.images.textureOld, uvOld)
                 this.images.textureNodeNew = texture(this.images.textureNew, uvNew)
 
-                const textureOldColor = this.images.textureNodeOld.rgb
-                const textureNewColor = this.images.textureNodeNew.rgb
+                const textureOldColor = this.images.textureNodeOld.rgb.toVar()
+                const textureNewColor = this.images.textureNodeNew.rgb.toVar()
 
                 // Load mix
                 textureNewColor.assign(mix(color('#333333'), textureNewColor, this.images.loadProgress))
