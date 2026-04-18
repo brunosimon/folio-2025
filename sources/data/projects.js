@@ -12,7 +12,12 @@ export default [
         images:
         [
             'ICE.ktx',
-            'threejs-journey-2.ktx',
+            'ICE_Dashboard.ktx',
+            'DisputeRealTimeChat.ktx',
+            'ManageSubmission.ktx',
+            'ManageReport.ktx',
+            'RaiseReport.ktx',
+            'SubmissionFormWithHistory.ktx',
         ]
     },
     {
