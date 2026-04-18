@@ -58735,7 +58735,7 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
       return this.renderer = new WebGPURenderer({
         canvas: this.game.canvasElement,
         powerPreference: "high-performance",
-        forceWebGL: false,
+        forceWebGL: true,
         antialias: this.game.viewport.pixelRatio < 2
       }), this.renderer.setSize(this.game.viewport.width, this.game.viewport.height), this.renderer.setPixelRatio(this.game.viewport.pixelRatio), this.renderer.sortObjects = false, this.renderer.domElement.classList.add("experience"), this.renderer.shadowMap.enabled = true, this.renderer.setOpaqueSort((e, r) => e.renderOrder - r.renderOrder), this.renderer.setTransparentSort((e, r) => e.renderOrder - r.renderOrder), location.hash.match(/inspector/i) && (this.renderer.inspector = new Inspector()), this.renderer.setAnimationLoop((e) => {
         this.game.ticker.update(e);
@@ -108437,7 +108437,7 @@ ${e.tab}if ( ${m} ) {
           }
         ]
       ]), this.options = new Options(), this.respawns = new Respawns("landing"), this.view = new View(), this.rendering.setPostprocessing(), this.rendering.start(), this.reveal = new Reveal(), this.noises = new Noises(), this.weather = new Weather(), this.wind = new Wind(), this.tracks = new Tracks(), this.lighting = new Lighting(), this.fog = new Fog(), this.water = new Water(), this.materials = new Materials(), this.objects = new Objects(), this.explosions = new Explosions(), this.world = new World();
-      const a = __vitePreload(() => import("./rapier-YDUYq6Zu.js").then(async (m) => {
+      const a = __vitePreload(() => import("./rapier-DrH-7Zap.js").then(async (m) => {
         await m.__tla;
         return m;
       }), [], import.meta.url), h = this.resourcesLoader.load([
