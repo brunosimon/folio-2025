@@ -40,7 +40,7 @@ export class Rendering
         this.renderer = new THREE.WebGPURenderer({
             canvas: this.game.canvasElement,
             powerPreference: 'high-performance',
-            forceWebGL: false,
+            forceWebGL: true,
             antialias: this.game.viewport.pixelRatio < 2
         })
         this.renderer.setSize(this.game.viewport.width, this.game.viewport.height)

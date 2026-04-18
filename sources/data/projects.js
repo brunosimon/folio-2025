@@ -1,21 +1,23 @@
 export default [
     {
-        title: 'Three.js Journey',
-        titleSmall: [ 'Three.js', 'Journey' ],
-        url: 'https://threejs-journey.com',
+        title: 'Laravel Journey',
+        titleSmall: [ 'Laravel', 'Journey' ],
+        url: 'https://icetech.my',
         attributes:
         {
-            role: [ 'developer', 'formater' ],
-            with: [ 'Hervé Studio', 'Bonhomme Paris' ]
+            role: [ 'developer' ],
+            by: [ 'Facebook/ Instagram Graph API' ]
         },
         distinctions: [ 'fwa' ], // 'awwwards', 'fwa', 'cssda'
         images:
         [
-            'threejs-journey-1.ktx',
-            'threejs-journey-2.ktx',
-            'threejs-journey-3.ktx',
-            'threejs-journey-4.ktx',
-            'threejs-journey-5.ktx',
+            'ICE.ktx',
+            'ICE_Dashboard.ktx',
+            'DisputeRealTimeChat.ktx',
+            'ManageSubmission.ktx',
+            'ManageReport.ktx',
+            'RaiseReport.ktx',
+            'SubmissionFormWithHistory.ktx',
         ]
     },
     // {
