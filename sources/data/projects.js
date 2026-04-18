@@ -11,7 +11,7 @@ export default [
         distinctions: [ ],
         images:
         [
-            'threejs-journey-1.ktx',
+            'ICE.ktx',
             'threejs-journey-2.ktx',
         ]
     },
