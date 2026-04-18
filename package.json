@@ -24,7 +24,7 @@
     "camera-controls": "^3.1.2",
     "dotenv": "^17.2.3",
     "emoji-regex": "^10.4.0",
-    "glob": "^13.0.0",
+    "glob": "^13.0.6",
     "gsap": "^3.12.5",
     "howler": "^2.2.4",
     "msgpack-lite": "^0.1.26",

@@ -356,8 +356,8 @@ export class LabArea extends Area
             this.images.mesh.visible = true
             const resource = this.images.resources.get(key)
 
-            this.images.textureOld = resource.texture.clone()
-            this.images.textureNew = resource.texture.clone()
+            this.images.textureOld = resource.texture
+            this.images.textureNew = resource.texture
 
             // Color node
             const colorNode = Fn(() =>
@@ -370,8 +370,11 @@ export class LabArea extends Area
                 uvOld.x.addAssign(this.images.animationProgress.mul(0.25).mul(this.images.animationDirection))
 
                 // Textures
-                const textureOldColor = texture(this.images.textureOld, uvOld).rgb
-                const textureNewColor = texture(this.images.textureNew, uvNew).rgb
+                this.images.textureNodeOld = texture(this.images.textureOld, uvOld)
+                this.images.textureNodeNew = texture(this.images.textureNew, uvNew)
+
+                const textureOldColor = this.images.textureNodeOld.rgb
+                const textureNewColor = this.images.textureNodeNew.rgb
 
                 // Load mix
                 textureNewColor.assign(mix(color('#333333'), textureNewColor, this.images.loadProgress))
@@ -412,7 +415,6 @@ export class LabArea extends Area
             this.images.mesh.material = this.images.material
         }
 
-        // Load ended
         this.images.loadEnded = (key) =>
         {
             // If first image => init
@@ -423,8 +425,8 @@ export class LabArea extends Area
             if(this.navigation.current.image === key)
             {
                 const resource = this.images.getResourceAndLoad(key)
-                this.images.textureNew.copy(resource.texture)
-                this.images.textureNew.needsUpdate = true
+                this.images.textureNew = resource.texture
+                this.images.textureNodeNew.value = this.images.textureNew
                 gsap.to(this.images.loadProgress, { value: 1, duration: 1, overwrite: true })
 
                 this.images.loadSibling()
@@ -512,13 +514,13 @@ export class LabArea extends Area
             // Update textures
             if(this.images.initiated)
             {
-                this.images.textureOld.copy(this.images.textureNew)
-                this.images.textureOld.needsUpdate = true
+                this.images.textureOld = this.images.textureNew
+                this.images.textureNodeOld.value = this.images.textureOld
 
                 if(resource.loaded)
                 {
-                    this.images.textureNew.copy(resource.texture)
-                    this.images.textureNew.needsUpdate = true
+                    this.images.textureNew = resource.texture
+                    this.images.textureNodeNew.value = this.images.textureNew
                 }
             }
 
