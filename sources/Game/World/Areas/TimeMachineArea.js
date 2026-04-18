@@ -24,7 +24,7 @@ export class TimeMachineArea extends Area
             InteractivePoints.STATE_CONCEALED,
             () =>
             {
-                window.open('https://2019.bruno-simon.com')
+                window.open('https://github.com/yan04s')
             },
             () =>
             {
