@@ -356,7 +356,7 @@ export class ProjectsArea extends Area
             this.images.mesh.visible = true
             const resource = this.images.resources.get(key)
 
-            this.images.textureOld = resource.texture
+            this.images.textureOld = resource.texture.clone()
             this.images.textureNew = resource.texture
 
             // Color node
