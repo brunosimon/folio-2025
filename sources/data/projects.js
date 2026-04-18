@@ -1,14 +1,14 @@
 export default [
     {
-        title: 'ICE — Social Media Management System',
-        titleSmall: [ 'ICE', 'Social' ],
-        url: 'https://github.com/yan04s',
+        title: 'Laravel Journey',
+        titleSmall: [ 'Laravel', 'Journey' ],
+        url: 'https://icetech.my',
         attributes:
         {
-            role: 'Developer',
-            with: 'Laravel, MySQL, JS'
+            role: [ 'developer' ],
+            by: [ 'Facebook/ Instagram Graph API' ]
         },
-        distinctions: [ ],
+        distinctions: [ 'fwa' ], // 'awwwards', 'fwa', 'cssda'
         images:
         [
             'ICE.ktx',
@@ -20,52 +20,145 @@ export default [
             'SubmissionFormWithHistory.ktx',
         ]
     },
+    // {
+    //     title: 'Chartogne Taillet',
+    //     titleSmall: [ 'Chartogne', 'Taillet' ],
+    //     url: 'https://chartogne-taillet.com',
+    //     attributes:
+    //     {
+    //         at: 'Immersive Garden',
+    //         role: 'WebGL developer',
+    //         with: 'Rémi Tran'
+    //     },
+    //     distinctions: [ 'awwwards', 'cssda', 'fwa' ], // 'awwwards', 'fwa', 'cssda'
+    //     images:
+    //     [
+    //         'chartogne-taillet-1.ktx',
+    //         'chartogne-taillet-2.ktx',
+    //         'chartogne-taillet-3.ktx',
+    //     ]
+    // },
     {
-        title: 'Gaming Wallet E-Commerce',
-        titleSmall: [ 'Gaming', 'Wallet' ],
-        url: 'https://github.com/yan04s',
+        title: 'Bonhomme | 10 ans',
+        titleSmall: [ 'Bonhomme', '10 ans' ],
+        url: 'https://anniversary.bonhommeparis.com',
         attributes:
         {
-            role: 'Manager',
-            with: '~100,000 members'
+            role: 'WebGL developer',
+            with: 'Bonhomme Paris'
         },
-        distinctions: [ ],
+        distinctions: [ 'awwwards', 'fwa' ],
         images:
         [
             'bonhomme-10-ans-1.ktx',
             'bonhomme-10-ans-2.ktx',
+            'bonhomme-10-ans-3.ktx',
         ]
     },
     {
-        title: 'Ubuntu VPS Hosting',
-        titleSmall: [ 'Ubuntu', 'VPS' ],
-        url: 'https://github.com/yan04s',
+        title: 'Madbox',
+        titleSmall: [ 'Madbox' ],
+        url: 'https://madbox.io',
         attributes:
         {
-            role: 'DevOps',
-            with: 'Nginx, SSL, Web Apps'
+            role: 'WebGL developer',
+            at: 'Hervé Studio',
+            with: 'Lei Xing'
         },
-        distinctions: [ ],
+        distinctions: [ 'awwwards' ],
         images:
         [
             'madbox-1.ktx',
             'madbox-2.ktx',
+            'madbox-3.ktx',
         ]
     },
     {
-        title: 'IT Support & Deployment',
-        titleSmall: [ 'IT', 'Support' ],
-        url: 'https://github.com/yan04s',
+        title: 'Luni',
+        titleSmall: [ 'Luni' ],
+        url: 'https://www.luni.app',
         attributes:
         {
-            role: 'Intern',
-            with: 'SQL Accounting& Payroll, C++'
+            role: 'WebGL developer',
+            at: 'Hervé Studio',
+            with: 'Loïc Belaidremesal'
         },
-        distinctions: [ ],
+        distinctions: [ 'awwwards', 'fwa' ],
         images:
         [
             'luni-1.ktx',
             'luni-2.ktx',
+            'luni-3.ktx',
+            'luni-4.ktx',
+        ]
+    },
+    {
+        title: 'Scout',
+        titleSmall: [ 'Scout' ],
+        url: 'https://scout-omega.vercel.app',
+        attributes:
+        {
+            role: 'WebGL developer',
+            at: 'Hervé Studio'
+        },
+        distinctions: [  ],
+        images:
+        [
+            'scout-1.ktx',
+            'scout-2.ktx',
+            'scout-3.ktx',
+        ]
+    },
+    {
+        title: 'Prior Holdings',
+        titleSmall: [ 'Prio', 'Holdings' ],
+        url: 'https://prior.co.jp/discover/en',
+        attributes:
+        {
+            role: [ 'Front developer', 'WebGL developer' ],
+            at: 'Immersive Garden'
+        },
+        distinctions: [ 'awwwards', 'cssda', 'fwa' ],
+        images:
+        [
+            'prior-1.ktx',
+            'prior-2.ktx',
+            'prior-3.ktx',
+        ]
+    },
+    {
+        title: 'Orano',
+        titleSmall:  'Orano',
+        url: 'https://www.orano.group/experience/innovation/en',
+        attributes:
+        {
+            role: [ 'Front developer', 'WebGL developer' ],
+            at: 'Immersive Garden'
+        },
+        distinctions: [ 'awwwards', 'cssda', 'fwa' ],
+        images:
+        [
+            'orano-1.ktx',
+            'orano-2.ktx',
+            'orano-3.ktx',
+        ]
+    },
+    {
+        title: 'Citrix / Redbull',
+        titleSmall: ['Citrix', 'Redbull'],
+        url: 'https://thenewmobileworkforce.imm-g-prod.com',
+        attributes:
+        {
+            role: [ 'WebGL developer' ],
+            at: 'Immersive Garden',
+            with: [ 'Damien Doussaud', 'Quentin Leclercq' ]
+        },
+        distinctions: [ 'awwwards', 'cssda', 'fwa' ],
+        images:
+        [
+            'citrix-redbull-1.ktx',
+            'citrix-redbull-2.ktx',
+            'citrix-redbull-3.ktx',
         ]
     }
 ]

@@ -85,7 +85,7 @@ export class Title
             }
 
             
-            document.title = 'Bing Yan' + title.join('')
+            document.title = 'Bruno' + title.join('')
         }
     }
 }

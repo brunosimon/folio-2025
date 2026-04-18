@@ -357,8 +357,7 @@ export class ProjectsArea extends Area
             const resource = this.images.resources.get(key)
 
             this.images.textureOld = resource.texture.clone()
-            this.images.textureOld.needsUpdate = true
-            this.images.textureNew = resource.texture
+            this.images.textureNew = resource.texture.clone()
 
             // Color node
             const colorNode = Fn(() =>
@@ -371,11 +370,8 @@ export class ProjectsArea extends Area
                 uvOld.x.addAssign(this.images.animationProgress.mul(0.25).mul(this.images.animationDirection))
 
                 // Textures
-                this.images.textureNodeOld = texture(this.images.textureOld, uvOld)
-                this.images.textureNodeNew = texture(this.images.textureNew, uvNew)
-
-                const textureOldColor = this.images.textureNodeOld.rgb.toVar()
-                const textureNewColor = this.images.textureNodeNew.rgb.toVar()
+                const textureOldColor = texture(this.images.textureOld, uvOld).rgb
+                const textureNewColor = texture(this.images.textureNew, uvNew).rgb
 
                 // Load mix
                 textureNewColor.assign(mix(color('#333333'), textureNewColor, this.images.loadProgress))
@@ -416,6 +412,7 @@ export class ProjectsArea extends Area
             this.images.mesh.material = this.images.material
         }
 
+        // Load ended
         this.images.loadEnded = (key) =>
         {
             // If first image => init
@@ -426,8 +423,8 @@ export class ProjectsArea extends Area
             if(this.navigation.current.images[this.images.index] === key)
             {
                 const resource = this.images.getResourceAndLoad(key)
-                this.images.textureNew = resource.texture
-                this.images.textureNodeNew.value = this.images.textureNew
+                this.images.textureNew.copy(resource.texture)
+                this.images.textureNew.needsUpdate = true
                 gsap.to(this.images.loadProgress, { value: 1, duration: 1, overwrite: true })
 
                 this.images.loadSibling()
@@ -531,13 +528,13 @@ export class ProjectsArea extends Area
             // Update textures
             if(this.images.initiated)
             {
-                this.images.textureOld = this.images.textureNew
-                this.images.textureNodeOld.value = this.images.textureOld
+                this.images.textureOld.copy(this.images.textureNew)
+                this.images.textureOld.needsUpdate = true
 
                 if(resource.loaded)
                 {
-                    this.images.textureNew = resource.texture
-                    this.images.textureNodeNew.value = this.images.textureNew
+                    this.images.textureNew.copy(resource.texture)
+                    this.images.textureNew.needsUpdate = true
                 }
             }
 
@@ -550,39 +547,18 @@ export class ProjectsArea extends Area
     setPagination()
     {
         this.pagination = {}
-        const maxImages = Math.max(...projectsData.map(p => p.images.length))
-        this.pagination.inter = Math.min(0.2, 0.8 / Math.max(1, maxImages - 1)) // Dynamic spacing to prevent bar overflow
+        this.pagination.inter = 0.2
         this.pagination.group = this.references.items.get('pagination')[0].children[0]
         this.pagination.items = []
 
-        const intersectPagination = this.references.items.get('intersectPagination')
-        
-        // Find a base mesh to clone if needed
-        const baseMesh = this.pagination.group.children.find(c => c instanceof THREE.Mesh)
-        const baseIntersect = intersectPagination[0]
-        
-        let meshCount = this.pagination.group.children.filter(c => c instanceof THREE.Mesh).length
-        while(meshCount < maxImages) {
-            const clone = baseMesh.clone()
-            this.pagination.group.add(clone)
-            meshCount++
-        }
-        
-        while(intersectPagination.length < maxImages) {
-            const clone = baseIntersect.clone()
-            if(baseIntersect.parent) baseIntersect.parent.add(clone)
-            intersectPagination.push(clone)
-        }
-
         // List
         let i = 0
-        
+        const intersectPagination = this.references.items.get('intersectPagination')
+
         for(const child of this.pagination.group.children)
         {
             if(child instanceof THREE.Mesh)
             {
-                if(i >= maxImages) break; // Only create up to maxImages items to prevent undefined intersectReferences
-
                 const item = {}
                 
                 item.index = i
@@ -1517,7 +1493,11 @@ export class ProjectsArea extends Area
         this.distinctions.update()
 
         // Change image
-        let imageIndex = 0
+        let imageIndex = null
+        if(firstImage)
+            imageIndex = 0
+        else
+            imageIndex = direction === ProjectsArea.DIRECTION_NEXT ? 0 : this.navigation.current.images.length - 1
 
         // Sound
         if(!silent)
