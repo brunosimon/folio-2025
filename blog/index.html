@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bruno Simon - Creative Developer</title>
+    <meta name="description" content="Bruno Simon's creative portfolio">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Nunito:wght@400;700;900&display=block" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="icon" type="image/png" href="../static/favicons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="../static/favicons/favicon.svg" />
+</head>
+<body>
+    <!-- Particle Background Canvas -->
+    <canvas id="particles-canvas" class="particles-canvas"></canvas>
+    
+    <!-- Weather Effects Container -->
+    <div id="weather-effects" class="weather-effects">
+        <div id="rain-container" class="rain-container"></div>
+        <div id="snow-container" class="snow-container"></div>
+    </div>
+    
+    <!-- Glow Orbs -->
+    <div class="glow-orbs">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+        <div class="glow-orb orb-4"></div>
+    </div>
+    
+    <!-- Grid Overlay -->
+    <div class="grid-overlay"></div>
+    
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <polygon points="20,2 38,32 2,32" fill="none" stroke="#ffceca" stroke-width="2"/>
+                        <circle cx="20" cy="22" r="8" fill="none" stroke="#ff87a2" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="logo-text">Bruno's</span>
+            </div>
+            
+            <div class="nav-links-wrapper">
+                <div class="nav-links">
+                    <a href="#hero" class="nav-link active" data-section="hero">
+                        <span class="nav-link-dot"></span>
+                        <span class="nav-link-text">Home</span>
+                    </a>
+                    <a href="#projects" class="nav-link" data-section="projects">
+                        <span class="nav-link-dot"></span>
+                        <span class="nav-link-text">Projects</span>
+                    </a>
+                    <a href="#lab" class="nav-link" data-section="lab">
+                        <span class="nav-link-dot"></span>
+                        <span class="nav-link-text">Lab</span>
+                    </a>
+                    <a href="#about" class="nav-link" data-section="about">
+                        <span class="nav-link-dot"></span>
+                        <span class="nav-link-text">About</span>
+                    </a>
+                    <a href="#contact" class="nav-link" data-section="contact">
+                        <span class="nav-link-dot"></span>
+                        <span class="nav-link-text">Contact</span>
+                    </a>
+                </div>
+                
+                <!-- Weather Toggle -->
+                <div class="weather-toggle">
+                    <button class="weather-btn" data-weather="clear" title="Clear">
+                        <span class="weather-icon">☀</span>
+                    </button>
+                    <button class="weather-btn" data-weather="rain" title="Rain">
+                        <span class="weather-icon">🌧</span>
+                    </button>
+                    <button class="weather-btn" data-weather="snow" title="Snow">
+                        <span class="weather-icon">❄</span>
+                    </button>
+                </div>
+            </div>
+            
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span class="toggle-line"></span>
+                <span class="toggle-line"></span>
+                <span class="toggle-line"></span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-content">
+            <a href="#hero" class="mobile-nav-link" data-section="hero">Home</a>
+            <a href="#projects" class="mobile-nav-link" data-section="projects">Projects</a>
+            <a href="#lab" class="mobile-nav-link" data-section="lab">Lab</a>
+            <a href="#about" class="mobile-nav-link" data-section="about">About</a>
+            <a href="#contact" class="mobile-nav-link" data-section="contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="section hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span class="badge-text">Creative Developer</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    <span class="title-line">Bruno</span>
+                    <span class="title-line title-glow">Simon</span>
+                </h1>
+                
+                <div class="hero-subtitle-wrapper">
+                    <p class="hero-subtitle">
+                        Crafting immersive digital experiences through
+                        <span class="highlight-text">WebGL</span>, 
+                        <span class="highlight-text">Three.js</span>, and 
+                        <span class="highlight-text">creative code</span>
+                    </p>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="50">0</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="15">0</span>
+                        <span class="stat-label">Awards</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="10">0</span>
+                        <span class="stat-label">Years Exp.</span>
+                    </div>
+                </div>
+                
+                <div class="hero-actions">
+                    <a href="#projects" class="btn-primary">
+                        <span class="btn-text">Explore Work</span>
+                        <span class="btn-arrow">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                    </a>
+                    <a href="#about" class="btn-secondary">
+                        <span class="btn-text">About Me</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 3D Cube Decoration -->
+            <div class="hero-3d-decoration">
+                <div class="cube-container">
+                    <div class="cube">
+                        <div class="cube-face face-front"></div>
+                        <div class="cube-face face-back"></div>
+                        <div class="cube-face face-right"></div>
+                        <div class="cube-face face-left"></div>
+                        <div class="cube-face face-top"></div>
+                        <div class="cube-face face-bottom"></div>
+                    </div>
+                </div>
+                
+                <div class="floating-shapes">
+                    <div class="shape shape-ring"></div>
+                    <div class="shape shape-dots"></div>
+                    <div class="shape shape-lines"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-line"></div>
+            <span class="scroll-text">Scroll</span>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section projects-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">
+                    <span class="label-line"></span>
+                    <span class="label-text">Portfolio</span>
+                </div>
+                <h2 class="section-title">
+                    Featured <span class="title-accent">Projects</span>
+                </h2>
+                <p class="section-description">
+                    A curated selection of my professional work, showcasing innovative WebGL experiences
+                </p>
+            </div>
+            
+            <div class="projects-showcase" id="projects-showcase">
+                <!-- Projects will be loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Marquee Section -->
+    <section class="marquee-section">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span class="marquee-item">WebGL</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">Three.js</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">Creative Code</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">WebGPU</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">Shaders</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">Interactive Design</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">WebGL</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">Three.js</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">Creative Code</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">WebGPU</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">Shaders</span>
+                <span class="marquee-dot">◆</span>
+                <span class="marquee-item">Interactive Design</span>
+                <span class="marquee-dot">◆</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lab Section -->
+    <section id="lab" class="section lab-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">
+                    <span class="label-line"></span>
+                    <span class="label-text">Experiments</span>
+                </div>
+                <h2 class="section-title">
+                    Creative <span class="title-accent">Lab</span>
+                </h2>
+                <p class="section-description">
+                    Where ideas come to life through code - experiments, prototypes, and creative explorations
+                </p>
+            </div>
+            
+            <div class="lab-grid" id="lab-grid">
+                <!-- Lab projects will be loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about-section">
+        <div class="section-container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <div class="section-label">
+                        <span class="label-line"></span>
+                        <span class="label-text">About Me</span>
+                    </div>
+                    <h2 class="section-title">
+                        Passionate about 
+                        <span class="title-accent">creative</span> technology
+                    </h2>
+                    
+                    <div class="about-text">
+                        <p>
+                            I'm <strong class="highlight-name">Bruno Simon</strong>, a creative developer based in France. 
+                            I specialize in building immersive web experiences using cutting-edge technologies.
+                        </p>
+                        <p>
+                            With a focus on <span class="tech-tag">WebGL</span>, 
+                            <span class="tech-tag">Three.js</span>, and 
+                            <span class="tech-tag">WebGPU</span>, I create digital experiences that 
+                            push the boundaries of what's possible on the web.
+                        </p>
+                        <p>
+                            When I'm not coding, you can find me creating educational content for 
+                            <a href="https://threejs-journey.com" target="_blank" class="journey-link">
+                                Three.js Journey
+                                <span class="link-arrow">↗</span>
+                            </a> 
+                            or sharing my knowledge through devlogs.
+                        </p>
+                    </div>
+                    
+                    <!-- Skills Visualization -->
+                    <div class="skills-visual">
+                        <h3 class="skills-title">Technologies I work with</h3>
+                        <div class="skills-cloud" id="skills-cloud">
+                            <!-- Skills will be loaded by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="about-stats">
+                    <div class="stat-card stat-card-large">
+                        <div class="card-icon">🎓</div>
+                        <div class="card-content">
+                            <span class="card-number" data-count="10000">0</span>
+                            <span class="card-label">Three.js Journey Students</span>
+                        </div>
+                        <div class="card-glow"></div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="card-icon">🏆</div>
+                        <div class="card-content">
+                            <span class="card-number" data-count="15">0</span>
+                            <span class="card-label">Awards & Recognitions</span>
+                        </div>
+                        <div class="card-glow"></div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="card-icon">🎬</div>
+                        <div class="card-content">
+                            <span class="card-number" data-count="50">0</span>
+                            <span class="card-label">Devlogs & Tutorials</span>
+                        </div>
+                        <div class="card-glow"></div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="card-icon">⭐</div>
+                        <div class="card-content">
+                            <span class="card-number" data-count="500">0</span>
+                            <span class="card-label">GitHub Stars</span>
+                        </div>
+                        <div class="card-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact-section">
+        <div class="section-container">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="section-label">
+                        <span class="label-line"></span>
+                        <span class="label-text">Get In Touch</span>
+                    </div>
+                    <h2 class="section-title">
+                        Let's create something 
+                        <span class="title-accent">amazing</span> together
+                    </h2>
+                    <p class="contact-description">
+                        Have a project in mind? Want to collaborate? Or just want to say hi? 
+                        I'd love to hear from you.
+                    </p>
+                    
+                    <div class="social-showcase">
+                        <h3 class="social-title">Find me on</h3>
+                        <div class="social-grid" id="social-grid">
+                            <!-- Social links will be loaded by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form-wrapper">
+                    <div class="form-decoration">
+                        <div class="form-orbit orbit-1"></div>
+                        <div class="form-orbit orbit-2"></div>
+                        <div class="form-orbit orbit-3"></div>
+                    </div>
+                    
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-header">
+                            <span class="form-status-dot"></span>
+                            <span class="form-status-text">Ready to connect</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="label-icon">👤</span>
+                                <span class="label-text">Your Name</span>
+                            </label>
+                            <input type="text" name="name" class="form-input" placeholder="Enter your name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="label-icon">✉️</span>
+                                <span class="label-text">Email Address</span>
+                            </label>
+                            <input type="email" name="email" class="form-input" placeholder="your@email.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="label-icon">💬</span>
+                                <span class="label-text">Your Message</span>
+                            </label>
+                            <textarea name="message" class="form-textarea" placeholder="Tell me about your project..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="form-submit-btn">
+                            <span class="btn-text">Send Message</span>
+                            <span class="btn-loader">
+                                <span class="loader-dot"></span>
+                                <span class="loader-dot"></span>
+                                <span class="loader-dot"></span>
+                            </span>
+                            <span class="btn-success">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <svg viewBox="0 0 40 40" fill="none">
+                            <polygon points="20,2 38,32 2,32" fill="none" stroke="#ffceca" stroke-width="2"/>
+                            <circle cx="20" cy="22" r="8" fill="none" stroke="#ff87a2" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="footer-text">
+                        <span class="footer-name">Bruno Simon</span>
+                        <span class="footer-tagline">Creative Developer</span>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="https://github.com/brunosimon" target="_blank" class="footer-link">
+                        <span class="link-icon">⌘</span>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="https://x.com/bruno_simon" target="_blank" class="footer-link">
+                        <span class="link-icon">𝕏</span>
+                        <span>X</span>
+                    </a>
+                    <a href="https://www.youtube.com/@BrunoSimon" target="_blank" class="footer-link">
+                        <span class="link-icon">▶</span>
+                        <span>YouTube</span>
+                    </a>
+                    <a href="https://threejs-journey.com" target="_blank" class="footer-link">
+                        <span class="link-icon">🎓</span>
+                        <span>Three.js Journey</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="footer-copyright">
+                    © 2025 Bruno Simon. Built with 
+                    <span class="heart-beat">❤️</span> 
+                    and lots of 
+                    <span class="coffee">☕</span>
+                </p>
+                <p class="footer-note">
+                    Inspired by the world of 3D, physics, and creative coding
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Cursor Follower -->
+    <div class="cursor-follower">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
