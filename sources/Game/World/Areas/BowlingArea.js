@@ -13,6 +13,20 @@ export class BowlingArea extends Area
     {
         super(model)
 
+        this.won = false
+        this.wonTime = 0
+
+        // Auto play settings
+        this.autoPlay = {
+            active: true,
+            interval: 5, // seconds between each launch
+            lastLaunchTime: 0,
+            minPinsToKnock: 1,
+            maxPinsToKnock: 10,
+            ballSpeed: 8,
+            ballVariation: 0.3 // random variation in ball direction
+        }
+
         // Debug
         if(this.game.debug.active)
         {
@@ -20,9 +34,20 @@ export class BowlingArea extends Area
                 title: '🎳 Bowling',
                 expanded: false,
             })
+
+            // Auto play debug panel
+            const autoPlayPanel = this.debugPanel.addFolder({
+                title: 'Auto Play',
+                expanded: true,
+            })
+
+            autoPlayPanel.addBinding(this.autoPlay, 'active', { label: 'Active' })
+            autoPlayPanel.addBinding(this.autoPlay, 'interval', { label: 'Interval (s)', min: 2, max: 20, step: 0.5 })
+            autoPlayPanel.addBinding(this.autoPlay, 'minPinsToKnock', { label: 'Min Pins', min: 1, max: 10, step: 1 })
+            autoPlayPanel.addBinding(this.autoPlay, 'maxPinsToKnock', { label: 'Max Pins', min: 1, max: 10, step: 1 })
+            autoPlayPanel.addBinding(this.autoPlay, 'ballSpeed', { label: 'Ball Speed', min: 1, max: 20, step: 0.5 })
+            autoPlayPanel.addBinding(this.autoPlay, 'ballVariation', { label: 'Variation', min: 0, max: 2, step: 0.1 })
         }
-        this.won = false
-        this.wonTime = 0
 
         this.setSounds()
         this.setPins()
@@ -198,6 +223,114 @@ export class BowlingArea extends Area
             {
                 this.ball.body.sleep()
             })
+        }
+
+        // Launch ball from the left with random direction
+        this.ball.launch = () =>
+        {
+            // Wake up the ball
+            this.ball.body.wakeUp()
+
+            // Calculate launch direction (from left to right with some variation)
+            const directionVariation = (Math.random() - 0.5) * this.autoPlay.ballVariation
+            const launchDirection = new THREE.Vector3(1, 0, directionVariation).normalize()
+
+            // Set velocity
+            const velocity = launchDirection.multiplyScalar(this.autoPlay.ballSpeed)
+            this.ball.body.setLinvel({ x: velocity.x, y: 0, z: velocity.z })
+
+            // Add some spin
+            this.ball.body.setAngvel({ x: 0, y: -5, z: directionVariation * 10 })
+        }
+    }
+
+    // Randomly knock down pins
+    knockDownRandomPins()
+    {
+        // Determine how many pins to knock down
+        const pinsToKnock = Math.floor(
+            Math.random() * (this.autoPlay.maxPinsToKnock - this.autoPlay.minPinsToKnock + 1)
+        ) + this.autoPlay.minPinsToKnock
+
+        // Create array of pin indices
+        const pinIndices = Array.from({ length: this.pins.items.length }, (_, i) => i)
+
+        // Shuffle and select pins to knock down
+        for (let i = pinIndices.length - 1; i > 0; i--)
+        {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pinIndices[i], pinIndices[j]] = [pinIndices[j], pinIndices[i]]
+        }
+
+        const selectedPins = pinIndices.slice(0, pinsToKnock)
+
+        // Wake up all pins
+        for (const pin of this.pins.items)
+        {
+            pin.body.wakeUp()
+        }
+
+        // Knock down selected pins with force
+        for (const pinIndex of selectedPins)
+        {
+            const pin = this.pins.items[pinIndex]
+
+            // Apply random force to knock down the pin
+            const forceDirection = new THREE.Vector3(
+                1 + (Math.random() - 0.5) * 0.5,
+                (Math.random() - 0.5) * 0.2,
+                (Math.random() - 0.5) * 0.5
+            ).normalize()
+
+            const forceMagnitude = 5 + Math.random() * 10
+            const force = forceDirection.multiplyScalar(forceMagnitude)
+
+            pin.body.applyImpulse(force, { x: 0, y: 0.1, z: 0 })
+
+            // Add angular velocity for more realistic falling
+            const angularVelocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 10,
+                (Math.random() - 0.5) * 5,
+                (Math.random() - 0.5) * 10
+            )
+            pin.body.setAngvel(angularVelocity)
+        }
+    }
+
+    // Auto launch the ball
+    autoLaunch()
+    {
+        if (!this.autoPlay.active)
+            return
+
+        const currentTime = this.game.ticker.elapsedScaled
+
+        // Check if it's time to launch
+        if (currentTime - this.autoPlay.lastLaunchTime >= this.autoPlay.interval)
+        {
+            this.autoPlay.lastLaunchTime = currentTime
+
+            // Reset first if needed
+            if (!this.pins.allSleeping || !this.ball.isSleeping)
+            {
+                this.pins.reset()
+                this.ball.reset()
+                this.screen.reset()
+                this.won = false
+
+                // Wait a bit before launching
+                this.game.ticker.wait(0.5, () =>
+                {
+                    this.ball.launch()
+                    this.knockDownRandomPins()
+                })
+            }
+            else
+            {
+                // Launch immediately
+                this.ball.launch()
+                this.knockDownRandomPins()
+            }
         }
     }
 
@@ -525,6 +658,9 @@ export class BowlingArea extends Area
 
     update()
     {
+        // Auto launch the ball
+        this.autoLaunch()
+
         let showRestartInteractivePoint = false
         
         // Screen position
