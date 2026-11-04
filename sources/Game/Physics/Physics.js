@@ -26,6 +26,7 @@ export class Physics
         this.eventQueue = new this.game.RAPIER.EventQueue(true)
 
         this.physicals = []
+        this.tempPosition = { x: 0, y: 0, z: 0 }
 
         this.groups = {
             all: 0b0000000000000001,
@@ -227,7 +228,7 @@ export class Physics
 
         // Original transform
         physical.initialState = {
-            position: { x: physical.body.translation().x, y: physical.body.translation().y, z: physical.body.translation().z },
+            position: physical.body.translation(),
             rotation: physical.body.rotation(),
             sleeping: physical.body.isSleeping() 
         }
@@ -243,7 +244,7 @@ export class Physics
     
         for(const physical of this.physicals)
         {
-            const waterDepth = Math.max(- physical.body.translation().y, this.game.water.surfaceElevation)
+            const waterDepth = Math.max(- physical.body.translation(this.tempPosition).y, this.game.water.surfaceElevation)
             // physical.body.setGravityScale(1 + waterDepth * physical.waterGravityMultiplier)
 
             if(waterDepth > 0)

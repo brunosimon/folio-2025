@@ -13,33 +13,37 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@dimforge/rapier3d": "^0.17.3",
+    "@dimforge/rapier3d": "^0.19.3",
     "@gltf-transform/cli": "^4.1.0",
     "@gltf-transform/core": "^4.2.1",
     "@gltf-transform/extensions": "^4.2.1",
     "@gltf-transform/functions": "^4.2.1",
     "@tweakpane/plugin-camerakit": "^0.3.0",
     "@tweakpane/plugin-essentials": "^0.2.1",
-    "@vitejs/plugin-basic-ssl": "^2.1.0",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
     "camera-controls": "^3.1.2",
-    "dotenv": "^17.2.3",
-    "emoji-regex": "^10.4.0",
+    "dotenv": "^18.0.9",
+    "emoji-regex": "^11.0.0",
     "glob": "^13.0.0",
-    "gsap": "^3.12.5",
+    "gsap": "^3.15.1",
     "howler": "^2.2.4",
-    "msgpack-lite": "^0.1.26",
+    "msgpack-lite": "^0.2.2",
     "normalize-wheel": "^1.0.1",
     "seedrandom": "^3.0.5",
     "sharp": "^0.34.5",
-    "stats-gl": "^3.6.0",
+    "stats-gl": "^4.2.3",
     "stylus": "^0.64.0",
-    "three": "^0.183.2",
-    "tweakpane": "^4.0.4",
-    "uuid": "^11.1.0",
-    "vite": "^7.2.4",
-    "vite-plugin-node-polyfills": "^0.24.0",
-    "vite-plugin-restart": "^0.4.1",
-    "vite-plugin-top-level-await": "^1.6.0",
-    "vite-plugin-wasm": "^3.5.0"
+    "three": "^0.187.0",
+    "tweakpane": "^4.0.5",
+    "uuid": "^14.0.3",
+    "vite": "^8.3.5",
+    "vite-plugin-node-polyfills": "^0.28.0",
+    "vite-plugin-restart": "^2.0.0",
+    "vite-plugin-wasm": "^3.6.0"
+  },
+  "overrides": {
+    "vite-plugin-restart": {
+      "vite": "$vite"
+    }
   }
 }

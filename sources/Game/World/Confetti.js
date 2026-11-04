@@ -82,7 +82,7 @@ export class Confetti
             material.positionNode = Fn(() =>
             {
                 // Realize nodes so that the shadow updates too
-                instance(this.count, instanceMatrix).toStack()
+                instance(instanceMatrix).toStack()
 
                 const basePosition = positionLocal
 

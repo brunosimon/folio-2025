@@ -9,6 +9,8 @@ export class Objects
         this.list = new Map()
         this.key = 0
         this.roundedViewPosition = { x: 0, z: 0 }
+        this.tempPosition = { x: 0, y: 0, z: 0 }
+        this.tempRotation = { x: 0, y: 0, z: 0, w: 1 }
 
         this.game.ticker.events.on('tick', () =>
         {
@@ -317,7 +319,7 @@ export class Objects
         }
         this.list.forEach((_object) =>
         {
-            const position = _object.physical ? _object.physical.body.translation() : null
+            const position = _object.physical ? _object.physical.body.translation(this.tempPosition) : null
 
             // Apply physical to visual
             if(
@@ -334,7 +336,7 @@ export class Objects
             {
                 _object.needsUpdate = false
                 _object.visual.object3D.position.copy(position)
-                _object.visual.object3D.quaternion.copy(_object.physical.body.rotation())
+                _object.visual.object3D.quaternion.copy(_object.physical.body.rotation(this.tempRotation))
             }
 
 

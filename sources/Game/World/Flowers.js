@@ -137,7 +137,7 @@ export class Flowers
 
         this.material.positionNode = Fn( ( { object } ) =>
         {
-            instance(object.count, this.instanceMatrix).toStack()
+            instance(this.instanceMatrix).toStack()
 
             return positionLocal.add(vec3(wind.x, 0, wind.y).mul(multiplier))
         })()
