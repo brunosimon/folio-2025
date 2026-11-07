@@ -94,7 +94,7 @@ export class Whispers
         this.flames.frustumCulled = false
         this.flames.visible = true
         this.flames.position.y = 0.25
-        this.game.scene.children.splice(1, 0, this.flames)
+        this.game.worldContainer.children.splice(1, 0, this.flames)
     }
 
     setData()

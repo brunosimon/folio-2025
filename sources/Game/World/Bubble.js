@@ -27,7 +27,7 @@ export class Bubble
         this.group.rotation.x = - Math.PI * 0.25
         this.group.rotation.y = Math.PI * 0.25
         this.group.visible = false
-        this.game.scene.add(this.group)
+        this.game.worldContainer.add(this.group)
 
         this.setCanvas()
         this.setMessage()

@@ -53,7 +53,7 @@ class WindLine
         this.mesh = new THREE.Mesh(geometry, material)
         this.mesh.renderOrder = 1
         this.mesh.position.y = 2
-        this.game.scene.add(this.mesh)
+        this.game.worldContainer.add(this.mesh)
     }
 }
 

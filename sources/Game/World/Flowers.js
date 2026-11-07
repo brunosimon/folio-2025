@@ -157,7 +157,7 @@ export class Flowers
         this.mesh.receiveShadow = true
         this.mesh.count = this.transformMatrices.length
         this.mesh.frustumCulled = false
-        this.game.scene.add(this.mesh)
+        this.game.worldContainer.add(this.mesh)
 
         this.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(this.mesh.count * 16), 16)
         this.instanceMatrix.setUsage(THREE.StaticDrawUsage)

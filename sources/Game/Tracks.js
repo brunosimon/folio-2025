@@ -196,7 +196,7 @@ export class Track
         
         this.trail.mesh = new THREE.Mesh(this.trail.geometry, this.trail.material)
         this.trail.mesh.frustumCulled = false
-        this.game.scene.add(this.trail.mesh)
+        this.game.worldContainer.add(this.trail.mesh)
     }
 
     setDebugPlane()

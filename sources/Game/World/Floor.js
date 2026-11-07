@@ -90,7 +90,7 @@ export class Floor
         this.mesh = new THREE.Mesh(geometry, material)
         this.mesh.receiveShadow = true
         // this.mesh.castShadow = true
-        this.game.scene.add(this.mesh)
+        this.game.worldContainer.add(this.mesh)
 
         // Resize
         this.game.viewport.events.on('throttleChange', () =>

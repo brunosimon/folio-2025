@@ -76,6 +76,16 @@ export class Game
 
         // First batch for intro
         this.scene = new THREE.Scene()
+        
+        // World container for all world objects (excluding vehicle)
+        this.worldContainer = new THREE.Group()
+        this.scene.add(this.worldContainer)
+        
+        // World angle state
+        this.worldAngle = 0
+        this.targetWorldAngle = 0
+        this.worldAngleSmoothing = 8
+        
         this.debug = new Debug()
         this.resourcesLoader = new ResourcesLoader()
         this.quality = new Quality()

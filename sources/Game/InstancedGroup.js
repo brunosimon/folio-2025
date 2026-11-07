@@ -45,7 +45,7 @@ export class InstancedGroup
                 mesh.instance.castShadow = _child.castShadow
                 mesh.instance.receiveShadow = _child.receiveShadow
                 mesh.instance.frustumCulled = _child.frustumCulled
-                this.game.scene.add(mesh.instance)
+                this.game.worldContainer.add(mesh.instance)
 
                 this.meshes.push(mesh)
             }

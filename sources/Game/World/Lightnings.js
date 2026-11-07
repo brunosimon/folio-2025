@@ -30,7 +30,7 @@ export class Lightnings
         this.colorB = uniform(color('#5180ff'))
         this.intensity = uniform(3)
         this.group = new THREE.Group()
-        this.game.scene.add(this.group)
+        this.game.worldContainer.add(this.group)
 
         // Debug
         this.hitChancesBinding = this.game.debug.addManualBinding(

@@ -15,7 +15,7 @@ export class FragmentObject
         
         this.group1 = new THREE.Group()
         this.group1.position.copy(_position)
-        this.game.scene.add(this.group1)
+        this.game.worldContainer.add(this.group1)
 
         this.group2 = this.game.resources.fragment.scene.clone(true)
         this.group1.add(this.group2)

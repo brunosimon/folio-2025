@@ -37,7 +37,7 @@ export class Objects
                 updateMaterials: true,
                 castShadow: true,
                 receiveShadow: true,
-                parent: this.game.scene,
+                parent: this.game.worldContainer,
                 ..._visualDescription
             }
             

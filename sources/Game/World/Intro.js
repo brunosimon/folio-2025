@@ -45,7 +45,7 @@ export class Intro
         }
         
         this.label.scale.setScalar(0.01)
-        this.game.scene.add(this.label)
+        this.game.worldContainer.add(this.label)
     }
 
     setCircle()
@@ -80,7 +80,7 @@ export class Intro
         mesh.rotation.x = - Math.PI * 0.5
         mesh.rotation.z = Math.PI * 0.5
         
-        this.game.scene.add(mesh)
+        this.game.worldContainer.add(mesh)
 
         this.circle.mesh = mesh
 

@@ -114,7 +114,7 @@ export class PoleLights
         const mesh = new THREE.Mesh(geometry, material)
         mesh.count = count
         mesh.frustumCulled = false
-        this.game.scene.add(mesh)
+        this.game.worldContainer.add(mesh)
     }
 
     setSwitchInterval()

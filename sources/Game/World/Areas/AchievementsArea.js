@@ -197,7 +197,7 @@ export class AchievementsArea extends Area
             mesh.lookAt(delta.multiplyScalar(-1))
             mesh.position.copy(destination)
             mesh.count = count
-            this.game.scene.add(mesh)
+            this.game.worldContainer.add(mesh)
             this.objects.hideable.push(mesh)
         }
     }
@@ -282,7 +282,7 @@ export class AchievementsArea extends Area
             mesh.position.z = this.pillar.position.z
             mesh.count = count
 
-            this.game.scene.add(mesh)
+            this.game.worldContainer.add(mesh)
             this.objects.hideable.push(mesh)
         }
     }

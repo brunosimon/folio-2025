@@ -281,7 +281,7 @@ export class Leaves
         this.mesh.castShadow = true
         this.mesh.receiveShadow = true
         this.mesh.renderOrder = 2
-        this.game.scene.add(this.mesh)
+        this.game.worldContainer.add(this.mesh)
     }
 
     explode(coordinates, radius)

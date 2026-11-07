@@ -62,7 +62,7 @@ export class Trees
             i++
         }
 
-        this.game.scene.add(this.bodies)
+        this.game.worldContainer.add(this.bodies)
     }
 
     setLeaves()

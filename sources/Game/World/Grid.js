@@ -66,7 +66,7 @@ export class Grid
         this.mesh.position.x = defaultRespawn.position.x
         this.mesh.position.z = defaultRespawn.position.z
         
-        this.game.scene.add(this.mesh)
+        this.game.worldContainer.add(this.mesh)
 
         // Debug
         if(this.game.debug.active)
@@ -90,7 +90,7 @@ export class Grid
 
     show()
     {
-        this.game.scene.add(this.mesh)
+        this.game.worldContainer.add(this.mesh)
     }
 
     destroy()

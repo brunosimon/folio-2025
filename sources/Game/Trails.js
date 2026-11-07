@@ -132,7 +132,7 @@ export class Trails
         item.mesh = new THREE.Mesh(this.geometry, material)
         item.mesh.renderOrder = 1
         item.mesh.frustumCulled = false
-        this.game.scene.add(item.mesh)
+        this.game.worldContainer.add(item.mesh)
 
         this.items.push(item)
         
