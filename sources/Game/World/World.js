@@ -37,11 +37,281 @@ export class World
 
         this.step(0)
 
+        this.setSceneModeListener()
+
         // this.setAxesHelper()
         // this.setCollisionGroupsTest()
         // this.setNormalTest()
         // this.setTestMesh()
         // this.setTestShadow()
+    }
+
+    setSceneModeListener()
+    {
+        this.game.sceneMode.events.on('change', (mode) =>
+        {
+            this.applySceneMode(mode)
+        })
+    }
+
+    applySceneMode(mode)
+    {
+        if(mode === 'obstacleFree')
+        {
+            this.disableObstacles()
+        }
+        else
+        {
+            this.enableObstacles()
+        }
+    }
+
+    hideInstancedGroup(instancedGroup)
+    {
+        if(instancedGroup && instancedGroup.meshes)
+        {
+            for(const mesh of instancedGroup.meshes)
+            {
+                if(mesh.instance)
+                {
+                    mesh.instance.visible = false
+                }
+            }
+        }
+    }
+
+    showInstancedGroup(instancedGroup)
+    {
+        if(instancedGroup && instancedGroup.meshes)
+        {
+            for(const mesh of instancedGroup.meshes)
+            {
+                if(mesh.instance)
+                {
+                    mesh.instance.visible = true
+                }
+            }
+        }
+    }
+
+    disableObjects(objects)
+    {
+        if(objects)
+        {
+            for(const object of objects)
+            {
+                this.game.objects.disable(object)
+            }
+        }
+    }
+
+    enableObjects(objects)
+    {
+        if(objects)
+        {
+            for(const object of objects)
+            {
+                this.game.objects.enable(object)
+            }
+        }
+    }
+
+    disableObstacles()
+    {
+        if(this.bricks)
+        {
+            this.hideInstancedGroup(this.bricks.instancedGroup)
+            this.disableObjects(this.bricks.objects)
+        }
+
+        if(this.fences)
+        {
+            this.hideInstancedGroup(this.fences.instancedGroup)
+            this.disableObjects(this.fences.objects)
+        }
+
+        if(this.benches)
+        {
+            this.hideInstancedGroup(this.benches.instancedGroup)
+            this.disableObjects(this.benches.objects)
+        }
+
+        if(this.lanterns)
+        {
+            this.hideInstancedGroup(this.lanterns.instancedGroup)
+            this.disableObjects(this.lanterns.objects)
+        }
+
+        if(this.poleLights)
+        {
+            this.hideInstancedGroup(this.poleLights.instancedGroup)
+            this.disableObjects(this.poleLights.physicalObjects)
+        }
+
+        if(this.explosiveCrates && this.explosiveCrates.items)
+        {
+            this.hideInstancedGroup(this.explosiveCrates.instancedGroup)
+            for(const crate of this.explosiveCrates.items)
+            {
+                if(crate.object)
+                {
+                    this.game.objects.disable(crate.object)
+                }
+            }
+        }
+
+        if(this.areas)
+        {
+            if(this.areas.bowling && this.areas.bowling.pins)
+            {
+                this.hideInstancedGroup(this.areas.bowling.pins.instancedGroup)
+                if(this.areas.bowling.pins.items)
+                {
+                    for(const pin of this.areas.bowling.pins.items)
+                    {
+                        if(pin.object)
+                        {
+                            this.game.objects.disable(pin.object)
+                        }
+                    }
+                }
+            }
+
+            if(this.areas.cookie && this.areas.cookie.cookies)
+            {
+                this.hideInstancedGroup(this.areas.cookie.cookies.instancedGroup)
+                this.disableObjects(this.areas.cookie.cookies.objects)
+            }
+
+            if(this.areas.social && this.areas.social.fans)
+            {
+                this.hideInstancedGroup(this.areas.social.fans.instancedGroup)
+                this.disableObjects(this.areas.social.fans.objects)
+            }
+
+            const areaList = [
+                this.areas.achievements,
+                this.areas.altar,
+                this.areas.behindTheScene,
+                this.areas.bowling,
+                this.areas.career,
+                this.areas.circuit,
+                this.areas.cookie,
+                this.areas.lab,
+                this.areas.landing,
+                this.areas.projects,
+                this.areas.social,
+                this.areas.toilet,
+                this.areas.timeMachine,
+            ]
+
+            for(const area of areaList)
+            {
+                if(area && area.objects && area.objects.items)
+                {
+                    this.disableObjects(area.objects.items)
+                }
+            }
+        }
+    }
+
+    enableObstacles()
+    {
+        if(this.bricks)
+        {
+            this.showInstancedGroup(this.bricks.instancedGroup)
+            this.enableObjects(this.bricks.objects)
+        }
+
+        if(this.fences)
+        {
+            this.showInstancedGroup(this.fences.instancedGroup)
+            this.enableObjects(this.fences.objects)
+        }
+
+        if(this.benches)
+        {
+            this.showInstancedGroup(this.benches.instancedGroup)
+            this.enableObjects(this.benches.objects)
+        }
+
+        if(this.lanterns)
+        {
+            this.showInstancedGroup(this.lanterns.instancedGroup)
+            this.enableObjects(this.lanterns.objects)
+        }
+
+        if(this.poleLights)
+        {
+            this.showInstancedGroup(this.poleLights.instancedGroup)
+            this.enableObjects(this.poleLights.physicalObjects)
+        }
+
+        if(this.explosiveCrates && this.explosiveCrates.items)
+        {
+            this.showInstancedGroup(this.explosiveCrates.instancedGroup)
+            for(const crate of this.explosiveCrates.items)
+            {
+                if(crate.object && !crate.exploded)
+                {
+                    this.game.objects.enable(crate.object)
+                }
+            }
+        }
+
+        if(this.areas)
+        {
+            if(this.areas.bowling && this.areas.bowling.pins)
+            {
+                this.showInstancedGroup(this.areas.bowling.pins.instancedGroup)
+                if(this.areas.bowling.pins.items)
+                {
+                    for(const pin of this.areas.bowling.pins.items)
+                    {
+                        if(pin.object)
+                        {
+                            this.game.objects.enable(pin.object)
+                        }
+                    }
+                }
+            }
+
+            if(this.areas.cookie && this.areas.cookie.cookies)
+            {
+                this.showInstancedGroup(this.areas.cookie.cookies.instancedGroup)
+                this.enableObjects(this.areas.cookie.cookies.objects)
+            }
+
+            if(this.areas.social && this.areas.social.fans)
+            {
+                this.showInstancedGroup(this.areas.social.fans.instancedGroup)
+                this.enableObjects(this.areas.social.fans.objects)
+            }
+
+            const areaList = [
+                this.areas.achievements,
+                this.areas.altar,
+                this.areas.behindTheScene,
+                this.areas.bowling,
+                this.areas.career,
+                this.areas.circuit,
+                this.areas.cookie,
+                this.areas.lab,
+                this.areas.landing,
+                this.areas.projects,
+                this.areas.social,
+                this.areas.toilet,
+                this.areas.timeMachine,
+            ]
+
+            for(const area of areaList)
+            {
+                if(area && area.objects && area.objects.items)
+                {
+                    this.enableObjects(area.objects.items)
+                }
+            }
+        }
     }
 
     step(step)
@@ -78,6 +348,11 @@ export class World
             this.lanterns = new Lanterns()
             this.scenery = new Scenery()
             this.areas = new Areas()
+
+            if(this.game.sceneMode.mode === 'obstacleFree')
+            {
+                this.disableObstacles()
+            }
         }
         else if(step === 2)
         {

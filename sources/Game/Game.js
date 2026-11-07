@@ -42,6 +42,7 @@ import { KonamiCode } from './KonamiCode.js'
 import { Achievements } from './Achievements.js'
 import { Notifications } from './Notifications.js'
 import { Quality } from './Quality.js'
+import { SceneMode } from './SceneMode.js'
 import { Menu } from './Menu.js'
 import { Title } from './Title.js'
 import { PreRenderer } from './PreRenderer.js'
@@ -79,6 +80,7 @@ export class Game
         this.debug = new Debug()
         this.resourcesLoader = new ResourcesLoader()
         this.quality = new Quality()
+        this.sceneMode = new SceneMode()
         this.server = new Server()
         this.ticker = new Ticker()
         this.time = new Time()

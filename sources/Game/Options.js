@@ -9,6 +9,7 @@ export class Options
 
         this.setSound()
         this.setQuality()
+        this.setSceneMode()
         this.setRespawn()
         this.setReset()
         this.setRenderer()
@@ -36,6 +37,24 @@ export class Options
         this.game.quality.events.on('change', () =>
         {
             text.textContent = this.game.quality.level === 0 ? 'High' : 'Low'
+        })
+    }
+
+    setSceneMode()
+    {
+        const element = this.element.querySelector('.js-scene-mode-toggle')
+        const text = element.querySelector('span')
+        text.textContent = this.game.sceneMode.mode === 'normal' ? 'Normal' : 'Obstacle Free'
+
+        element.addEventListener('click', () =>
+        {
+            const newMode = this.game.sceneMode.mode === 'normal' ? 'obstacleFree' : 'normal'
+            this.game.sceneMode.changeMode(newMode)
+        })
+
+        this.game.sceneMode.events.on('change', () =>
+        {
+            text.textContent = this.game.sceneMode.mode === 'normal' ? 'Normal' : 'Obstacle Free'
         })
     }
 

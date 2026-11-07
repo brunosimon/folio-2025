@@ -47,9 +47,10 @@ export class PoleLights
 
     setPhysics()
     {
+        this.physicalObjects = []
         for(const reference of this.references)
         {
-            this.game.objects.add(
+            const object = this.game.objects.add(
                 null,
                 {
                     type: 'fixed',
@@ -62,6 +63,7 @@ export class PoleLights
                     }
                 },
             )
+            this.physicalObjects.push(object)
         }
     }
 
