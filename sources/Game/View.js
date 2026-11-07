@@ -1,7 +1,7 @@
 import * as THREE from 'three/webgpu'
 import CameraControls from 'camera-controls'
 import { Game } from './Game.js'
-import { clamp, lerp, remap, smoothstep } from './utilities/maths.js'
+import { clamp, lerp, remap, smoothstep, smallestAngle } from './utilities/maths.js'
 import { mix, uniform, vec4, Fn, positionGeometry, attribute } from 'three/tsl'
 import gsap from 'gsap'
 import { Pointer } from './Inputs/Pointer.js'
@@ -334,6 +334,8 @@ export class View
         this.spherical = {}
         this.spherical.phi = Math.PI * (this.game.quality.level === 0 ? 0.31 : 0.27)
         this.spherical.theta = Math.PI * 0.25
+        this.spherical.targetTheta = Math.PI * 0.25
+        this.spherical.thetaSmoothing = 8
 
         this.spherical.radius = {}
         this.spherical.radius.edges = { min: 15, max: 30 }
@@ -351,6 +353,7 @@ export class View
             })
             sphericalDebugPanel.addBinding(this.spherical, 'phi', { min: 0, max: Math.PI * 0.5, step: 0.001 })
             sphericalDebugPanel.addBinding(this.spherical, 'theta', { min: - Math.PI, max: Math.PI, step: 0.001 })
+            sphericalDebugPanel.addBinding(this.spherical, 'thetaSmoothing', { min: 0, max: 20, step: 0.001 })
             sphericalDebugPanel.addBinding(this.spherical.radius, 'edges', { min: 0, max: 100, step: 0.001 })
         }
     }
@@ -701,6 +704,18 @@ export class View
 
             this.zoom.smoothedRatio = lerp(this.zoom.smoothedRatio, this.zoom.ratio, this.game.ticker.delta * 10)
         }
+
+        // Update theta to follow vehicle direction when tracking
+        if(this.focusPoint.isTracking && this.game.physicalVehicle)
+        {
+            const forward = this.game.physicalVehicle.forward
+            const vehicleYaw = Math.atan2(forward.z, forward.x)
+            this.spherical.targetTheta = vehicleYaw + Math.PI * 0.25
+        }
+
+        // Smoothly update theta towards target
+        const thetaDelta = smallestAngle(this.spherical.theta, this.spherical.targetTheta)
+        this.spherical.theta += thetaDelta * this.game.ticker.delta * this.spherical.thetaSmoothing
 
         // Radius
         const radiusMax = this.spherical.radius.edges.max + this.ratioOverflow * this.spherical.radius.nonIdealRatioOffset
